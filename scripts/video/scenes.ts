@@ -31,7 +31,7 @@ export const SCENES: Scene[] = [
     kind: "card",
     title: "Who it is for",
     narration:
-      "Small sellers lose disputes they could win. Nobody owns them, so the deadline slips, or the wrong evidence goes in. Every loss costs the sale, the goods and a fee.",
+      "Small sellers lose disputes they could win. Nobody owns them, so the deadline slips, or the wrong evidence goes in. A lost claim can cost the sale, the goods and a dispute fee.",
   },
   {
     id: "s03-board",
@@ -39,7 +39,6 @@ export const SCENES: Scene[] = [
     title: "The triage board",
     narration:
       "Dispute Desk pulls every dispute from PayPal's Disputes API onto one board. Marlow, the desk's clerk, reads each case and books the work into free time before its deadline, inside each person's working hours. The board is a Bryntum Scheduler. Drag a block to reassign it, and Marlow reflows the rest.",
-    marlow: { line: "intake", at: 9.5 },
   },
   {
     id: "s04-case",
@@ -52,7 +51,7 @@ export const SCENES: Scene[] = [
     id: "s05-file",
     kind: "clip",
     title: "Approve and file",
-    narration: "The owner reads it and approves. It goes to PayPal's provide evidence endpoint with the pack attached. From new to filed in under a minute.",
+    narration: "The owner reads it and approves. It goes to PayPal's provide evidence endpoint with the pack attached. Three clicks from a new dispute to a filed response.",
     marlow: { line: "filed", at: 9.4 },
     // The filing is shown in real time (about seven seconds), so this scene runs past its narration.
     tail: 5.6,
@@ -62,8 +61,9 @@ export const SCENES: Scene[] = [
     kind: "clip",
     title: "PayPal settles it",
     narration: "In the sandbox we can play PayPal's reviewer and settle the claim. The hold on the money is released. Won: one hundred eighty four dollars recovered.",
-    marlow: { line: "won", at: 9.6 },
-    tail: 2.6,
+    marlow: { line: "won", at: 10.3 },
+    // Runs past the narration so the Recovered this month counter is on screen.
+    tail: 5.4,
   },
   {
     id: "s07-offer",
@@ -77,14 +77,14 @@ export const SCENES: Scene[] = [
     id: "s08-prevent",
     kind: "clip",
     title: "Prevention",
-    narration: "Then Marlow looks across cases. Two claims on the same planter. The fix: add a size chart. That is the dispute you never get.",
+    narration: "Then Marlow looks across cases. Two disputes on the same planter. The fix: add a size chart. That is the dispute you never get.",
   },
   {
     id: "s09-guard",
     kind: "clip",
     title: "Guardrails and one honest limit",
     narration:
-      "Money decisions stay in code. Every action is checked against PayPal's own list of what is allowed, and against the owner's thresholds. One honest limit: the win estimate comes from fixed rules, not from past outcomes, and the sandbox makes you wait about twenty minutes before a claim can be settled. We cut that wait.",
+      "Money decisions stay in code. Every action is checked against the owner's thresholds, and against PayPal's own list of what is allowed. One honest limit: the win estimate comes from fixed rules, not from past outcomes, and the sandbox makes you wait almost half an hour before a claim can be settled. We cut that wait.",
   },
   {
     id: "s10-end",

@@ -339,14 +339,21 @@ async function s07End() {
   await sleep(1200);
   await moveTo(page, page.locator('[data-testid="outcome-title"]'), { steps: 22 });
   await sleep(3000);
-  await caption(page, tag("Resolved", "half the sale kept, no claim, no dispute fee"));
+  await caption(page, tag("Resolved", "half the sale kept, closed as an inquiry, never a claim"));
   await moveTo(page, page.locator('[data-testid="fund-movements"]').first(), { steps: 18 });
   await sleep(4500);
   // The first part of the scene keeps the approval; the long wait on PayPal is dropped.
   const file = path.join(ROOT, ".data", "video-cuts.json");
   const all = JSON.parse(readFileSync(file, "utf8"));
-  const first = all["s07-offer"]?.[0] ?? [0, 20];
-  all["s07-offer"] = [[first[0], first[0] + 11.2], [first[0] + 15.2, first[1] ?? first[0] + 17.7], [Math.round(start * 100) / 100, null, "s07-offer-end"]];
+  const existing: [number, number | null, string?][] = all["s07-offer"] ?? [[0, 20]];
+  const ending: [number, null, string] = [Math.round(start * 100) / 100, null, "s07-offer-end"];
+  if (existing.length >= 3) {
+    // Recorded again: only the ending changes.
+    all["s07-offer"] = [existing[0], existing[1], ending];
+  } else {
+    const first = existing[0];
+    all["s07-offer"] = [[first[0], first[0] + 11.2], [first[0] + 15.2, first[1] ?? first[0] + 17.7], ending];
+  }
   writeFileSync(file, JSON.stringify(all, null, 2));
   await r.finish();
 }
@@ -391,19 +398,20 @@ async function s09Guard(id?: string) {
 
   await caption(page, tag("Guardrails", "the owner's thresholds are checked in code before PayPal is called"));
   await moveTo(page, page.locator('[data-testid="auto-accept-under"]'), { steps: 20 });
-  await until(3.4);
+  await until(3.0);
   await moveTo(page, page.locator('[data-testid="always-ask-above"]'), { steps: 20 });
-  await until(6.2);
+  await until(5.4);
   // The case file: only actions PayPal lists, each with its endpoint.
   await page.goto(`${BASE}/cases/${hero}`, { waitUntil: "domcontentloaded" });
   await page.locator('[data-testid="allowed-actions"]').waitFor();
   await caption(page, tag("PayPal decides", "only actions in the dispute's <code>links</code> get a button"));
   await moveTo(page, page.locator('[data-testid="allowed-actions"]'), { steps: 18 });
-  await until(10.6);
+  await until(9.0);
+  await caption(page, tag("One honest limit", "the win estimate comes from fixed rules, not from past outcomes"));
+  await moveTo(page, page.locator('[data-testid="rec-likelihood"]'), { steps: 20 });
+  await until(13.8);
+  await caption(page, tag("Sandbox", "about half an hour before a claim can be settled: cut from this video"));
   await click(page, page.locator('[data-testid="hood-open"]'));
-  await caption(page, tag("Under the hood", "every PayPal call, with its PayPal-Debug-Id"));
-  await until(14.4);
-  await caption(page, tag("One honest limit", "the win estimate is rule based, and sandbox waits were cut from this video"));
   await until(total + 1.2);
   await r.finish();
 }

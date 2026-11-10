@@ -28,7 +28,7 @@ const problem = base(
          <li style="display:flex;gap:22px;align-items:center"><span style="width:20px;height:20px;border-radius:50%;background:#b3402e;flex:none"></span>The deadline slips</li>
          <li style="display:flex;gap:22px;align-items:center"><span style="width:20px;height:20px;border-radius:50%;background:#b3402e;flex:none"></span>The wrong evidence goes in</li>
        </ul>
-       <p style="margin-top:44px;font-size:38px;color:#55625b">Every loss costs the sale, the goods and a fee.</p>
+       <p style="margin-top:44px;font-size:38px;color:#55625b">A lost claim can cost the sale, the goods and a dispute fee.</p>
      </div>
      <div style="flex:none">${marlow("calm", 440)}</div>
    </div>`,

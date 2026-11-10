@@ -1,6 +1,6 @@
 {
   "budget": 15000,
-  "used": 2402,
+  "used": 3178,
   "requests": [
     {
       "at": "2026-11-10T16:41:03.646Z",
@@ -91,6 +91,30 @@
       "voice": "narrator",
       "characters": 56,
       "purpose": "video narration s10-end"
+    },
+    {
+      "at": "2026-11-10T17:52:23.541Z",
+      "voice": "narrator",
+      "characters": 176,
+      "purpose": "video narration s02-problem"
+    },
+    {
+      "at": "2026-11-10T17:52:24.758Z",
+      "voice": "narrator",
+      "characters": 155,
+      "purpose": "video narration s05-file"
+    },
+    {
+      "at": "2026-11-10T17:52:25.944Z",
+      "voice": "narrator",
+      "characters": 127,
+      "purpose": "video narration s08-prevent"
+    },
+    {
+      "at": "2026-11-10T17:52:27.677Z",
+      "voice": "narrator",
+      "characters": 318,
+      "purpose": "video narration s09-guard"
     }
   ]
 }
