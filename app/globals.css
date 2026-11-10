@@ -146,6 +146,9 @@ body {
 .desk-block.tiny b { font-size: 11.5px; text-overflow: clip; }
 .desk-block span { font-weight: 500; font-size: 11.5px; color: #3c4a43; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* The current time marker: Bryntum's orange gives white text 3.5:1. This red gives 5.7:1. */
+.desk-scheduler { --b-current-time-color: #b3402e; }
+
 /* Deadlines: PayPal's are solid clay lines, the desk's own targets are dashed amber. */
 .desk-scheduler .b-sch-time-range.deadline {
   background: transparent;

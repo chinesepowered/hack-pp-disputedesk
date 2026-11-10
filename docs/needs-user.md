@@ -40,13 +40,15 @@ It registers `https://<domain>/api/paypal/webhook` for the three dispute events 
 
 ## 3. Top up the dispute pool before judging
 
-Each sandbox dispute can be filed only once. At the last push the live board had 11 cases that still need a response (5 from the first batch and 6 from a fresh batch seeded for judging), plus one with evidence already filed that is ready to settle in the sandbox. If judges or you use them up, run this locally (it needs Playwright's Chromium and the sandbox buyer login in `.env.local`):
+Each sandbox dispute can be filed only once. At the last push the live board had **8 cases that still need a response** (5 from batch C and 3 from batch D, including a fresh $184 fig claim with a 95% estimate and a $12 case Marlow may auto-accept), plus **2 claims with evidence already filed that can be settled** with the sandbox tools once PayPal lists the link. If judges or you use them up, run this locally (it needs Playwright's Chromium and the sandbox buyer login in `.env.local`):
 
 ```bash
 pnpm seed --batch E
 ```
 
 It takes 30 to 45 minutes because it waits on PayPal. `pnpm seed --status` shows what exists. When fewer than three cases need a response, the board itself offers the recorded cases in Replay and says so.
+
+**Heads-up: the sandbox buyer may be at a limit.** Late on Nov 10, after this buyer had opened about 26 disputes in one day, PayPal's "Report a problem" page stopped offering "item not received" and "not as described" for the buyer's newest payments (only the billing and unauthorized options were listed). Two orders in batch D (`JM-4051`, `JM-4052`) are paid and tracked but have no dispute for that reason. `pnpm seed --batch D` retries them and is safe to re-run. If the options are still missing a day later, create a second sandbox personal account, put its login in `.env.local` as `PAYPAL_SANDBOX_BUYER_EMAIL` and `PAYPAL_SANDBOX_BUYER_PASSWORD`, delete `.data/buyer-session.json`, and seed a new batch.
 
 ## 4. Video, repo, Devpost
 

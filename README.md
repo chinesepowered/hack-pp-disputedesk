@@ -278,23 +278,27 @@ State is kept in `.data/` locally and in Vercel Blob when `BLOB_READ_WRITE_TOKEN
 ## Sandbox logins for judges
 
 - **The app needs no login.** The hosted demo opens straight onto the board, against a sandbox seller account that already has disputes waiting. Use Live sandbox to act on them, or Replay to play the recorded cases without using any up.
-- **To settle a claim yourself:** file evidence on a claim, wait until PayPal lists the sandbox `adjudicate` link (about half an hour in our runs), then use "Settle in the seller's favor" in the case file's sandbox tools. One seeded case is left in that state on purpose.
+- **To settle a claim yourself:** file evidence on a claim, wait until PayPal lists the sandbox `adjudicate` link (about half an hour in our runs), then use "Settle in the seller's favor" in the case file's sandbox tools. Two seeded claims are left with evidence already filed for this purpose (look under "With PayPal or the buyer").
 - **To be the buyer:** buy something on the Demo store page with any PayPal sandbox personal account, then log in at sandbox.paypal.com as that buyer, open Activity, pick the payment and choose "Report a problem". The dispute reaches the board 3 to 4 minutes later. We do not publish our own sandbox buyer's password in the repository.
 - Sandbox only. No real money moves anywhere in this project.
 
 ## Accessibility
 
-Built to WCAG 2.2 AA, and checked by hand at desktop and phone widths.
+Built to WCAG 2.2 AA. Checked by hand at desktop and phone widths, from the keyboard, and with an automated axe-core scan (WCAG 2.0, 2.1 and 2.2 A and AA rules) of the board, the cases list, two case files, prevention, settings and the store at both widths (`scripts/dev/a11y.ts`).
 
 - Text and controls meet AA contrast on the cream background; the status colors (ready, partial, missing) are always paired with a text label or an icon.
 - Visible focus rings on every control, a skip link to the main content, and logical heading order.
 - Every form control has a label; tables have captions and header cells; the stepper marks the current step.
 - Async results (a filing, a new dispute, Marlow finishing) are announced through a polite live region as well as shown as toasts.
 - `prefers-reduced-motion` turns off the board's animations.
-- The board has a non-pointer path: "Let Marlow book" books everything, the block editor changes person and time without dragging, and the "Needs a response" cards under the board list the same cases as plain links.
+- The board has a non-pointer path: "Let Marlow book" books everything, blocks are focusable (arrow keys move between them, Enter opens the block editor, which changes person and time without dragging), and the "Needs a response" cards under the board list the same cases as plain links.
+- Each block's accessible name starts with the text visible on it, then gives the customer's full name, start time and length.
 - Marlow's voice is off by default and has a visible toggle.
 
-Known gap: dragging from the Unscheduled panel needs a pointer. The button and the editor cover the same job.
+Known gaps:
+
+- Dragging from the Unscheduled panel needs a pointer. The button and the editor cover the same job.
+- The axe scan reports no violations on any page except one inside Bryntum Scheduler's own markup: its focusable event bars sit inside the grid's row group, which axe flags as `aria-required-children`. We left the vendor's roles alone because its keyboard navigation depends on them.
 
 ## Limitations, and what is next
 

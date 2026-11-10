@@ -113,6 +113,19 @@ how we got around them. Times are UTC.
   video and README say a lost claim "can" cost a fee, and the economics treat the fee as a
   setting.
 
+- **The buyer's "Report a problem" page can stop offering item disputes.** After the sandbox
+  buyer had opened about 26 disputes in one day, the page for its two newest payments listed only
+  "Billing errors or issues with subscriptions" and "Unauthorized activity". The "item not
+  received" and "not as described" options were gone, for payments that were otherwise the same
+  as ones disputed minutes earlier. We did not find the rule. The seed reports the step as
+  failed and can be re-run; a second buyer account is the fallback.
+- **Evidence arrives after the dispute.** The desk gathered a case's evidence once, when the
+  dispute first appeared. Tracking added a few minutes later (which is what our own seed does
+  for claim cases) never reached the checklist, so a strong case read 75% with "no tracking on
+  the PayPal order". Evidence is now read again when it is more than five minutes old and the
+  seller can still act, and a draft that was written from the older evidence is replaced unless
+  a person edited it.
+
 ### Models (W&B Inference)
 
 - **Both text models reason before they answer, and the reasoning counts against

@@ -44,13 +44,26 @@ const DAY_START = 7;
 const DAY_END = 19;
 const enc = (s: unknown) => StringHelper.encodeHtml(String(s ?? ""));
 
+/** The two lines of text on a block. The block's accessible name starts with the same words. */
+function blockLines(c: CaseMeta | undefined, readiness: string, fallback: string): { title: string; detail: string } {
+  const label = readiness === "unknown" ? "Not assessed yet" : READINESS_LABEL[readiness as keyof typeof READINESS_LABEL];
+  const short = label.replace("Evidence ", "").replace(/^./, (ch: string) => ch.toUpperCase());
+  if (!c) return { title: fallback, detail: short };
+  return { title: `${(c.customer ?? "Customer").split(" ")[0]} · ${money(c.amount)}`, detail: `${short} · ${reasonLabel(c.reason)}` };
+}
+
 function eventData(block: WorkBlock, c: CaseMeta | undefined) {
+  const lines = blockLines(c, c?.readiness ?? "unknown", block.disputeId);
   return {
     id: block.id,
     resourceId: block.resourceId,
     startDate: new Date(block.start),
     endDate: new Date(block.end),
-    name: c ? `${c.customer ?? "Customer"} · ${money(c.amount)}` : block.disputeId,
+    // Read out as "for 30 minutes", not as a fraction of a day.
+    durationUnit: "minute",
+    // The Scheduler builds the block's accessible name from this, so it begins with the text
+    // that is visible on the block and then gives the customer's full name.
+    name: c ? `${lines.title} ${lines.detail} (${c.customer ?? "customer"})` : block.disputeId,
     disputeId: block.disputeId,
     readiness: c?.readiness ?? "unknown",
     pinned: block.pinned,
@@ -334,8 +347,7 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
             const readiness = eventRecord.readiness ?? "unknown";
             renderData.wrapperCls.add(readiness);
             if (eventRecord.pinned) renderData.wrapperCls.add("pinned");
-            const label = readiness === "unknown" ? "Not assessed yet" : READINESS_LABEL[readiness as keyof typeof READINESS_LABEL];
-            const short = label.replace("Evidence ", "").replace(/^./, (ch: string) => ch.toUpperCase());
+            const lines = blockLines(c, readiness, eventRecord.disputeId ?? "");
             // Very short blocks (Marlow's own quick jobs) only have room for the amount.
             const tiny = eventRecord.endDate - eventRecord.startDate <= 15 * 60_000;
             if (tiny) renderData.wrapperCls.add("tiny");
@@ -344,8 +356,8 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
               children: tiny
                 ? [{ tag: "b", text: c ? money(c.amount) : "" }]
                 : [
-                    { tag: "b", text: c ? `${(c.customer ?? "Customer").split(" ")[0]} · ${money(c.amount)}` : eventRecord.name },
-                    { tag: "span", text: c ? `${short} · ${reasonLabel(c.reason)}` : short },
+                    { tag: "b", text: `${lines.title} ` },
+                    { tag: "span", text: lines.detail },
                   ],
             };
           }}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { MarlowMark } from "@/components/marlow/Marlow";
 import { cx } from "@/components/ui/atoms";
 import { clearCalls, dismissToast, setDrawer, setMode, setVoice, useDeskStore } from "@/lib/client/store";
@@ -115,7 +115,19 @@ function UnderTheHood() {
                   <tr key={c.id} className="border-t border-line align-top" data-testid="hood-row">
                     <td className="px-4 py-2">
                       <span className={cx("mr-2 inline-block rounded px-1.5 py-0.5 text-[11px] font-bold", c.method === "GET" ? "bg-slate-tint text-slate" : "bg-forest-tint text-forest-deep")}>{c.method}</span>
-                      <code className="break-all font-mono text-[12.5px]">{c.path}</code>
+                      {/* Long paths wrap after a slash, so a dispute id stays in one piece. */}
+                      <code className="font-mono text-[12.5px] [overflow-wrap:anywhere]">
+                        {c.path.split("/").map((part, i) => (
+                          <Fragment key={i}>
+                            {i > 0 && (
+                              <>
+                                /<wbr />
+                              </>
+                            )}
+                            {part}
+                          </Fragment>
+                        ))}
+                      </code>
                       <div className="mt-0.5 text-[11.5px] text-muted">
                         {c.via === "sdk" ? "paypal-server-sdk" : c.via === "toolkit" ? "agent-toolkit" : "REST"}
                         {" · "}
@@ -180,7 +192,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[9999] focus:rounded-lg focus:bg-forest focus:px-4 focus:py-2 focus:text-white">Skip to content</a>
       <header className="sticky top-0 z-40 border-b border-line bg-[rgb(247_245_239/0.94)] backdrop-blur">
         <div className="mx-auto flex max-w-[1500px] flex-wrap items-center gap-x-5 gap-y-2 px-4 py-2.5">
-          <Link href="/" className="flex items-center gap-2.5 rounded-lg" aria-label="Dispute Desk home">
+          <Link href="/" className="flex items-center gap-2.5 rounded-lg">
             <MarlowMark size={34} />
             <span className="leading-tight">
               <span className="block text-[17px] font-extrabold tracking-tight">Dispute Desk</span>

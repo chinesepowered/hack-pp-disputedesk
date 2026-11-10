@@ -16,6 +16,9 @@ import { fillMissingPhotoReads, gatherEvidence } from "./evidence";
 import { addTrail, loadCase, loadDesk, loadSettings, saveCase, updateDesk } from "./state";
 import type { CaseDetail, CaseMeta, Desk, Settings } from "./types";
 
+/** How long a case's gathered evidence is used before PayPal and the store are read again. */
+const EVIDENCE_FRESH_MS = 5 * 60_000;
+
 async function pool<T, R>(items: T[], size: number, fn: (item: T) => Promise<R>): Promise<R[]> {
   const out: R[] = new Array(items.length);
   let next = 0;
@@ -265,6 +268,29 @@ export async function prepareCase(
   const { detail, settings } = await refreshCase(id, "Case file: read dispute");
   const dispute = detail.dispute;
 
+  // Evidence can arrive after the dispute does (tracking added late, a new carrier scan), so
+  // while the seller can still act, PayPal and the store's records are read again when the
+  // copy on file is more than a few minutes old.
+  const sellerCanAct = allowedActions(dispute).some((a) => a !== "adjudicate" && a !== "require_evidence");
+  const age = detail.evidence ? Date.now() - new Date(detail.evidence.gatheredAt).getTime() : 0;
+  let evidenceChanged = false;
+  if (detail.evidence && !opts.force && sellerCanAct && age > EVIDENCE_FRESH_MS) {
+    const before = detail.evidence;
+    const fresh = await gatherEvidence(dispute);
+    const summary = (e: typeof fresh) => JSON.stringify([e.paypal.trackers, e.paypal.captureStatus, e.paypal.sellerProtection, e.store.carrier?.outcome ?? null, e.store.carrier?.scans.length ?? 0, e.store.thread.length]);
+    evidenceChanged = summary(before) !== summary(fresh);
+    detail.evidence = fresh;
+    if (evidenceChanged) {
+      addTrail(detail, {
+        actor: "marlow",
+        kind: "tool",
+        title: "Evidence changed since the last read",
+        detail: `PayPal now shows ${fresh.paypal.trackers.length} tracker(s) on the order (was ${before.paypal.trackers.length}), capture ${fresh.paypal.captureStatus ?? "status unknown"}. The checklist and the recommendation were worked out again.`,
+        ok: true,
+      });
+    }
+  }
+
   if (!detail.evidence || opts.force) {
     detail.evidence = await gatherEvidence(dispute);
     const e = detail.evidence;
@@ -317,7 +343,9 @@ export async function prepareCase(
     }
   }
 
-  if (opts.draft && (!detail.draft || opts.force)) {
+  // A draft written from older evidence is replaced, unless a person has edited it.
+  const draftIsStale = Boolean(detail.draft && !detail.draft.editedAt && (evidenceChanged || changed) && sellerCanAct);
+  if (opts.draft && (!detail.draft || opts.force || draftIsStale)) {
     const evidenceType = pickEvidenceType(dispute, ruleFor(dispute.reason).fileAs);
     try {
       const draft = await draftResponse(dispute, detail.evidence, detail.checklist, rec);
