@@ -1,27 +1,1009 @@
 {
- "recordedAt": "2026-11-10T16:38:34.669Z",
+ "recordedAt": "2026-11-10T18:15:01.097Z",
  "note": "Built by pnpm replay:record from real PayPal sandbox and model responses. Do not edit by hand.",
  "disputes": {
-  "PP-R-KBX-10198048": {
-   "label": "Planter not as described, $62",
+  "PP-R-MME-10198068": {
+   "label": "Fiddle leaf fig, not received: fight and win",
    "tape": [
     {
      "type": "state",
      "dispute": {
-      "dispute_id": "PP-R-KBX-10198048",
-      "create_time": "2026-11-10T15:27:17.015Z",
-      "update_time": "2026-11-10T15:30:54.048Z",
+      "dispute_id": "PP-R-MME-10198068",
+      "create_time": "2026-11-10T16:33:25.049Z",
+      "update_time": "2026-11-10T16:51:23.887Z",
       "disputed_transactions": [
        {
-        "buyer_transaction_id": "03V13045G39811707",
-        "seller_transaction_id": "2JK13464BF925663Y",
-        "create_time": "2026-11-10T15:17:59.000Z",
+        "buyer_transaction_id": "5XT84143782099357",
+        "seller_transaction_id": "0MK5861822957405D",
+        "create_time": "2026-11-10T16:31:30.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "184.00"
+        },
+        "invoice_number": "JM-3041",
+        "custom": "fig-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-FIG-10",
+          "item_name": "Fiddle Leaf Fig, 10 inch floor plant",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "WAITING_FOR_SELLER_RESPONSE",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "184.00"
+      },
+      "dispute_state": "REQUIRED_ACTION",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "177.09"
+        },
+        "initiated_time": "2026-11-10T16:36:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:33:25.049Z",
+        "content": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:33:24.359Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:33:25.049Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "The buyer and seller could not agree. Asking PayPal to decide.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T16:48:40.613Z",
+        "action_info": {
+         "action": "ESCALATE"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:51:23.887Z"
+       },
+       {
+        "evidence_type": "PROOF_OF_REFUND",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:51:23.887Z"
+       },
+       {
+        "evidence_type": "OTHER",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:51:23.887Z"
+       }
+      ],
+      "seller_response_due_date": "2026-11-21T04:59:59.000Z",
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "REFUND",
+         "PARTIAL_REFUND"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/provide-evidence",
+        "rel": "provide_evidence",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca58691d54e29",
+     "ms": 769
+    },
+    {
+     "type": "post",
+     "action": "provide_evidence",
+     "status": 200,
+     "response": {
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068",
+        "rel": "detail",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f410759b38483",
+     "ms": 2125
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-MME-10198068",
+      "create_time": "2026-11-10T16:33:25.049Z",
+      "update_time": "2026-11-10T17:08:58.138Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "5XT84143782099357",
+        "seller_transaction_id": "0MK5861822957405D",
+        "create_time": "2026-11-10T16:31:30.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "184.00"
+        },
+        "invoice_number": "JM-3041",
+        "custom": "fig-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-FIG-10",
+          "item_name": "Fiddle Leaf Fig, 10 inch floor plant",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "184.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "177.09"
+        },
+        "initiated_time": "2026-11-10T16:36:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:33:25.049Z",
+        "content": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:33:24.359Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:33:25.049Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "The buyer and seller could not agree. Asking PayPal to decide.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T16:48:40.613Z",
+        "action_info": {
+         "action": "ESCALATE"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "evidence_info": {
+         "tracking_info": [
+          {
+           "carrier_name": "OTHER",
+           "carrier_name_other": "Harbor Post",
+           "tracking_number": "HBP304126704US"
+          }
+         ]
+        },
+        "documents": [
+         {
+          "name": "evidence-pack-PP-R-MME-10198068.pdf",
+          "url": "https://api-m.sandbox.paypal.com/v2/content/documents/DIS-010-11f1-dd29-6aa4d120-8b3d-626d8b7bf8cf/files/1/download"
+         }
+        ],
+        "notes": "Hello,\n\nWe ask PayPal to decide this chargeback in the seller's favour. Order JM-3041, one Fiddle Leaf Fig, 10 inch floor plant, 184.00 USD, was shipped to Priya Raman, 2217 Larkspur Ave, Sacramento CA. Tracking number Harbor Post HBP304126704US is on the PayPal order. Carrier scans show the parcel was picked up in Portland, OR on Nov 2 and delivered in Sacramento, CA on Nov 4 at 08:31. The delivery address matches the address on the PayPal order, 2217 Larkspur Ave, Sacramento. A delivery photo shows a cardboard parcel with a fragile sticker on a stone doorstep in front of a door. Store records show it was signed for by P. Raman. We also hold 3 messages with the customer, in which we shared the tracking link and the delivery photo. The evidence shows delivery was completed. Thank you, Juniper & Moss",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T17:08:58.138Z",
+        "action_info": {
+         "action": "PROVIDE_EVIDENCE"
+        },
+        "dispute_life_cycle_stage": "CHARGEBACK"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/provide-supporting-info",
+        "rel": "provide_supporting_info",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f2723354f13b4",
+     "ms": 972
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-MME-10198068",
+      "create_time": "2026-11-10T16:33:25.049Z",
+      "update_time": "2026-11-10T17:37:03.838Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "5XT84143782099357",
+        "seller_transaction_id": "0MK5861822957405D",
+        "create_time": "2026-11-10T16:31:30.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "184.00"
+        },
+        "invoice_number": "JM-3041",
+        "custom": "fig-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-FIG-10",
+          "item_name": "Fiddle Leaf Fig, 10 inch floor plant",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "184.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "177.09"
+        },
+        "initiated_time": "2026-11-10T16:36:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:33:25.049Z",
+        "content": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:33:24.359Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:33:25.049Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "The buyer and seller could not agree. Asking PayPal to decide.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T16:48:40.613Z",
+        "action_info": {
+         "action": "ESCALATE"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "evidence_info": {
+         "tracking_info": [
+          {
+           "carrier_name": "OTHER",
+           "carrier_name_other": "Harbor Post",
+           "tracking_number": "HBP304126704US"
+          }
+         ]
+        },
+        "documents": [
+         {
+          "name": "evidence-pack-PP-R-MME-10198068.pdf",
+          "url": "https://api-m.sandbox.paypal.com/v2/content/documents/DIS-010-11f1-dd29-6aa4d120-8b3d-626d8b7bf8cf/files/1/download"
+         }
+        ],
+        "notes": "Hello,\n\nWe ask PayPal to decide this chargeback in the seller's favour. Order JM-3041, one Fiddle Leaf Fig, 10 inch floor plant, 184.00 USD, was shipped to Priya Raman, 2217 Larkspur Ave, Sacramento CA. Tracking number Harbor Post HBP304126704US is on the PayPal order. Carrier scans show the parcel was picked up in Portland, OR on Nov 2 and delivered in Sacramento, CA on Nov 4 at 08:31. The delivery address matches the address on the PayPal order, 2217 Larkspur Ave, Sacramento. A delivery photo shows a cardboard parcel with a fragile sticker on a stone doorstep in front of a door. Store records show it was signed for by P. Raman. We also hold 3 messages with the customer, in which we shared the tracking link and the delivery photo. The evidence shows delivery was completed. Thank you, Juniper & Moss",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T17:08:58.138Z",
+        "action_info": {
+         "action": "PROVIDE_EVIDENCE"
+        },
+        "dispute_life_cycle_stage": "CHARGEBACK"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "REFUND"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/adjudicate",
+        "rel": "adjudicate",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/require-evidence",
+        "rel": "require_evidence",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/provide-supporting-info",
+        "rel": "provide_supporting_info",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f626796756a0b",
+     "ms": 1726
+    },
+    {
+     "type": "post",
+     "action": "adjudicate",
+     "outcome": "SELLER_FAVOR",
+     "status": 200,
+     "response": {
+      "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068",
+      "rel": "self",
+      "method": "GET",
+      "encType": "application/json"
+     },
+     "debugId": "ca586d3bc2e6e",
+     "ms": 1511
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-MME-10198068",
+      "create_time": "2026-11-10T16:33:25.049Z",
+      "update_time": "2026-11-10T17:37:47.938Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "5XT84143782099357",
+        "seller_transaction_id": "0MK5861822957405D",
+        "create_time": "2026-11-10T16:31:30.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "184.00"
+        },
+        "invoice_number": "JM-3041",
+        "custom": "fig-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-FIG-10",
+          "item_name": "Fiddle Leaf Fig, 10 inch floor plant",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "184.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "177.09"
+        },
+        "initiated_time": "2026-11-10T16:36:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:33:25.049Z",
+        "content": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:33:24.359Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:33:25.049Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "The buyer and seller could not agree. Asking PayPal to decide.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T16:48:40.613Z",
+        "action_info": {
+         "action": "ESCALATE"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "evidence_info": {
+         "tracking_info": [
+          {
+           "carrier_name": "OTHER",
+           "carrier_name_other": "Harbor Post",
+           "tracking_number": "HBP304126704US"
+          }
+         ]
+        },
+        "documents": [
+         {
+          "name": "evidence-pack-PP-R-MME-10198068.pdf",
+          "url": "https://api-m.sandbox.paypal.com/v2/content/documents/DIS-010-11f1-dd29-6aa4d120-8b3d-626d8b7bf8cf/files/1/download"
+         }
+        ],
+        "notes": "Hello,\n\nWe ask PayPal to decide this chargeback in the seller's favour. Order JM-3041, one Fiddle Leaf Fig, 10 inch floor plant, 184.00 USD, was shipped to Priya Raman, 2217 Larkspur Ave, Sacramento CA. Tracking number Harbor Post HBP304126704US is on the PayPal order. Carrier scans show the parcel was picked up in Portland, OR on Nov 2 and delivered in Sacramento, CA on Nov 4 at 08:31. The delivery address matches the address on the PayPal order, 2217 Larkspur Ave, Sacramento. A delivery photo shows a cardboard parcel with a fragile sticker on a stone doorstep in front of a door. Store records show it was signed for by P. Raman. We also hold 3 messages with the customer, in which we shared the tracking link and the delivery photo. The evidence shows delivery was completed. Thank you, Juniper & Moss",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T17:08:58.138Z",
+        "action_info": {
+         "action": "PROVIDE_EVIDENCE"
+        },
+        "dispute_life_cycle_stage": "CHARGEBACK"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/provide-supporting-info",
+        "rel": "provide_supporting_info",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca586d3c59c85",
+     "ms": 1023
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-MME-10198068",
+      "create_time": "2026-11-10T16:33:25.049Z",
+      "update_time": "2026-11-10T17:39:05.316Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "5XT84143782099357",
+        "seller_transaction_id": "0MK5861822957405D",
+        "create_time": "2026-11-10T16:31:30.000Z",
+        "transaction_status": "COMPLETED",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "184.00"
+        },
+        "invoice_number": "JM-3041",
+        "custom": "fig-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-FIG-10",
+          "item_name": "Fiddle Leaf Fig, 10 inch floor plant",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "184.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "adjudications": [
+       {
+        "type": "DENY_BUYER",
+        "adjudication_time": "2026-11-10T17:37:47.938Z",
+        "reason": "INELIGIBLE_BUYER_PROTECTION_POLICY",
+        "dispute_life_cycle_stage": "CHARGEBACK"
+       }
+      ],
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "177.09"
+        },
+        "initiated_time": "2026-11-10T16:36:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       },
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "177.09"
+        },
+        "initiated_time": "2026-11-10T17:39:04.000Z",
+        "type": "CREDIT",
+        "reason": "HOLD_RELEASED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:33:25.049Z",
+        "content": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:33:24.359Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:33:25.049Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "The buyer and seller could not agree. Asking PayPal to decide.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T16:48:40.613Z",
+        "action_info": {
+         "action": "ESCALATE"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "evidence_info": {
+         "tracking_info": [
+          {
+           "carrier_name": "OTHER",
+           "carrier_name_other": "Harbor Post",
+           "tracking_number": "HBP304126704US"
+          }
+         ]
+        },
+        "documents": [
+         {
+          "name": "evidence-pack-PP-R-MME-10198068.pdf",
+          "url": "https://api-m.sandbox.paypal.com/v2/content/documents/DIS-010-11f1-dd29-6aa4d120-8b3d-626d8b7bf8cf/files/1/download"
+         }
+        ],
+        "notes": "Hello,\n\nWe ask PayPal to decide this chargeback in the seller's favour. Order JM-3041, one Fiddle Leaf Fig, 10 inch floor plant, 184.00 USD, was shipped to Priya Raman, 2217 Larkspur Ave, Sacramento CA. Tracking number Harbor Post HBP304126704US is on the PayPal order. Carrier scans show the parcel was picked up in Portland, OR on Nov 2 and delivered in Sacramento, CA on Nov 4 at 08:31. The delivery address matches the address on the PayPal order, 2217 Larkspur Ave, Sacramento. A delivery photo shows a cardboard parcel with a fragile sticker on a stone doorstep in front of a door. Store records show it was signed for by P. Raman. We also hold 3 messages with the customer, in which we shared the tracking link and the delivery photo. The evidence shows delivery was completed. Thank you, Juniper & Moss",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T17:08:58.138Z",
+        "action_info": {
+         "action": "PROVIDE_EVIDENCE"
+        },
+        "dispute_life_cycle_stage": "CHARGEBACK"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068/provide-supporting-info",
+        "rel": "provide_supporting_info",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca586d60faa2a",
+     "ms": 1012
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-MME-10198068",
+      "create_time": "2026-11-10T16:33:25.049Z",
+      "update_time": "2026-11-10T17:40:13.398Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "5XT84143782099357",
+        "seller_transaction_id": "0MK5861822957405D",
+        "create_time": "2026-11-10T16:31:30.000Z",
+        "transaction_status": "COMPLETED",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "184.00"
+        },
+        "invoice_number": "JM-3041",
+        "custom": "fig-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-FIG-10",
+          "item_name": "Fiddle Leaf Fig, 10 inch floor plant",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "RESOLVED",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "184.00"
+      },
+      "dispute_state": "RESOLVED",
+      "dispute_outcome": {
+       "outcome_code": "RESOLVED_SELLER_FAVOUR",
+       "outcome_reason": "INELIGIBLE_BUYER_PROTECTION_POLICY"
+      },
+      "adjudications": [
+       {
+        "type": "DENY_BUYER",
+        "adjudication_time": "2026-11-10T17:37:47.938Z",
+        "reason": "INELIGIBLE_BUYER_PROTECTION_POLICY",
+        "dispute_life_cycle_stage": "CHARGEBACK"
+       }
+      ],
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "177.09"
+        },
+        "initiated_time": "2026-11-10T16:36:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       },
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "177.09"
+        },
+        "initiated_time": "2026-11-10T17:39:04.000Z",
+        "type": "CREDIT",
+        "reason": "HOLD_RELEASED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:33:25.049Z",
+        "content": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:33:24.359Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:33:25.049Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "The buyer and seller could not agree. Asking PayPal to decide.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T16:48:40.613Z",
+        "action_info": {
+         "action": "ESCALATE"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "evidence_info": {
+         "tracking_info": [
+          {
+           "carrier_name": "OTHER",
+           "carrier_name_other": "Harbor Post",
+           "tracking_number": "HBP304126704US"
+          }
+         ]
+        },
+        "documents": [
+         {
+          "name": "evidence-pack-PP-R-MME-10198068.pdf",
+          "url": "https://api-m.sandbox.paypal.com/v2/content/documents/DIS-010-11f1-dd29-6aa4d120-8b3d-626d8b7bf8cf/files/1/download"
+         }
+        ],
+        "notes": "Hello,\n\nWe ask PayPal to decide this chargeback in the seller's favour. Order JM-3041, one Fiddle Leaf Fig, 10 inch floor plant, 184.00 USD, was shipped to Priya Raman, 2217 Larkspur Ave, Sacramento CA. Tracking number Harbor Post HBP304126704US is on the PayPal order. Carrier scans show the parcel was picked up in Portland, OR on Nov 2 and delivered in Sacramento, CA on Nov 4 at 08:31. The delivery address matches the address on the PayPal order, 2217 Larkspur Ave, Sacramento. A delivery photo shows a cardboard parcel with a fragile sticker on a stone doorstep in front of a door. Store records show it was signed for by P. Raman. We also hold 3 messages with the customer, in which we shared the tracking link and the delivery photo. The evidence shows delivery was completed. Thank you, Juniper & Moss",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T17:08:58.138Z",
+        "action_info": {
+         "action": "PROVIDE_EVIDENCE"
+        },
+        "dispute_life_cycle_stage": "CHARGEBACK"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "184.00"
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-MME-10198068",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f4718780fcd5d",
+     "ms": 1399
+    }
+   ]
+  },
+  "PP-R-LCP-10198069": {
+   "label": "Speckled planter, not as described: partial refund offer",
+   "tape": [
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-LCP-10198069",
+      "create_time": "2026-11-10T16:34:53.621Z",
+      "update_time": "2026-11-10T16:38:23.928Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "6VE41004F2008560P",
+        "seller_transaction_id": "9H2634727Y842913S",
+        "create_time": "2026-11-10T16:33:34.000Z",
         "transaction_status": "HELD",
         "gross_amount": {
          "currency_code": "USD",
          "value": "62.00"
         },
-        "invoice_number": "JM-1042",
+        "invoice_number": "JM-3042",
         "custom": "planter-not-as-described",
         "buyer": {
          "email": "buyer@example.com",
@@ -61,7 +1043,7 @@
          "currency_code": "USD",
          "value": "59.35"
         },
-        "initiated_time": "2026-11-10T15:30:34.000Z",
+        "initiated_time": "2026-11-10T16:38:04.000Z",
         "type": "DEBIT",
         "reason": "HOLD_PLACED"
        }
@@ -71,24 +1053,24 @@
       "messages": [
        {
         "posted_by": "BUYER",
-        "time_posted": "2026-11-10T15:27:17.015Z",
+        "time_posted": "2026-11-10T16:34:53.621Z",
         "content": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
        }
       ],
       "extensions": {
        "merchant_contacted": false,
-       "buyer_contacted_time": "2026-11-10T15:27:16.188Z"
+       "buyer_contacted_time": "2026-11-10T16:34:52.836Z"
       },
       "evidences": [
        {
         "evidence_type": "CREATE",
         "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
         "source": "SUBMITTED_BY_BUYER",
-        "date": "2026-11-10T15:27:17.015Z",
+        "date": "2026-11-10T16:34:53.621Z",
         "dispute_life_cycle_stage": "INQUIRY"
        }
       ],
-      "seller_response_due_date": "2026-11-30T15:27:17.015Z",
+      "seller_response_due_date": "2026-11-30T16:34:53.621Z",
       "offer": {
        "buyer_requested_amount": {
         "currency_code": "USD",
@@ -118,39 +1100,39 @@
       },
       "links": [
        {
-        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048",
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069",
         "rel": "self",
         "method": "GET",
         "encType": "application/json"
        },
        {
-        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048/accept-claim",
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069/accept-claim",
         "rel": "accept_claim",
         "method": "POST",
         "encType": "application/json"
        },
        {
-        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048/send-message",
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069/send-message",
         "rel": "send_message",
         "method": "POST",
         "encType": "application/json"
        },
        {
-        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048/make-offer",
-        "rel": "make_offer",
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069/escalate",
+        "rel": "escalate",
         "method": "POST",
         "encType": "application/json"
        },
        {
-        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048/escalate",
-        "rel": "escalate",
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069/make-offer",
+        "rel": "make_offer",
         "method": "POST",
         "encType": "application/json"
        }
       ]
      },
-     "debugId": "ca58678bf3bc4",
-     "ms": 1396
+     "debugId": "f983328face8f",
+     "ms": 439
     },
     {
      "type": "post",
@@ -159,33 +1141,33 @@
      "response": {
       "links": [
        {
-        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048",
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069",
         "rel": "detail",
         "method": "GET",
         "encType": "application/json"
        }
       ]
      },
-     "debugId": "ca58678d74ed6",
-     "ms": 1190
+     "debugId": "f9690500df1be",
+     "ms": 1716
     },
     {
      "type": "state",
      "dispute": {
-      "dispute_id": "PP-R-KBX-10198048",
-      "create_time": "2026-11-10T15:27:17.015Z",
-      "update_time": "2026-11-10T16:35:44.680Z",
+      "dispute_id": "PP-R-LCP-10198069",
+      "create_time": "2026-11-10T16:34:53.621Z",
+      "update_time": "2026-11-10T17:15:53.406Z",
       "disputed_transactions": [
        {
-        "buyer_transaction_id": "03V13045G39811707",
-        "seller_transaction_id": "2JK13464BF925663Y",
-        "create_time": "2026-11-10T15:17:59.000Z",
+        "buyer_transaction_id": "6VE41004F2008560P",
+        "seller_transaction_id": "9H2634727Y842913S",
+        "create_time": "2026-11-10T16:33:34.000Z",
         "transaction_status": "HELD",
         "gross_amount": {
          "currency_code": "USD",
          "value": "62.00"
         },
-        "invoice_number": "JM-1042",
+        "invoice_number": "JM-3042",
         "custom": "planter-not-as-described",
         "buyer": {
          "email": "buyer@example.com",
@@ -225,7 +1207,7 @@
          "currency_code": "USD",
          "value": "59.35"
         },
-        "initiated_time": "2026-11-10T15:30:34.000Z",
+        "initiated_time": "2026-11-10T16:38:04.000Z",
         "type": "DEBIT",
         "reason": "HOLD_PLACED"
        }
@@ -235,25 +1217,25 @@
       "messages": [
        {
         "posted_by": "BUYER",
-        "time_posted": "2026-11-10T15:27:17.015Z",
+        "time_posted": "2026-11-10T16:34:53.621Z",
         "content": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
        },
        {
         "posted_by": "SELLER",
-        "time_posted": "2026-11-10T16:35:44.680Z",
-        "content": "Hi, we're sorry the plant didn't match what you expected. As a gesture of goodwill we'd like to offer a $31 partial refund. No return needed. Hope that works for you."
+        "time_posted": "2026-11-10T17:15:53.406Z",
+        "content": "Hi, we are sorry the planter did not match your expectations. As a goodwill gesture we would like to offer a partial refund of $31 to settle this dispute. Please let us know if you would like to accept. Thanks, Juniper & Moss"
        }
       ],
       "extensions": {
        "merchant_contacted": false,
-       "buyer_contacted_time": "2026-11-10T15:27:16.188Z"
+       "buyer_contacted_time": "2026-11-10T16:34:52.836Z"
       },
       "evidences": [
        {
         "evidence_type": "CREATE",
         "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
         "source": "SUBMITTED_BY_BUYER",
-        "date": "2026-11-10T15:27:17.015Z",
+        "date": "2026-11-10T16:34:53.621Z",
         "dispute_life_cycle_stage": "INQUIRY"
        }
       ],
@@ -269,7 +1251,7 @@
        "offer_type": "REFUND",
        "history": [
         {
-         "offer_time": "2026-11-10T16:35:44.680Z",
+         "offer_time": "2026-11-10T17:15:53.406Z",
          "actor": "SELLER",
          "event_type": "PROPOSED",
          "offer_type": "REFUND",
@@ -288,33 +1270,188 @@
       },
       "links": [
        {
-        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048",
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069",
         "rel": "self",
         "method": "GET",
         "encType": "application/json"
        }
       ]
      },
-     "debugId": "ca58678debd07",
-     "ms": 922
+     "debugId": "f740522438716",
+     "ms": 1317
     },
     {
      "type": "state",
      "dispute": {
-      "dispute_id": "PP-R-KBX-10198048",
-      "create_time": "2026-11-10T15:27:17.015Z",
-      "update_time": "2026-11-10T16:37:04.155Z",
+      "dispute_id": "PP-R-LCP-10198069",
+      "create_time": "2026-11-10T16:34:53.621Z",
+      "update_time": "2026-11-10T17:16:03.827Z",
       "disputed_transactions": [
        {
-        "buyer_transaction_id": "03V13045G39811707",
-        "seller_transaction_id": "2JK13464BF925663Y",
-        "create_time": "2026-11-10T15:17:59.000Z",
+        "buyer_transaction_id": "6VE41004F2008560P",
+        "seller_transaction_id": "9H2634727Y842913S",
+        "create_time": "2026-11-10T16:33:34.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "62.00"
+        },
+        "invoice_number": "JM-3042",
+        "custom": "planter-not-as-described",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-CER-8",
+          "item_name": "Speckled Ceramic Planter, 8 inch",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+          "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+      "status": "WAITING_FOR_BUYER_RESPONSE",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "62.00"
+      },
+      "dispute_state": "REQUIRED_OTHER_PARTY_ACTION",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "59.35"
+        },
+        "initiated_time": "2026-11-10T16:38:04.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:34:53.621Z",
+        "content": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       },
+       {
+        "posted_by": "SELLER",
+        "time_posted": "2026-11-10T17:15:53.406Z",
+        "content": "Hi, we are sorry the planter did not match your expectations. As a goodwill gesture we would like to offer a partial refund of $31 to settle this dispute. Please let us know if you would like to accept. Thanks, Juniper & Moss"
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": false,
+       "buyer_contacted_time": "2026-11-10T16:34:52.836Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:34:53.621Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "buyer_response_due_date": "2026-11-30T16:34:53.621Z",
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "62.00"
+       },
+       "seller_offered_amount": {
+        "currency_code": "USD",
+        "value": "31.00"
+       },
+       "offer_type": "REFUND",
+       "history": [
+        {
+         "offer_time": "2026-11-10T17:15:53.406Z",
+         "actor": "SELLER",
+         "event_type": "PROPOSED",
+         "offer_type": "REFUND",
+         "offer_amount": {
+          "currency_code": "USD",
+          "value": "31.00"
+         }
+        }
+       ]
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "62.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "REFUND"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069/send-message",
+        "rel": "send_message",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069/escalate",
+        "rel": "escalate",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca586b43b1f5d",
+     "ms": 989
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-LCP-10198069",
+      "create_time": "2026-11-10T16:34:53.621Z",
+      "update_time": "2026-11-10T17:16:53.874Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "6VE41004F2008560P",
+        "seller_transaction_id": "9H2634727Y842913S",
+        "create_time": "2026-11-10T16:33:34.000Z",
         "transaction_status": "PARTIALLY_REFUNDED",
         "gross_amount": {
          "currency_code": "USD",
          "value": "62.00"
         },
-        "invoice_number": "JM-1042",
+        "invoice_number": "JM-3042",
         "custom": "planter-not-as-described",
         "buyer": {
          "email": "buyer@example.com",
@@ -349,23 +1486,23 @@
       "dispute_state": "UNDER_PAYPAL_REVIEW",
       "money_movements": [
        {
-        "affected_party": "SELLER",
-        "amount": {
-         "currency_code": "USD",
-         "value": "31.00"
-        },
-        "initiated_time": "2026-11-10T16:37:04.008Z",
-        "type": "DEBIT",
-        "reason": "DISPUTE_SETTLEMENT"
-       },
-       {
         "affected_party": "BUYER",
         "amount": {
          "currency_code": "USD",
          "value": "31.00"
         },
-        "initiated_time": "2026-11-10T16:37:04.008Z",
+        "initiated_time": "2026-11-10T17:16:34.512Z",
         "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "affected_party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T17:16:34.512Z",
+        "type": "DEBIT",
         "reason": "DISPUTE_SETTLEMENT"
        }
       ],
@@ -376,19 +1513,9 @@
          "currency_code": "USD",
          "value": "59.35"
         },
-        "initiated_time": "2026-11-10T15:30:34.000Z",
+        "initiated_time": "2026-11-10T16:38:04.000Z",
         "type": "DEBIT",
         "reason": "HOLD_PLACED"
-       },
-       {
-        "party": "SELLER",
-        "amount": {
-         "currency_code": "USD",
-         "value": "31.00"
-        },
-        "initiated_time": "2026-11-10T16:37:04.008Z",
-        "type": "DEBIT",
-        "reason": "DISPUTE_SETTLEMENT"
        },
        {
         "party": "BUYER",
@@ -396,8 +1523,18 @@
          "currency_code": "USD",
          "value": "31.00"
         },
-        "initiated_time": "2026-11-10T16:37:04.008Z",
+        "initiated_time": "2026-11-10T17:16:34.512Z",
         "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T17:16:34.512Z",
+        "type": "DEBIT",
         "reason": "DISPUTE_SETTLEMENT"
        }
       ],
@@ -406,25 +1543,25 @@
       "messages": [
        {
         "posted_by": "BUYER",
-        "time_posted": "2026-11-10T15:27:17.015Z",
+        "time_posted": "2026-11-10T16:34:53.621Z",
         "content": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
        },
        {
         "posted_by": "SELLER",
-        "time_posted": "2026-11-10T16:35:44.680Z",
-        "content": "Hi, we're sorry the plant didn't match what you expected. As a gesture of goodwill we'd like to offer a $31 partial refund. No return needed. Hope that works for you."
+        "time_posted": "2026-11-10T17:15:53.406Z",
+        "content": "Hi, we are sorry the planter did not match your expectations. As a goodwill gesture we would like to offer a partial refund of $31 to settle this dispute. Please let us know if you would like to accept. Thanks, Juniper & Moss"
        }
       ],
       "extensions": {
        "merchant_contacted": false,
-       "buyer_contacted_time": "2026-11-10T15:27:16.188Z"
+       "buyer_contacted_time": "2026-11-10T16:34:52.836Z"
       },
       "evidences": [
        {
         "evidence_type": "CREATE",
         "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
         "source": "SUBMITTED_BY_BUYER",
-        "date": "2026-11-10T15:27:17.015Z",
+        "date": "2026-11-10T16:34:53.621Z",
         "dispute_life_cycle_stage": "INQUIRY"
        }
       ],
@@ -440,7 +1577,7 @@
        "offer_type": "REFUND",
        "history": [
         {
-         "offer_time": "2026-11-10T16:35:44.680Z",
+         "offer_time": "2026-11-10T17:15:53.406Z",
          "actor": "SELLER",
          "event_type": "PROPOSED",
          "offer_type": "REFUND",
@@ -450,7 +1587,7 @@
          }
         },
         {
-         "offer_time": "2026-11-10T16:37:04.155Z",
+         "offer_time": "2026-11-10T17:16:34.647Z",
          "actor": "BUYER",
          "event_type": "ACCEPTED"
         }
@@ -463,44 +1600,1476 @@
        },
        "transactions": [
         {
-         "id": "0CK1135812738554A",
+         "id": "5G929385S62698709",
          "gross_amount": {
           "currency_code": "USD",
           "value": "31.00"
          },
-         "create_time": "2026-11-10T16:37:03.000Z"
+         "create_time": "2026-11-10T17:16:34.000Z"
         }
        ]
       },
       "links": [
        {
-        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048",
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069",
         "rel": "self",
         "method": "GET",
         "encType": "application/json"
        }
       ]
      },
-     "debugId": "f156621289092",
-     "ms": 1686
+     "debugId": "f33120303b44b",
+     "ms": 1305
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-LCP-10198069",
+      "create_time": "2026-11-10T16:34:53.621Z",
+      "update_time": "2026-11-10T17:18:33.951Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "6VE41004F2008560P",
+        "seller_transaction_id": "9H2634727Y842913S",
+        "create_time": "2026-11-10T16:33:34.000Z",
+        "transaction_status": "PARTIALLY_REFUNDED",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "62.00"
+        },
+        "invoice_number": "JM-3042",
+        "custom": "planter-not-as-described",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-CER-8",
+          "item_name": "Speckled Ceramic Planter, 8 inch",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+          "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+      "status": "RESOLVED",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "31.00"
+      },
+      "dispute_state": "RESOLVED",
+      "dispute_outcome": {
+       "outcome_code": "RESOLVED_BUYER_FAVOUR",
+       "outcome_reason": "INQUIRY_OFFER_PARTIAL_REFUND",
+       "amount_refunded": {
+        "currency_code": "USD",
+        "value": "31.00"
+       }
+      },
+      "money_movements": [
+       {
+        "affected_party": "BUYER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T17:16:34.512Z",
+        "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "affected_party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T17:16:34.512Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       }
+      ],
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "59.35"
+        },
+        "initiated_time": "2026-11-10T16:38:04.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       },
+       {
+        "party": "BUYER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T17:16:34.512Z",
+        "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T17:16:34.512Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:34:53.621Z",
+        "content": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       },
+       {
+        "posted_by": "SELLER",
+        "time_posted": "2026-11-10T17:15:53.406Z",
+        "content": "Hi, we are sorry the planter did not match your expectations. As a goodwill gesture we would like to offer a partial refund of $31 to settle this dispute. Please let us know if you would like to accept. Thanks, Juniper & Moss"
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": false,
+       "buyer_contacted_time": "2026-11-10T16:34:52.836Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:34:53.621Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "31.00"
+       },
+       "seller_offered_amount": {
+        "currency_code": "USD",
+        "value": "31.00"
+       },
+       "offer_type": "REFUND",
+       "history": [
+        {
+         "offer_time": "2026-11-10T17:15:53.406Z",
+         "actor": "SELLER",
+         "event_type": "PROPOSED",
+         "offer_type": "REFUND",
+         "offer_amount": {
+          "currency_code": "USD",
+          "value": "31.00"
+         }
+        },
+        {
+         "offer_time": "2026-11-10T17:16:34.647Z",
+         "actor": "BUYER",
+         "event_type": "ACCEPTED"
+        }
+       ]
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "31.00"
+       },
+       "transactions": [
+        {
+         "id": "5G929385S62698709",
+         "gross_amount": {
+          "currency_code": "USD",
+          "value": "31.00"
+         },
+         "create_time": "2026-11-10T17:16:34.000Z"
+        }
+       ]
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-LCP-10198069",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca586b7d3ea1a",
+     "ms": 1122
+    }
+   ]
+  },
+  "PP-R-OGL-10198071": {
+   "label": "Mini succulent sent untracked: accept under the auto-accept rule",
+   "tape": [
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-OGL-10198071",
+      "create_time": "2026-11-10T16:36:34.184Z",
+      "update_time": "2026-11-10T16:39:53.951Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "1L155908RS197564K",
+        "seller_transaction_id": "09N195712B631093T",
+        "create_time": "2026-11-10T16:35:03.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "invoice_number": "JM-3043",
+        "custom": "mini-succulent-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-SUC-1",
+          "item_name": "Mini Succulent, 2 inch pot",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "WAITING_FOR_SELLER_RESPONSE",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "12.00"
+      },
+      "dispute_state": "REQUIRED_ACTION",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "11.09"
+        },
+        "initiated_time": "2026-11-10T16:39:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:36:34.184Z",
+        "content": "Ordered almost two weeks ago and nothing has arrived. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:36:33.464Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "Ordered almost two weeks ago and nothing has arrived. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:36:34.184Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:39:53.951Z"
+       }
+      ],
+      "seller_response_due_date": "2026-11-30T16:36:34.184Z",
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "12.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "12.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "PARTIAL_REFUND",
+         "REFUND"
+        ]
+       },
+       "make_offer": {
+        "offer_types": [
+         "REFUND"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071/provide-evidence",
+        "rel": "provide_evidence",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071/send-message",
+        "rel": "send_message",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071/escalate",
+        "rel": "escalate",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071/make-offer",
+        "rel": "make_offer",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f9833281627d6",
+     "ms": 872
+    },
+    {
+     "type": "post",
+     "action": "accept_claim",
+     "status": 200,
+     "response": {
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071",
+        "rel": "detail",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f3361413794fd",
+     "ms": 3671
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-OGL-10198071",
+      "create_time": "2026-11-10T16:36:34.184Z",
+      "update_time": "2026-11-10T17:57:14.453Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "1L155908RS197564K",
+        "seller_transaction_id": "09N195712B631093T",
+        "create_time": "2026-11-10T16:35:03.000Z",
+        "transaction_status": "REFUNDED",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "invoice_number": "JM-3043",
+        "custom": "mini-succulent-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-SUC-1",
+          "item_name": "Mini Succulent, 2 inch pot",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "12.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "money_movements": [
+       {
+        "affected_party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "affected_party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "0.91"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT_FEE"
+       },
+       {
+        "affected_party": "BUYER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       }
+      ],
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "11.09"
+        },
+        "initiated_time": "2026-11-10T16:39:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       },
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "party": "BUYER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:36:34.184Z",
+        "content": "Ordered almost two weeks ago and nothing has arrived. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:36:33.464Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "Ordered almost two weeks ago and nothing has arrived. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:36:34.184Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "Auto-accept per shop rule: $12 claim under the $15 ceiling with weak evidence (no tracking, no delivery scan, win estimate 10%). Full refund of 12.00 USD.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T17:57:14.453Z",
+        "action_info": {
+         "action": "ACCEPT_CLAIM",
+         "response_option": "REFUND"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "12.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "12.00"
+       },
+       "transactions": [
+        {
+         "id": "317508696M355473W",
+         "gross_amount": {
+          "currency_code": "USD",
+          "value": "12.00"
+         },
+         "create_time": "2026-11-10T17:57:13.000Z"
+        }
+       ]
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f822013b74399",
+     "ms": 2259
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-OGL-10198071",
+      "create_time": "2026-11-10T16:36:34.184Z",
+      "update_time": "2026-11-10T17:58:47.603Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "1L155908RS197564K",
+        "seller_transaction_id": "09N195712B631093T",
+        "create_time": "2026-11-10T16:35:03.000Z",
+        "transaction_status": "REFUNDED",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "invoice_number": "JM-3043",
+        "custom": "mini-succulent-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-SUC-1",
+          "item_name": "Mini Succulent, 2 inch pot",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "RESOLVED",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "12.00"
+      },
+      "dispute_state": "RESOLVED",
+      "dispute_outcome": {
+       "outcome_code": "RESOLVED_BUYER_FAVOUR",
+       "outcome_reason": "SELLER_ISSUED_REFUND",
+       "amount_refunded": {
+        "currency_code": "USD",
+        "value": "12.00"
+       }
+      },
+      "money_movements": [
+       {
+        "affected_party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "affected_party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "0.91"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT_FEE"
+       },
+       {
+        "affected_party": "BUYER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       }
+      ],
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "11.09"
+        },
+        "initiated_time": "2026-11-10T16:39:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       },
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "party": "BUYER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "12.00"
+        },
+        "initiated_time": "2026-11-10T17:57:14.111Z",
+        "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:36:34.184Z",
+        "content": "Ordered almost two weeks ago and nothing has arrived. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:36:33.464Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "Ordered almost two weeks ago and nothing has arrived. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:36:34.184Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "Auto-accept per shop rule: $12 claim under the $15 ceiling with weak evidence (no tracking, no delivery scan, win estimate 10%). Full refund of 12.00 USD.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T17:57:14.453Z",
+        "action_info": {
+         "action": "ACCEPT_CLAIM",
+         "response_option": "REFUND"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "12.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "12.00"
+       },
+       "transactions": [
+        {
+         "id": "317508696M355473W",
+         "gross_amount": {
+          "currency_code": "USD",
+          "value": "12.00"
+         },
+         "create_time": "2026-11-10T17:57:13.000Z"
+        }
+       ]
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-OGL-10198071",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca586f7e7a88c",
+     "ms": 767
+    }
+   ]
+  },
+  "PP-R-PBU-10198073": {
+   "label": "Terracotta pots, not received: evidence wanted",
+   "tape": [
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-PBU-10198073",
+      "create_time": "2026-11-10T16:39:29.585Z",
+      "update_time": "2026-11-10T16:51:34.053Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "51J765247T5099423",
+        "seller_transaction_id": "31688083E0352124T",
+        "create_time": "2026-11-10T16:38:12.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "38.00"
+        },
+        "invoice_number": "JM-3046",
+        "custom": "terracotta-set-not-received",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-TER-3",
+          "item_name": "Terracotta Pot Set of 3",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "WAITING_FOR_SELLER_RESPONSE",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "38.00"
+      },
+      "dispute_state": "REQUIRED_ACTION",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "36.18"
+        },
+        "initiated_time": "2026-11-10T16:43:04.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:39:29.585Z",
+        "content": "Tracking says delivered but I never got the pots. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:39:28.867Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "Tracking says delivered but I never got the pots. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:39:29.585Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "The buyer and seller could not agree. Asking PayPal to decide.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T16:48:43.100Z",
+        "action_info": {
+         "action": "ESCALATE"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_FULFILLMENT",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:51:34.053Z"
+       },
+       {
+        "evidence_type": "PROOF_OF_REFUND",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:51:34.053Z"
+       },
+       {
+        "evidence_type": "OTHER",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:51:34.053Z"
+       }
+      ],
+      "seller_response_due_date": "2026-11-21T04:59:59.000Z",
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "38.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "38.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "REFUND",
+         "PARTIAL_REFUND"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-PBU-10198073",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-PBU-10198073/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-PBU-10198073/provide-evidence",
+        "rel": "provide_evidence",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f948788daa6eb",
+     "ms": 827
+    }
+   ]
+  },
+  "PP-R-HHM-10198076": {
+   "label": "Calathea, not as described: claim",
+   "tape": [
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-HHM-10198076",
+      "create_time": "2026-11-10T16:42:27.727Z",
+      "update_time": "2026-11-10T16:51:34.140Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "9V964651BL9461712",
+        "seller_transaction_id": "0GH438056B116751A",
+        "create_time": "2026-11-10T16:41:08.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "42.00"
+        },
+        "invoice_number": "JM-3049",
+        "custom": "calathea-wrong-plant",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-CAL-6",
+          "item_name": "Calathea Medallion, 6 inch pot",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+          "notes": "The plant I received is not the one shown in the listing. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+      "status": "WAITING_FOR_SELLER_RESPONSE",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "42.00"
+      },
+      "dispute_state": "REQUIRED_ACTION",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "40.04"
+        },
+        "initiated_time": "2026-11-10T16:45:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:42:27.727Z",
+        "content": "The plant I received is not the one shown in the listing. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": false,
+       "buyer_contacted_time": "2026-11-10T16:42:26.960Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The plant I received is not the one shown in the listing. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:42:27.727Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "OTHER",
+        "notes": "The buyer and seller could not agree. Asking PayPal to decide.",
+        "source": "SUBMITTED_BY_SELLER",
+        "date": "2026-11-10T16:48:44.836Z",
+        "action_info": {
+         "action": "ESCALATE"
+        },
+        "dispute_life_cycle_stage": "INQUIRY"
+       },
+       {
+        "evidence_type": "PROOF_OF_REFUND",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:51:34.140Z"
+       },
+       {
+        "evidence_type": "OTHER",
+        "source": "REQUESTED_FROM_SELLER",
+        "date": "2026-11-10T16:51:34.140Z"
+       }
+      ],
+      "seller_response_due_date": "2026-11-21T04:59:59.000Z",
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "42.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "42.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "REFUND",
+         "PARTIAL_REFUND",
+         "REFUND_WITH_RETURN",
+         "REFUND_WITH_RETURN_SHIPMENT_LABEL"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-HHM-10198076",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-HHM-10198076/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-HHM-10198076/provide-evidence",
+        "rel": "provide_evidence",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca58691f39d8b",
+     "ms": 536
+    }
+   ]
+  },
+  "PP-R-QEJ-10198072": {
+   "label": "Monstera, not as described: inquiry",
+   "tape": [
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-QEJ-10198072",
+      "create_time": "2026-11-10T16:38:03.070Z",
+      "update_time": "2026-11-10T16:41:34.001Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "04W55095F6571261H",
+        "seller_transaction_id": "5TW87703UE092212G",
+        "create_time": "2026-11-10T16:36:44.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "48.00"
+        },
+        "invoice_number": "JM-3045",
+        "custom": "monstera-damaged",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-MON-6",
+          "item_name": "Monstera Deliciosa, 6 inch pot",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+          "notes": "The plant arrived damaged with broken stems and wilted leaves. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+      "status": "WAITING_FOR_SELLER_RESPONSE",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "48.00"
+      },
+      "dispute_state": "REQUIRED_ACTION",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "45.83"
+        },
+        "initiated_time": "2026-11-10T16:41:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T16:38:03.070Z",
+        "content": "The plant arrived damaged with broken stems and wilted leaves. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": false,
+       "buyer_contacted_time": "2026-11-10T16:38:02.304Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The plant arrived damaged with broken stems and wilted leaves. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:38:03.070Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "seller_response_due_date": "2026-11-30T16:38:03.070Z",
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "48.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "48.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "PARTIAL_REFUND",
+         "REFUND_WITH_RETURN",
+         "REFUND"
+        ]
+       },
+       "make_offer": {
+        "offer_types": [
+         "REFUND",
+         "REFUND_WITH_RETURN"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-QEJ-10198072",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-QEJ-10198072/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-QEJ-10198072/send-message",
+        "rel": "send_message",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-QEJ-10198072/escalate",
+        "rel": "escalate",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-QEJ-10198072/make-offer",
+        "rel": "make_offer",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f983328591d01",
+     "ms": 345
+    }
+   ]
+  },
+  "PP-R-KXD-10198075": {
+   "label": "Watering can, not received: PayPal is reviewing",
+   "tape": [
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-KXD-10198075",
+      "create_time": "2026-11-10T16:40:58.582Z",
+      "update_time": "2026-11-10T16:44:23.599Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "39K20352UA3327252",
+        "seller_transaction_id": "1E716470680334407",
+        "create_time": "2026-11-10T16:39:40.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "56.00"
+        },
+        "invoice_number": "JM-3047",
+        "custom": "watering-can-returned",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-CAN-1L",
+          "item_name": "Brass Watering Can, 1 litre",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "56.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "53.56"
+        },
+        "initiated_time": "2026-11-10T16:44:04.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:40:57.735Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The watering can never came. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:40:58.582Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "56.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "56.00"
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KXD-10198075",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KXD-10198075/provide-supporting-info",
+        "rel": "provide_supporting_info",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f9833282e925e",
+     "ms": 730
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-KXD-10198075",
+      "create_time": "2026-11-10T16:40:58.582Z",
+      "update_time": "2026-11-10T17:02:14.156Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "39K20352UA3327252",
+        "seller_transaction_id": "1E716470680334407",
+        "create_time": "2026-11-10T16:39:40.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "56.00"
+        },
+        "invoice_number": "JM-3047",
+        "custom": "watering-can-returned",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-CAN-1L",
+          "item_name": "Brass Watering Can, 1 litre",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_RECEIVED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "56.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "53.56"
+        },
+        "initiated_time": "2026-11-10T16:44:04.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "CHARGEBACK",
+      "dispute_channel": "INTERNAL",
+      "extensions": {
+       "merchant_contacted": true,
+       "buyer_contacted_time": "2026-11-10T16:40:57.735Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The watering can never came. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T16:40:58.582Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "56.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "56.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "REFUND"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KXD-10198075",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KXD-10198075/provide-supporting-info",
+        "rel": "provide_supporting_info",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KXD-10198075/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f823878d63462",
+     "ms": 1056
     }
    ]
   }
  },
  "sdk": {
-  "/v2/payments/captures/2JK13464BF925663Y": {
+  "/v2/payments/captures/0MK5861822957405D": {
    "status": 200,
-   "debugId": "f5161037d7656",
-   "ms": 1297,
+   "debugId": "f5458645eaca0",
+   "ms": 573,
    "response": {
-    "status": "PARTIALLY_REFUNDED",
-    "id": "2JK13464BF925663Y",
+    "status": "PENDING",
+    "statusDetails": {
+     "reason": "BUYER_COMPLAINT"
+    },
+    "id": "0MK5861822957405D",
     "amount": {
      "currencyCode": "USD",
-     "value": "62.00"
+     "value": "184.00"
     },
-    "invoiceId": "JM-1042",
-    "customId": "planter-not-as-described",
+    "invoiceId": "JM-3041",
+    "customId": "fig-not-received",
     "sellerProtection": {
      "status": "ELIGIBLE",
      "disputeCategories": [
@@ -509,42 +3078,28 @@
      ]
     },
     "finalCapture": true,
-    "sellerReceivableBreakdown": {
-     "grossAmount": {
-      "currencyCode": "USD",
-      "value": "62.00"
-     },
-     "paypalFee": {
-      "currencyCode": "USD",
-      "value": "2.65"
-     },
-     "netAmount": {
-      "currencyCode": "USD",
-      "value": "59.35"
-     }
-    },
     "links": [
      {
-      "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y",
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/0MK5861822957405D",
       "rel": "self",
       "method": "GET"
      },
      {
-      "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y/refund",
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/0MK5861822957405D/refund",
       "rel": "refund",
       "method": "POST"
      },
      {
-      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J",
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/31P22815RD966925G",
       "rel": "up",
       "method": "GET"
      }
     ],
-    "createTime": "2026-11-10T15:17:59Z",
-    "updateTime": "2026-11-10T16:37:03Z",
+    "createTime": "2026-11-10T16:31:30Z",
+    "updateTime": "2026-11-10T16:49:04Z",
     "supplementaryData": {
      "relatedIds": {
-      "orderId": "6B4215973U738122J"
+      "orderId": "31P22815RD966925G"
      }
     },
     "payee": {
@@ -553,14 +3108,14 @@
     }
    }
   },
-  "/v2/checkout/orders/6B4215973U738122J": {
+  "/v2/checkout/orders/31P22815RD966925G": {
    "status": 200,
-   "debugId": "f356345373939",
+   "debugId": "f162266faf398",
    "ms": 688,
    "response": {
-    "createTime": "2026-11-10T15:17:59Z",
-    "updateTime": "2026-11-10T16:37:03Z",
-    "id": "6B4215973U738122J",
+    "createTime": "2026-11-10T16:31:30Z",
+    "updateTime": "2026-11-10T16:49:04Z",
+    "id": "31P22815RD966925G",
     "paymentSource": {
      "paypal": {
       "emailAddress": "buyer@example.com",
@@ -589,7 +3144,288 @@
     },
     "purchaseUnits": [
      {
-      "referenceId": "JM-1042",
+      "referenceId": "JM-3041",
+      "amount": {
+       "currencyCode": "USD",
+       "value": "184.00",
+       "breakdown": {
+        "itemTotal": {
+         "currencyCode": "USD",
+         "value": "184.00"
+        }
+       }
+      },
+      "payee": {
+       "emailAddress": "seller@juniperandmoss.example",
+       "merchantId": "B86SUP6NGTBX2"
+      },
+      "description": "Juniper & Moss: Fiddle Leaf Fig, 10 inch floor plant",
+      "customId": "fig-not-received",
+      "invoiceId": "JM-3041",
+      "items": [
+       {
+        "name": "Fiddle Leaf Fig, 10 inch floor plant",
+        "unitAmount": {
+         "currencyCode": "USD",
+         "value": "184.00"
+        },
+        "quantity": "1",
+        "description": "A tall statement plant, shipped in its nursery pot with a moisture sleeve.",
+        "sku": "JM-FIG-10",
+        "category": "PHYSICAL_GOODS"
+       }
+      ],
+      "shipping": {
+       "trackers": [
+        {
+         "id": "0MK5861822957405D-HBP304126704US",
+         "status": "SHIPPED",
+         "items": [],
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/31P22815RD966925G",
+           "rel": "up",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/31P22815RD966925G/trackers/0MK5861822957405D-HBP304126704US",
+           "rel": "update",
+           "method": "PATCH"
+          }
+         ]
+        }
+       ],
+       "name": {
+        "fullName": "Priya Raman"
+       },
+       "address": {
+        "addressLine1": "2217 Larkspur Ave",
+        "adminArea2": "Sacramento",
+        "adminArea1": "CA",
+        "postalCode": "95818",
+        "countryCode": "US"
+       }
+      },
+      "payments": {
+       "captures": [
+        {
+         "status": "PENDING",
+         "statusDetails": {
+          "reason": "BUYER_COMPLAINT"
+         },
+         "id": "0MK5861822957405D",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "184.00"
+         },
+         "invoiceId": "JM-3041",
+         "customId": "fig-not-received",
+         "sellerProtection": {
+          "status": "ELIGIBLE",
+          "disputeCategories": [
+           "ITEM_NOT_RECEIVED",
+           "UNAUTHORIZED_TRANSACTION"
+          ]
+         },
+         "finalCapture": true,
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/0MK5861822957405D",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/0MK5861822957405D/refund",
+           "rel": "refund",
+           "method": "POST"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/31P22815RD966925G",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T16:31:30Z",
+         "updateTime": "2026-11-10T16:49:04Z"
+        }
+       ],
+       "refunds": [
+        {
+         "status": "PENDING",
+         "id": "4SG57591CD8810420",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "177.09"
+         },
+         "invoiceId": "JM-3041",
+         "customId": "fig-not-received",
+         "sellerPayableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "177.09"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "177.09"
+          },
+          "platformFees": [
+           {
+            "amount": {
+             "currencyCode": "USD",
+             "value": "0.00"
+            }
+           }
+          ],
+          "totalRefundedAmount": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/4SG57591CD8810420",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/0MK5861822957405D",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T08:36:33-08:00",
+         "updateTime": "2026-11-10T08:36:33-08:00"
+        }
+       ]
+      }
+     }
+    ],
+    "status": "COMPLETED",
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/31P22815RD966925G",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v1/reporting/transactions?transaction_id=0MK5861822957405D": {
+   "status": 200,
+   "debugId": "f3997503b6646",
+   "ms": 421,
+   "response": {
+    "accountNumber": "B86SUP6NGTBX2",
+    "startDate": "2026-11-08T16:31:30Z",
+    "endDate": "2026-11-10T14:59:59Z",
+    "lastRefreshedDatetime": "2026-11-10T14:59:59Z",
+    "page": 1,
+    "totalItems": 0,
+    "totalPages": 0,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?end_date=2026-11-10T17%3A02%3A36Z&transaction_id=0MK5861822957405D&fields=all&start_date=2026-11-08T16%3A31%3A30Z&page_size=10&page=1",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v2/payments/captures/9H2634727Y842913S": {
+   "status": 200,
+   "debugId": "f662748562f28",
+   "ms": 573,
+   "response": {
+    "status": "PENDING",
+    "statusDetails": {
+     "reason": "BUYER_COMPLAINT"
+    },
+    "id": "9H2634727Y842913S",
+    "amount": {
+     "currencyCode": "USD",
+     "value": "62.00"
+    },
+    "invoiceId": "JM-3042",
+    "customId": "planter-not-as-described",
+    "sellerProtection": {
+     "status": "ELIGIBLE",
+     "disputeCategories": [
+      "ITEM_NOT_RECEIVED",
+      "UNAUTHORIZED_TRANSACTION"
+     ]
+    },
+    "finalCapture": true,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/9H2634727Y842913S",
+      "rel": "self",
+      "method": "GET"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/9H2634727Y842913S/refund",
+      "rel": "refund",
+      "method": "POST"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/9G8978478P113712P",
+      "rel": "up",
+      "method": "GET"
+     }
+    ],
+    "createTime": "2026-11-10T16:33:34Z",
+    "updateTime": "2026-11-10T16:38:03Z",
+    "supplementaryData": {
+     "relatedIds": {
+      "orderId": "9G8978478P113712P"
+     }
+    },
+    "payee": {
+     "emailAddress": "seller@juniperandmoss.example",
+     "merchantId": "B86SUP6NGTBX2"
+    }
+   }
+  },
+  "/v2/checkout/orders/9G8978478P113712P": {
+   "status": 200,
+   "debugId": "f41633493397b",
+   "ms": 781,
+   "response": {
+    "createTime": "2026-11-10T16:33:34Z",
+    "updateTime": "2026-11-10T16:38:03Z",
+    "id": "9G8978478P113712P",
+    "paymentSource": {
+     "paypal": {
+      "emailAddress": "buyer@example.com",
+      "accountId": "SHB5GFLEDVTY6",
+      "accountStatus": "VERIFIED",
+      "name": {
+       "givenName": "Test",
+       "surname": "Buyer"
+      },
+      "address": {
+       "countryCode": "US"
+      }
+     }
+    },
+    "intent": "CAPTURE",
+    "payer": {
+     "emailAddress": "buyer@example.com",
+     "payerId": "SHB5GFLEDVTY6",
+     "name": {
+      "givenName": "Test",
+      "surname": "Buyer"
+     },
+     "address": {
+      "countryCode": "US"
+     }
+    },
+    "purchaseUnits": [
+     {
+      "referenceId": "JM-3042",
       "amount": {
        "currencyCode": "USD",
        "value": "62.00",
@@ -606,7 +3442,7 @@
       },
       "description": "Juniper & Moss: Speckled Ceramic Planter, 8 inch",
       "customId": "planter-not-as-described",
-      "invoiceId": "JM-1042",
+      "invoiceId": "JM-3042",
       "items": [
        {
         "name": "Speckled Ceramic Planter, 8 inch",
@@ -623,17 +3459,17 @@
       "shipping": {
        "trackers": [
         {
-         "id": "2JK13464BF925663Y-NLP104290056US",
+         "id": "9H2634727Y842913S-NLP304290056US",
          "status": "SHIPPED",
          "items": [],
          "links": [
           {
-           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J",
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/9G8978478P113712P",
            "rel": "up",
            "method": "GET"
           },
           {
-           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J/trackers/2JK13464BF925663Y-NLP104290056US",
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/9G8978478P113712P/trackers/9H2634727Y842913S-NLP304290056US",
            "rel": "update",
            "method": "PATCH"
           }
@@ -654,13 +3490,16 @@
       "payments": {
        "captures": [
         {
-         "status": "PARTIALLY_REFUNDED",
-         "id": "2JK13464BF925663Y",
+         "status": "PENDING",
+         "statusDetails": {
+          "reason": "BUYER_COMPLAINT"
+         },
+         "id": "9H2634727Y842913S",
          "amount": {
           "currencyCode": "USD",
           "value": "62.00"
          },
-         "invoiceId": "JM-1042",
+         "invoiceId": "JM-3042",
          "customId": "planter-not-as-described",
          "sellerProtection": {
           "status": "ELIGIBLE",
@@ -670,103 +3509,37 @@
           ]
          },
          "finalCapture": true,
-         "sellerReceivableBreakdown": {
-          "grossAmount": {
-           "currencyCode": "USD",
-           "value": "62.00"
-          },
-          "paypalFee": {
-           "currencyCode": "USD",
-           "value": "2.65"
-          },
-          "netAmount": {
-           "currencyCode": "USD",
-           "value": "59.35"
-          }
-         },
          "links": [
           {
-           "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y",
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/9H2634727Y842913S",
            "rel": "self",
            "method": "GET"
           },
           {
-           "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y/refund",
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/9H2634727Y842913S/refund",
            "rel": "refund",
            "method": "POST"
           },
           {
-           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J",
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/9G8978478P113712P",
            "rel": "up",
            "method": "GET"
           }
          ],
-         "createTime": "2026-11-10T15:17:59Z",
-         "updateTime": "2026-11-10T16:37:03Z"
+         "createTime": "2026-11-10T16:33:34Z",
+         "updateTime": "2026-11-10T16:38:03Z"
         }
        ],
        "refunds": [
         {
-         "status": "COMPLETED",
-         "id": "0CK1135812738554A",
-         "amount": {
-          "currencyCode": "USD",
-          "value": "31.00"
-         },
-         "invoiceId": "JM-1042",
-         "customId": "planter-not-as-described",
-         "noteToPayer": "31.0 USD; 2026-11-10 Credit has been processed and claim is now closed. Please refer Dispute ID PP-R-KBX-10198048. Thank you.",
-         "sellerPayableBreakdown": {
-          "grossAmount": {
-           "currencyCode": "USD",
-           "value": "31.00"
-          },
-          "paypalFee": {
-           "currencyCode": "USD",
-           "value": "0.00"
-          },
-          "netAmount": {
-           "currencyCode": "USD",
-           "value": "31.00"
-          },
-          "platformFees": [
-           {
-            "amount": {
-             "currencyCode": "USD",
-             "value": "0.00"
-            }
-           }
-          ],
-          "totalRefundedAmount": {
-           "currencyCode": "USD",
-           "value": "31.00"
-          }
-         },
-         "links": [
-          {
-           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/0CK1135812738554A",
-           "rel": "self",
-           "method": "GET"
-          },
-          {
-           "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y",
-           "rel": "up",
-           "method": "GET"
-          }
-         ],
-         "createTime": "2026-11-10T08:37:03-08:00",
-         "updateTime": "2026-11-10T08:37:03-08:00"
-        },
-        {
-         "status": "FAILED",
-         "id": "6H204244WP3341437",
+         "status": "PENDING",
+         "id": "9TP46928EL333942V",
          "amount": {
           "currencyCode": "USD",
           "value": "59.35"
          },
-         "invoiceId": "JM-1042",
+         "invoiceId": "JM-3042",
          "customId": "planter-not-as-described",
-         "noteToPayer": "31.0 USD; 2026-11-10 Credit has been processed and claim is now closed. Please refer Dispute ID PP-R-KBX-10198048. Thank you.",
          "sellerPayableBreakdown": {
           "grossAmount": {
            "currencyCode": "USD",
@@ -790,23 +3563,23 @@
           ],
           "totalRefundedAmount": {
            "currencyCode": "USD",
-           "value": "31.00"
+           "value": "0.00"
           }
          },
          "links": [
           {
-           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/6H204244WP3341437",
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/9TP46928EL333942V",
            "rel": "self",
            "method": "GET"
           },
           {
-           "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y",
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/9H2634727Y842913S",
            "rel": "up",
            "method": "GET"
           }
          ],
-         "createTime": "2026-11-10T07:30:33-08:00",
-         "updateTime": "2026-11-10T08:37:03-08:00"
+         "createTime": "2026-11-10T08:38:03-08:00",
+         "updateTime": "2026-11-10T08:38:03-08:00"
         }
        ]
       }
@@ -815,28 +3588,1414 @@
     "status": "COMPLETED",
     "links": [
      {
-      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J",
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/9G8978478P113712P",
       "rel": "self",
       "method": "GET"
      }
     ]
    }
   },
-  "/v1/reporting/transactions?transaction_id=2JK13464BF925663Y": {
+  "/v1/reporting/transactions?transaction_id=9H2634727Y842913S": {
    "status": 200,
-   "debugId": "f50549349c682",
-   "ms": 415,
+   "debugId": "f382829304683",
+   "ms": 436,
    "response": {
     "accountNumber": "B86SUP6NGTBX2",
-    "startDate": "2026-11-08T15:17:59Z",
-    "endDate": "2026-11-10T14:29:59Z",
-    "lastRefreshedDatetime": "2026-11-10T14:29:59Z",
+    "startDate": "2026-11-08T16:33:34Z",
+    "endDate": "2026-11-10T14:59:59Z",
+    "lastRefreshedDatetime": "2026-11-10T14:59:59Z",
     "page": 1,
     "totalItems": 0,
     "totalPages": 0,
     "links": [
      {
-      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?start_date=2026-11-08T15%3A17%3A59Z&fields=all&transaction_id=2JK13464BF925663Y&end_date=2026-11-10T16%3A38%3A22Z&page_size=10&page=1",
+      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?start_date=2026-11-08T16%3A33%3A34Z&end_date=2026-11-10T17%3A02%3A21Z&fields=all&transaction_id=9H2634727Y842913S&page_size=10&page=1",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v2/payments/captures/09N195712B631093T": {
+   "status": 200,
+   "debugId": "f8159674c821f",
+   "ms": 506,
+   "response": {
+    "status": "PENDING",
+    "statusDetails": {
+     "reason": "BUYER_COMPLAINT"
+    },
+    "id": "09N195712B631093T",
+    "amount": {
+     "currencyCode": "USD",
+     "value": "12.00"
+    },
+    "invoiceId": "JM-3043",
+    "customId": "mini-succulent-not-received",
+    "sellerProtection": {
+     "status": "ELIGIBLE",
+     "disputeCategories": [
+      "ITEM_NOT_RECEIVED",
+      "UNAUTHORIZED_TRANSACTION"
+     ]
+    },
+    "finalCapture": true,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/09N195712B631093T",
+      "rel": "self",
+      "method": "GET"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/09N195712B631093T/refund",
+      "rel": "refund",
+      "method": "POST"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6N9759104Y820122V",
+      "rel": "up",
+      "method": "GET"
+     }
+    ],
+    "createTime": "2026-11-10T16:35:03Z",
+    "updateTime": "2026-11-10T16:39:34Z",
+    "supplementaryData": {
+     "relatedIds": {
+      "orderId": "6N9759104Y820122V"
+     }
+    },
+    "payee": {
+     "emailAddress": "seller@juniperandmoss.example",
+     "merchantId": "B86SUP6NGTBX2"
+    }
+   }
+  },
+  "/v2/checkout/orders/6N9759104Y820122V": {
+   "status": 200,
+   "debugId": "f8159677d74a2",
+   "ms": 505,
+   "response": {
+    "createTime": "2026-11-10T16:35:03Z",
+    "updateTime": "2026-11-10T16:39:34Z",
+    "id": "6N9759104Y820122V",
+    "paymentSource": {
+     "paypal": {
+      "emailAddress": "buyer@example.com",
+      "accountId": "SHB5GFLEDVTY6",
+      "accountStatus": "VERIFIED",
+      "name": {
+       "givenName": "Test",
+       "surname": "Buyer"
+      },
+      "address": {
+       "countryCode": "US"
+      }
+     }
+    },
+    "intent": "CAPTURE",
+    "payer": {
+     "emailAddress": "buyer@example.com",
+     "payerId": "SHB5GFLEDVTY6",
+     "name": {
+      "givenName": "Test",
+      "surname": "Buyer"
+     },
+     "address": {
+      "countryCode": "US"
+     }
+    },
+    "purchaseUnits": [
+     {
+      "referenceId": "JM-3043",
+      "amount": {
+       "currencyCode": "USD",
+       "value": "12.00",
+       "breakdown": {
+        "itemTotal": {
+         "currencyCode": "USD",
+         "value": "12.00"
+        }
+       }
+      },
+      "payee": {
+       "emailAddress": "seller@juniperandmoss.example",
+       "merchantId": "B86SUP6NGTBX2"
+      },
+      "description": "Juniper & Moss: Mini Succulent, 2 inch pot",
+      "customId": "mini-succulent-not-received",
+      "invoiceId": "JM-3043",
+      "items": [
+       {
+        "name": "Mini Succulent, 2 inch pot",
+        "unitAmount": {
+         "currencyCode": "USD",
+         "value": "12.00"
+        },
+        "quantity": "1",
+        "description": "One small succulent, picked from this week's batch.",
+        "sku": "JM-SUC-1",
+        "category": "PHYSICAL_GOODS"
+       }
+      ],
+      "shipping": {
+       "name": {
+        "fullName": "Dana Whitlock"
+       },
+       "address": {
+        "addressLine1": "64 Tamarack Ct",
+        "adminArea2": "Denver",
+        "adminArea1": "CO",
+        "postalCode": "80205",
+        "countryCode": "US"
+       }
+      },
+      "payments": {
+       "captures": [
+        {
+         "status": "PENDING",
+         "statusDetails": {
+          "reason": "BUYER_COMPLAINT"
+         },
+         "id": "09N195712B631093T",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "12.00"
+         },
+         "invoiceId": "JM-3043",
+         "customId": "mini-succulent-not-received",
+         "sellerProtection": {
+          "status": "ELIGIBLE",
+          "disputeCategories": [
+           "ITEM_NOT_RECEIVED",
+           "UNAUTHORIZED_TRANSACTION"
+          ]
+         },
+         "finalCapture": true,
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/09N195712B631093T",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/09N195712B631093T/refund",
+           "rel": "refund",
+           "method": "POST"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6N9759104Y820122V",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T16:35:03Z",
+         "updateTime": "2026-11-10T16:39:34Z"
+        }
+       ],
+       "refunds": [
+        {
+         "status": "PENDING",
+         "id": "3HC5496353160111K",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "11.09"
+         },
+         "invoiceId": "JM-3043",
+         "customId": "mini-succulent-not-received",
+         "sellerPayableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "11.09"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "11.09"
+          },
+          "platformFees": [
+           {
+            "amount": {
+             "currencyCode": "USD",
+             "value": "0.00"
+            }
+           }
+          ],
+          "totalRefundedAmount": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/3HC5496353160111K",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/09N195712B631093T",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T08:39:34-08:00",
+         "updateTime": "2026-11-10T08:39:34-08:00"
+        }
+       ]
+      }
+     }
+    ],
+    "status": "COMPLETED",
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6N9759104Y820122V",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v1/reporting/transactions?transaction_id=09N195712B631093T": {
+   "status": 200,
+   "debugId": "f666557a5f9b2",
+   "ms": 558,
+   "response": {
+    "accountNumber": "B86SUP6NGTBX2",
+    "startDate": "2026-11-08T16:35:03Z",
+    "endDate": "2026-11-10T14:59:59Z",
+    "lastRefreshedDatetime": "2026-11-10T14:59:59Z",
+    "page": 1,
+    "totalItems": 0,
+    "totalPages": 0,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?transaction_id=09N195712B631093T&end_date=2026-11-10T17%3A02%3A23Z&fields=all&start_date=2026-11-08T16%3A35%3A03Z&page_size=10&page=1",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v2/payments/captures/31688083E0352124T": {
+   "status": 200,
+   "debugId": "f99880817eaf4",
+   "ms": 1712,
+   "response": {
+    "status": "PENDING",
+    "statusDetails": {
+     "reason": "BUYER_COMPLAINT"
+    },
+    "id": "31688083E0352124T",
+    "amount": {
+     "currencyCode": "USD",
+     "value": "38.00"
+    },
+    "invoiceId": "JM-3046",
+    "customId": "terracotta-set-not-received",
+    "sellerProtection": {
+     "status": "ELIGIBLE",
+     "disputeCategories": [
+      "ITEM_NOT_RECEIVED",
+      "UNAUTHORIZED_TRANSACTION"
+     ]
+    },
+    "finalCapture": true,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/31688083E0352124T",
+      "rel": "self",
+      "method": "GET"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/31688083E0352124T/refund",
+      "rel": "refund",
+      "method": "POST"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6UB63895S3056054L",
+      "rel": "up",
+      "method": "GET"
+     }
+    ],
+    "createTime": "2026-11-10T16:38:12Z",
+    "updateTime": "2026-11-10T16:49:04Z",
+    "supplementaryData": {
+     "relatedIds": {
+      "orderId": "6UB63895S3056054L"
+     }
+    },
+    "payee": {
+     "emailAddress": "seller@juniperandmoss.example",
+     "merchantId": "B86SUP6NGTBX2"
+    }
+   }
+  },
+  "/v2/checkout/orders/6UB63895S3056054L": {
+   "status": 200,
+   "debugId": "ca587098c396c",
+   "ms": 1685,
+   "response": {
+    "createTime": "2026-11-10T16:38:12Z",
+    "updateTime": "2026-11-10T16:49:04Z",
+    "id": "6UB63895S3056054L",
+    "paymentSource": {
+     "paypal": {
+      "emailAddress": "buyer@example.com",
+      "accountId": "SHB5GFLEDVTY6",
+      "accountStatus": "VERIFIED",
+      "name": {
+       "givenName": "Test",
+       "surname": "Buyer"
+      },
+      "address": {
+       "countryCode": "US"
+      }
+     }
+    },
+    "intent": "CAPTURE",
+    "payer": {
+     "emailAddress": "buyer@example.com",
+     "payerId": "SHB5GFLEDVTY6",
+     "name": {
+      "givenName": "Test",
+      "surname": "Buyer"
+     },
+     "address": {
+      "countryCode": "US"
+     }
+    },
+    "purchaseUnits": [
+     {
+      "referenceId": "JM-3046",
+      "amount": {
+       "currencyCode": "USD",
+       "value": "38.00",
+       "breakdown": {
+        "itemTotal": {
+         "currencyCode": "USD",
+         "value": "38.00"
+        }
+       }
+      },
+      "payee": {
+       "emailAddress": "seller@juniperandmoss.example",
+       "merchantId": "B86SUP6NGTBX2"
+      },
+      "description": "Juniper & Moss: Terracotta Pot Set of 3",
+      "customId": "terracotta-set-not-received",
+      "invoiceId": "JM-3046",
+      "items": [
+       {
+        "name": "Terracotta Pot Set of 3",
+        "unitAmount": {
+         "currencyCode": "USD",
+         "value": "38.00"
+        },
+        "quantity": "1",
+        "description": "Three classic clay pots: 4, 6 and 8 inch.",
+        "sku": "JM-TER-3",
+        "category": "PHYSICAL_GOODS"
+       }
+      ],
+      "shipping": {
+       "trackers": [
+        {
+         "id": "31688083E0352124T-NLP304613813US",
+         "status": "SHIPPED",
+         "items": [],
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6UB63895S3056054L",
+           "rel": "up",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6UB63895S3056054L/trackers/31688083E0352124T-NLP304613813US",
+           "rel": "update",
+           "method": "PATCH"
+          }
+         ]
+        }
+       ],
+       "name": {
+        "fullName": "Imani Carter"
+       },
+       "address": {
+        "addressLine1": "712 Wrightwood Ln",
+        "adminArea2": "Chicago",
+        "adminArea1": "IL",
+        "postalCode": "60614",
+        "countryCode": "US"
+       }
+      },
+      "payments": {
+       "captures": [
+        {
+         "status": "PENDING",
+         "statusDetails": {
+          "reason": "BUYER_COMPLAINT"
+         },
+         "id": "31688083E0352124T",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "38.00"
+         },
+         "invoiceId": "JM-3046",
+         "customId": "terracotta-set-not-received",
+         "sellerProtection": {
+          "status": "ELIGIBLE",
+          "disputeCategories": [
+           "ITEM_NOT_RECEIVED",
+           "UNAUTHORIZED_TRANSACTION"
+          ]
+         },
+         "finalCapture": true,
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/31688083E0352124T",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/31688083E0352124T/refund",
+           "rel": "refund",
+           "method": "POST"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6UB63895S3056054L",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T16:38:12Z",
+         "updateTime": "2026-11-10T16:49:04Z"
+        }
+       ],
+       "refunds": [
+        {
+         "status": "PENDING",
+         "id": "9DF76882KS504694C",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "36.18"
+         },
+         "invoiceId": "JM-3046",
+         "customId": "terracotta-set-not-received",
+         "sellerPayableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "36.18"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "36.18"
+          },
+          "platformFees": [
+           {
+            "amount": {
+             "currencyCode": "USD",
+             "value": "0.00"
+            }
+           }
+          ],
+          "totalRefundedAmount": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/9DF76882KS504694C",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/31688083E0352124T",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T08:43:03-08:00",
+         "updateTime": "2026-11-10T08:43:03-08:00"
+        }
+       ]
+      }
+     }
+    ],
+    "status": "COMPLETED",
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6UB63895S3056054L",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v1/reporting/transactions?transaction_id=31688083E0352124T": {
+   "status": 200,
+   "debugId": "f125070703c02",
+   "ms": 912,
+   "response": {
+    "accountNumber": "B86SUP6NGTBX2",
+    "startDate": "2026-11-08T16:38:12Z",
+    "endDate": "2026-11-10T15:59:59Z",
+    "lastRefreshedDatetime": "2026-11-10T15:59:59Z",
+    "page": 1,
+    "totalItems": 0,
+    "totalPages": 0,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?fields=all&end_date=2026-11-10T18%3A14%3A32Z&transaction_id=31688083E0352124T&start_date=2026-11-08T16%3A38%3A12Z&page_size=10&page=1",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v2/payments/captures/0GH438056B116751A": {
+   "status": 200,
+   "debugId": "f71377433ba37",
+   "ms": 613,
+   "response": {
+    "status": "PENDING",
+    "statusDetails": {
+     "reason": "BUYER_COMPLAINT"
+    },
+    "id": "0GH438056B116751A",
+    "amount": {
+     "currencyCode": "USD",
+     "value": "42.00"
+    },
+    "invoiceId": "JM-3049",
+    "customId": "calathea-wrong-plant",
+    "sellerProtection": {
+     "status": "ELIGIBLE",
+     "disputeCategories": [
+      "ITEM_NOT_RECEIVED",
+      "UNAUTHORIZED_TRANSACTION"
+     ]
+    },
+    "finalCapture": true,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/0GH438056B116751A",
+      "rel": "self",
+      "method": "GET"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/0GH438056B116751A/refund",
+      "rel": "refund",
+      "method": "POST"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/03N10913TJ407911P",
+      "rel": "up",
+      "method": "GET"
+     }
+    ],
+    "createTime": "2026-11-10T16:41:08Z",
+    "updateTime": "2026-11-10T16:45:33Z",
+    "supplementaryData": {
+     "relatedIds": {
+      "orderId": "03N10913TJ407911P"
+     }
+    },
+    "payee": {
+     "emailAddress": "seller@juniperandmoss.example",
+     "merchantId": "B86SUP6NGTBX2"
+    }
+   }
+  },
+  "/v2/checkout/orders/03N10913TJ407911P": {
+   "status": 200,
+   "debugId": "f5901512d8670",
+   "ms": 647,
+   "response": {
+    "createTime": "2026-11-10T16:41:08Z",
+    "updateTime": "2026-11-10T16:45:33Z",
+    "id": "03N10913TJ407911P",
+    "paymentSource": {
+     "paypal": {
+      "emailAddress": "buyer@example.com",
+      "accountId": "SHB5GFLEDVTY6",
+      "accountStatus": "VERIFIED",
+      "name": {
+       "givenName": "Test",
+       "surname": "Buyer"
+      },
+      "address": {
+       "countryCode": "US"
+      }
+     }
+    },
+    "intent": "CAPTURE",
+    "payer": {
+     "emailAddress": "buyer@example.com",
+     "payerId": "SHB5GFLEDVTY6",
+     "name": {
+      "givenName": "Test",
+      "surname": "Buyer"
+     },
+     "address": {
+      "countryCode": "US"
+     }
+    },
+    "purchaseUnits": [
+     {
+      "referenceId": "JM-3049",
+      "amount": {
+       "currencyCode": "USD",
+       "value": "42.00",
+       "breakdown": {
+        "itemTotal": {
+         "currencyCode": "USD",
+         "value": "42.00"
+        }
+       }
+      },
+      "payee": {
+       "emailAddress": "seller@juniperandmoss.example",
+       "merchantId": "B86SUP6NGTBX2"
+      },
+      "description": "Juniper & Moss: Calathea Medallion, 6 inch pot",
+      "customId": "calathea-wrong-plant",
+      "invoiceId": "JM-3049",
+      "items": [
+       {
+        "name": "Calathea Medallion, 6 inch pot",
+        "unitAmount": {
+         "currencyCode": "USD",
+         "value": "42.00"
+        },
+        "quantity": "1",
+        "description": "Patterned leaves that fold up at night.",
+        "sku": "JM-CAL-6",
+        "category": "PHYSICAL_GOODS"
+       }
+      ],
+      "shipping": {
+       "trackers": [
+        {
+         "id": "0GH438056B116751A-HBP304958380US",
+         "status": "SHIPPED",
+         "items": [],
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/03N10913TJ407911P",
+           "rel": "up",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/03N10913TJ407911P/trackers/0GH438056B116751A-HBP304958380US",
+           "rel": "update",
+           "method": "PATCH"
+          }
+         ]
+        }
+       ],
+       "name": {
+        "fullName": "Noor Haddad"
+       },
+       "address": {
+        "addressLine1": "118 Sycamore Bend",
+        "adminArea2": "Atlanta",
+        "adminArea1": "GA",
+        "postalCode": "30307",
+        "countryCode": "US"
+       }
+      },
+      "payments": {
+       "captures": [
+        {
+         "status": "PENDING",
+         "statusDetails": {
+          "reason": "BUYER_COMPLAINT"
+         },
+         "id": "0GH438056B116751A",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "42.00"
+         },
+         "invoiceId": "JM-3049",
+         "customId": "calathea-wrong-plant",
+         "sellerProtection": {
+          "status": "ELIGIBLE",
+          "disputeCategories": [
+           "ITEM_NOT_RECEIVED",
+           "UNAUTHORIZED_TRANSACTION"
+          ]
+         },
+         "finalCapture": true,
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/0GH438056B116751A",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/0GH438056B116751A/refund",
+           "rel": "refund",
+           "method": "POST"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/03N10913TJ407911P",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T16:41:08Z",
+         "updateTime": "2026-11-10T16:45:33Z"
+        }
+       ],
+       "refunds": [
+        {
+         "status": "PENDING",
+         "id": "7LV765296S310815R",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "40.04"
+         },
+         "invoiceId": "JM-3049",
+         "customId": "calathea-wrong-plant",
+         "sellerPayableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "40.04"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "40.04"
+          },
+          "platformFees": [
+           {
+            "amount": {
+             "currencyCode": "USD",
+             "value": "0.00"
+            }
+           }
+          ],
+          "totalRefundedAmount": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/7LV765296S310815R",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/0GH438056B116751A",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T08:45:33-08:00",
+         "updateTime": "2026-11-10T08:45:33-08:00"
+        }
+       ]
+      }
+     }
+    ],
+    "status": "COMPLETED",
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/03N10913TJ407911P",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v1/reporting/transactions?transaction_id=0GH438056B116751A": {
+   "status": 200,
+   "debugId": "f590151991829",
+   "ms": 623,
+   "response": {
+    "accountNumber": "B86SUP6NGTBX2",
+    "startDate": "2026-11-08T16:41:08Z",
+    "endDate": "2026-11-10T14:59:59Z",
+    "lastRefreshedDatetime": "2026-11-10T14:59:59Z",
+    "page": 1,
+    "totalItems": 0,
+    "totalPages": 0,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?start_date=2026-11-08T16%3A41%3A08Z&end_date=2026-11-10T17%3A02%3A16Z&transaction_id=0GH438056B116751A&fields=all&page_size=10&page=1",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v2/payments/captures/5TW87703UE092212G": {
+   "status": 200,
+   "debugId": "f955536789b13",
+   "ms": 600,
+   "response": {
+    "status": "PENDING",
+    "statusDetails": {
+     "reason": "BUYER_COMPLAINT"
+    },
+    "id": "5TW87703UE092212G",
+    "amount": {
+     "currencyCode": "USD",
+     "value": "48.00"
+    },
+    "invoiceId": "JM-3045",
+    "customId": "monstera-damaged",
+    "sellerProtection": {
+     "status": "ELIGIBLE",
+     "disputeCategories": [
+      "ITEM_NOT_RECEIVED",
+      "UNAUTHORIZED_TRANSACTION"
+     ]
+    },
+    "finalCapture": true,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/5TW87703UE092212G",
+      "rel": "self",
+      "method": "GET"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/5TW87703UE092212G/refund",
+      "rel": "refund",
+      "method": "POST"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/1N083653CV339323W",
+      "rel": "up",
+      "method": "GET"
+     }
+    ],
+    "createTime": "2026-11-10T16:36:44Z",
+    "updateTime": "2026-11-10T16:41:33Z",
+    "supplementaryData": {
+     "relatedIds": {
+      "orderId": "1N083653CV339323W"
+     }
+    },
+    "payee": {
+     "emailAddress": "seller@juniperandmoss.example",
+     "merchantId": "B86SUP6NGTBX2"
+    }
+   }
+  },
+  "/v2/checkout/orders/1N083653CV339323W": {
+   "status": 200,
+   "debugId": "f955536355721",
+   "ms": 662,
+   "response": {
+    "createTime": "2026-11-10T16:36:44Z",
+    "updateTime": "2026-11-10T16:41:33Z",
+    "id": "1N083653CV339323W",
+    "paymentSource": {
+     "paypal": {
+      "emailAddress": "buyer@example.com",
+      "accountId": "SHB5GFLEDVTY6",
+      "accountStatus": "VERIFIED",
+      "name": {
+       "givenName": "Test",
+       "surname": "Buyer"
+      },
+      "address": {
+       "countryCode": "US"
+      }
+     }
+    },
+    "intent": "CAPTURE",
+    "payer": {
+     "emailAddress": "buyer@example.com",
+     "payerId": "SHB5GFLEDVTY6",
+     "name": {
+      "givenName": "Test",
+      "surname": "Buyer"
+     },
+     "address": {
+      "countryCode": "US"
+     }
+    },
+    "purchaseUnits": [
+     {
+      "referenceId": "JM-3045",
+      "amount": {
+       "currencyCode": "USD",
+       "value": "48.00",
+       "breakdown": {
+        "itemTotal": {
+         "currencyCode": "USD",
+         "value": "48.00"
+        }
+       }
+      },
+      "payee": {
+       "emailAddress": "seller@juniperandmoss.example",
+       "merchantId": "B86SUP6NGTBX2"
+      },
+      "description": "Juniper & Moss: Monstera Deliciosa, 6 inch pot",
+      "customId": "monstera-damaged",
+      "invoiceId": "JM-3045",
+      "items": [
+       {
+        "name": "Monstera Deliciosa, 6 inch pot",
+        "unitAmount": {
+         "currencyCode": "USD",
+         "value": "48.00"
+        },
+        "quantity": "1",
+        "description": "The classic split-leaf plant, grown to fill a 6 inch pot.",
+        "sku": "JM-MON-6",
+        "category": "PHYSICAL_GOODS"
+       }
+      ],
+      "shipping": {
+       "trackers": [
+        {
+         "id": "5TW87703UE092212G-NLP304526704US",
+         "status": "SHIPPED",
+         "items": [],
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/1N083653CV339323W",
+           "rel": "up",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/1N083653CV339323W/trackers/5TW87703UE092212G-NLP304526704US",
+           "rel": "update",
+           "method": "PATCH"
+          }
+         ]
+        }
+       ],
+       "name": {
+        "fullName": "Tobias Lindqvist"
+       },
+       "address": {
+        "addressLine1": "33 Garnet St",
+        "adminArea2": "Minneapolis",
+        "adminArea1": "MN",
+        "postalCode": "55408",
+        "countryCode": "US"
+       }
+      },
+      "payments": {
+       "captures": [
+        {
+         "status": "PENDING",
+         "statusDetails": {
+          "reason": "BUYER_COMPLAINT"
+         },
+         "id": "5TW87703UE092212G",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "48.00"
+         },
+         "invoiceId": "JM-3045",
+         "customId": "monstera-damaged",
+         "sellerProtection": {
+          "status": "ELIGIBLE",
+          "disputeCategories": [
+           "ITEM_NOT_RECEIVED",
+           "UNAUTHORIZED_TRANSACTION"
+          ]
+         },
+         "finalCapture": true,
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/5TW87703UE092212G",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/5TW87703UE092212G/refund",
+           "rel": "refund",
+           "method": "POST"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/1N083653CV339323W",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T16:36:44Z",
+         "updateTime": "2026-11-10T16:41:33Z"
+        }
+       ],
+       "refunds": [
+        {
+         "status": "PENDING",
+         "id": "7C614703B1449451M",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "45.83"
+         },
+         "invoiceId": "JM-3045",
+         "customId": "monstera-damaged",
+         "sellerPayableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "45.83"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "45.83"
+          },
+          "platformFees": [
+           {
+            "amount": {
+             "currencyCode": "USD",
+             "value": "0.00"
+            }
+           }
+          ],
+          "totalRefundedAmount": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/7C614703B1449451M",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/5TW87703UE092212G",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T08:41:33-08:00",
+         "updateTime": "2026-11-10T08:41:33-08:00"
+        }
+       ]
+      }
+     }
+    ],
+    "status": "COMPLETED",
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/1N083653CV339323W",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v1/reporting/transactions?transaction_id=5TW87703UE092212G": {
+   "status": 200,
+   "debugId": "f811969faa7af",
+   "ms": 507,
+   "response": {
+    "accountNumber": "B86SUP6NGTBX2",
+    "startDate": "2026-11-08T16:36:44Z",
+    "endDate": "2026-11-10T15:59:59Z",
+    "lastRefreshedDatetime": "2026-11-10T15:59:59Z",
+    "page": 1,
+    "totalItems": 0,
+    "totalPages": 0,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?end_date=2026-11-10T18%3A14%3A37Z&fields=all&start_date=2026-11-08T16%3A36%3A44Z&transaction_id=5TW87703UE092212G&page_size=10&page=1",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v2/payments/captures/1E716470680334407": {
+   "status": 200,
+   "debugId": "f377156c0512f",
+   "ms": 754,
+   "response": {
+    "status": "PENDING",
+    "statusDetails": {
+     "reason": "BUYER_COMPLAINT"
+    },
+    "id": "1E716470680334407",
+    "amount": {
+     "currencyCode": "USD",
+     "value": "56.00"
+    },
+    "invoiceId": "JM-3047",
+    "customId": "watering-can-returned",
+    "sellerProtection": {
+     "status": "ELIGIBLE",
+     "disputeCategories": [
+      "ITEM_NOT_RECEIVED",
+      "UNAUTHORIZED_TRANSACTION"
+     ]
+    },
+    "finalCapture": true,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/1E716470680334407",
+      "rel": "self",
+      "method": "GET"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/1E716470680334407/refund",
+      "rel": "refund",
+      "method": "POST"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/19A08334K7085615A",
+      "rel": "up",
+      "method": "GET"
+     }
+    ],
+    "createTime": "2026-11-10T16:39:40Z",
+    "updateTime": "2026-11-10T16:44:03Z",
+    "supplementaryData": {
+     "relatedIds": {
+      "orderId": "19A08334K7085615A"
+     }
+    },
+    "payee": {
+     "emailAddress": "seller@juniperandmoss.example",
+     "merchantId": "B86SUP6NGTBX2"
+    }
+   }
+  },
+  "/v2/checkout/orders/19A08334K7085615A": {
+   "status": 200,
+   "debugId": "f3771560dd76f",
+   "ms": 720,
+   "response": {
+    "createTime": "2026-11-10T16:39:40Z",
+    "updateTime": "2026-11-10T16:44:03Z",
+    "id": "19A08334K7085615A",
+    "paymentSource": {
+     "paypal": {
+      "emailAddress": "buyer@example.com",
+      "accountId": "SHB5GFLEDVTY6",
+      "accountStatus": "VERIFIED",
+      "name": {
+       "givenName": "Test",
+       "surname": "Buyer"
+      },
+      "address": {
+       "countryCode": "US"
+      }
+     }
+    },
+    "intent": "CAPTURE",
+    "payer": {
+     "emailAddress": "buyer@example.com",
+     "payerId": "SHB5GFLEDVTY6",
+     "name": {
+      "givenName": "Test",
+      "surname": "Buyer"
+     },
+     "address": {
+      "countryCode": "US"
+     }
+    },
+    "purchaseUnits": [
+     {
+      "referenceId": "JM-3047",
+      "amount": {
+       "currencyCode": "USD",
+       "value": "56.00",
+       "breakdown": {
+        "itemTotal": {
+         "currencyCode": "USD",
+         "value": "56.00"
+        }
+       }
+      },
+      "payee": {
+       "emailAddress": "seller@juniperandmoss.example",
+       "merchantId": "B86SUP6NGTBX2"
+      },
+      "description": "Juniper & Moss: Brass Watering Can, 1 litre",
+      "customId": "watering-can-returned",
+      "invoiceId": "JM-3047",
+      "items": [
+       {
+        "name": "Brass Watering Can, 1 litre",
+        "unitAmount": {
+         "currencyCode": "USD",
+         "value": "56.00"
+        },
+        "quantity": "1",
+        "description": "A long-spout indoor watering can.",
+        "sku": "JM-CAN-1L",
+        "category": "PHYSICAL_GOODS"
+       }
+      ],
+      "shipping": {
+       "trackers": [
+        {
+         "id": "1E716470680334407-NLP304766299US",
+         "status": "SHIPPED",
+         "items": [],
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/19A08334K7085615A",
+           "rel": "up",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/19A08334K7085615A/trackers/1E716470680334407-NLP304766299US",
+           "rel": "update",
+           "method": "PATCH"
+          }
+         ]
+        }
+       ],
+       "name": {
+        "fullName": "Gareth Monk"
+       },
+       "address": {
+        "addressLine1": "5 Sorrel Way",
+        "adminArea2": "Boston",
+        "adminArea1": "MA",
+        "postalCode": "02118",
+        "countryCode": "US"
+       }
+      },
+      "payments": {
+       "captures": [
+        {
+         "status": "PENDING",
+         "statusDetails": {
+          "reason": "BUYER_COMPLAINT"
+         },
+         "id": "1E716470680334407",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "56.00"
+         },
+         "invoiceId": "JM-3047",
+         "customId": "watering-can-returned",
+         "sellerProtection": {
+          "status": "ELIGIBLE",
+          "disputeCategories": [
+           "ITEM_NOT_RECEIVED",
+           "UNAUTHORIZED_TRANSACTION"
+          ]
+         },
+         "finalCapture": true,
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/1E716470680334407",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/1E716470680334407/refund",
+           "rel": "refund",
+           "method": "POST"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/19A08334K7085615A",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T16:39:40Z",
+         "updateTime": "2026-11-10T16:44:03Z"
+        }
+       ],
+       "refunds": [
+        {
+         "status": "PENDING",
+         "id": "04B47110WY233080A",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "53.56"
+         },
+         "invoiceId": "JM-3047",
+         "customId": "watering-can-returned",
+         "sellerPayableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "53.56"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "53.56"
+          },
+          "platformFees": [
+           {
+            "amount": {
+             "currencyCode": "USD",
+             "value": "0.00"
+            }
+           }
+          ],
+          "totalRefundedAmount": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/04B47110WY233080A",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/1E716470680334407",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T08:44:03-08:00",
+         "updateTime": "2026-11-10T08:44:03-08:00"
+        }
+       ]
+      }
+     }
+    ],
+    "status": "COMPLETED",
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/19A08334K7085615A",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v1/reporting/transactions?transaction_id=1E716470680334407": {
+   "status": 200,
+   "debugId": "f56504595cf71",
+   "ms": 533,
+   "response": {
+    "accountNumber": "B86SUP6NGTBX2",
+    "startDate": "2026-11-08T16:39:40Z",
+    "endDate": "2026-11-10T15:59:59Z",
+    "lastRefreshedDatetime": "2026-11-10T15:59:59Z",
+    "page": 1,
+    "totalItems": 0,
+    "totalPages": 0,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?transaction_id=1E716470680334407&end_date=2026-11-10T18%3A14%3A42Z&fields=all&start_date=2026-11-08T16%3A39%3A40Z&page_size=10&page=1",
       "rel": "self",
       "method": "GET"
      }
@@ -850,9 +5009,125 @@
    "text": "```json\n{\"verdict\":\"yes\",\"summary\":\"A cardboard parcel with a fragile label is sitting on a carpeted floor next to a door.\"}\n```",
    "kind": "vision"
   },
-  "explain:PP-R-KBX-10198048": {
+  "photo:delivery:/seed/photos/delivery-door-1.jpg": {
+   "model": "google/gemma-4-31B-it",
+   "text": "```json\n{\"verdict\":\"yes\",\"summary\":\"A cardboard parcel with a fragile sticker is sitting on a stone doorstep in front of a door.\"}\n```",
+   "kind": "vision"
+  },
+  "photo:damage:/seed/photos/wilted-plant.jpg": {
+   "model": "google/gemma-4-31B-it",
+   "text": "```json\n{\"verdict\":\"yes\",\"summary\":\"The plant's leaves are severely wilted and drooping, indicating it is dying or dehydrated.\"}\n```",
+   "kind": "vision"
+  },
+  "photo:delivery:/seed/photos/delivery-unclear.jpg": {
+   "model": "google/gemma-4-31B-it",
+   "text": "```json\n{\"verdict\":\"no\",\"summary\":\"The photo shows a front porch with a dog house and plants, but no parcel is visible.\"}\n```",
+   "kind": "vision"
+  },
+  "schedule:explain": {
    "model": "Qwen/Qwen3.8-27B",
-   "text": "We accept the claim and refund Marcus because the product page has no size chart or measurements, and no packing photo was taken. Northline Parcel shows delivered in Austin, TX, and no signature was required because the order is under $150. The buyer sent no damage photo, but the size and colour complaint is supported by the missing product detail, our offered fix, and the return policy on file.",
+   "text": "I booked Priya Raman's $184 item not received case with Sam for Tuesday 09:45. It is the earliest free slot before Friday's deadline.",
+   "kind": "text"
+  },
+  "photo:damage:/seed/photos/broken-pot.jpg": {
+   "model": "google/gemma-4-31B-it",
+   "text": "```json\n{\"verdict\":\"yes\",\"summary\":\"The photo shows a terracotta pot with a large piece broken off from the rim and side.\"}\n```",
+   "kind": "vision"
+  },
+  "explain:PP-R-MME-10198068": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "We should fight because the win estimate is 95% and the evidence supports delivery. Harbor Post shows the parcel was delivered to 2217 Larkspur Ave, Sacramento, CA, and signed for by P. Raman. The delivery photo shows the fragile parcel on the doorstep, and the buyer says the fiddle leaf fig is missing. We will respond with the Harbor Post scan, signature, photo, and messages.",
+   "kind": "text"
+  },
+  "draft:PP-R-MME-10198068": {
+   "model": "zai-org/GLM-5.3-Flash",
+   "text": "Hello,\n\nWe ask PayPal to decide this chargeback in the seller's favour. Order JM-3041, one Fiddle Leaf Fig, 10 inch floor plant, 184.00 USD, was shipped to Priya Raman, 2217 Larkspur Ave, Sacramento CA. Tracking number Harbor Post HBP304126704US is on the PayPal order. Carrier scans show the parcel was picked up in Portland, OR on Nov 2 and delivered in Sacramento, CA on Nov 4 at 08:31. The delivery address matches the address on the PayPal order, 2217 Larkspur Ave, Sacramento. A delivery photo shows a cardboard parcel with a fragile sticker on a stone doorstep in front of a door. Store records show it was signed for by P. Raman. We also hold 3 messages with the customer, in which we shared the tracking link and the delivery photo. The evidence shows delivery was completed. Thank you, Juniper & Moss",
+   "kind": "text",
+   "fallback": true
+  },
+  "draft:PP-R-LCP-10198069": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Hello,\nWe are sorry the planter did not meet your expectations. The listing stated the item is a Speckled Ceramic Planter, 8 inch, and the order was 1 x Speckled Ceramic Planter, 8 inch, invoice JM-3042. We replied to you and offered a fix. Northline Parcel scan shows delivered in Austin, TX on Nov 6, 08:33. Our return policy is on file: pots and plant care items can be returned unused within 30 days for a full refund, and return postage is paid by the customer unless the item arrived damaged or wrong. To settle this dispute, we can offer a partial refund of $31. Please let us know if you accept. Thank you, Juniper & Moss",
+   "kind": "text"
+  },
+  "agent:PP-R-LCP-10198069": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Found: $62 not-as-described claim on the 8 inch planter, inquiry stage, response due Nov 30. Evidence is mixed: no size chart or packing photo, but delivery scan, return policy and our earlier fix offer are on file. Win estimate 45 percent, so the rules say offer. I proposed a $31 partial refund with a friendly note. It is recorded and waiting for your approval.",
+   "kind": "agent"
+  },
+  "explain:PP-R-LCP-10198069": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "The shop rules say to offer a partial refund of $31. The product page has no size chart or measurements, and the buyer says the planter is smaller and the colour differs. Northline Parcel shows delivered in Austin, TX, and no signature was required because the order was under $150. The buyer sent no photo of damage, and no packing photo was taken.",
+   "kind": "text"
+  },
+  "pattern:Speckled Ceramic Planter, 8 inch keeps drawing \"not as described\"": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "The pattern is that 2 of 11 disputes are \"not as described\" claims on the Speckled Ceramic Planter, 8 inch, with $124 at stake.\nAdding a size chart with measurements and more photos, including a photo with something for scale, should help because the page has no size chart or measurements and says the item is listed as 8 inch and hand glazed, so colour varies.",
+   "kind": "text"
+  },
+  "pattern:Northline Parcel deliveries keep being reported as not received": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Three of the shop's 11 disputes are not received claims on Northline Parcel parcels, and all three had no signature on delivery, with $112 at stake. Requiring a signature on Northline Parcel orders over $40, or moving those orders to a service that takes a delivery photo, should help because it addresses the missing signature on these disputed deliveries.",
+   "kind": "text"
+  },
+  "pattern:Untracked post cannot be defended": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "1 not received claim is on orders sent by untracked letter post, with $12 at stake. The fix should help because it lets the shop use tracked post as the default or knowingly absorb losses under $15, rather than refunding untracked claims every time.",
+   "kind": "text"
+  },
+  "explain:PP-R-PBU-10198073": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "We should fight the claim because Northline Parcel shows delivery to 712 Wrightwood Ln, Chicago, IL, on Nov 6. The delivery photo shows a front porch with a dog house and plants, but no parcel is visible. No signature was collected, and the buyer says the pots are missing from a shared lobby. Our win estimate is 55%.",
+   "kind": "text"
+  },
+  "draft:PP-R-OGL-10198071": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Hello,\nWe accept the claim in PayPal case PP-R-OGL-10198071 for the Mini Succulent in a 2 inch pot, invoice JM-3043. We are sorry the item did not reach you. We have one message on file from you about the order, and we have reviewed it carefully. We confirm this refund now. We will issue a full refund of 12.00 USD to the original payment method. No further action is needed from you. The refund should appear according to PayPal's normal processing times. We appreciate your patience and your effort to contact us first. Thank you, Juniper & Moss",
+   "kind": "text"
+  },
+  "agent:PP-R-OGL-10198071": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Case PP-R-OGL-10198071: a $12 not-received claim on invoice JM-3043. Evidence was weak: no tracking, no delivery scan, win estimate 10%. The rules said accept, and your auto-accept rule under $15 allowed it, so I accepted the claim. PayPal refunded the buyer 12.00 USD and the case is now under PayPal review. Nothing needs your approval.",
+   "kind": "agent"
+  },
+  "explain:PP-R-HHM-10198076": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "We should fight this $42 PayPal claim, with an 85% win estimate. Harbor Post shows delivered in Atlanta, GA, and no signature was required because the order was under $150. Our packing photo shows a Calathea Medallion going into the box, and the buyer sent no photo of damage. The missing item is the buyer's photo of damage.",
+   "kind": "text"
+  },
+  "draft:PP-R-HHM-10198076": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Hello,\nWe ask PayPal to find in the seller's favour on claim PP-R-HHM-10198076 for 42.00 USD. The order was 1 x Calathea Medallion, 6 inch pot, invoice JM-3049, shipped to Noor Haddad, 118 Sycamore Bend, Atlanta GA. The product page has a size chart and measurements. A packing photo on file shows the item as packed. Our return policy is on file. We replied to the customer and offered a fix. Harbor Post scan: delivered in Atlanta, GA. Carrier scans: Nov 3, 15:53: Label created, Portland, OR; Nov 4, 03:53: Picked up, Portland, OR; Nov 5, 08:41: Arrived at local depot, Atlanta, GA; Nov 6, 01:29: Out for delivery, Atlanta, GA; Nov 6, 08:41: Delivered, Atlanta, GA. The buyer sent no photo of damage.\nThank you, Juniper & Moss",
+   "kind": "text"
+  },
+  "explain:PP-R-QEJ-10198072": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Northline Parcel shows delivery in Minneapolis, and no signature was required because the order was under $150. The buyer's photo shows wilted, drooping leaves, but it does not clearly show the snapped stems they described. The missing item is our reply to the customer, which weakens our position. We should offer the partial refund of $24 on the $48 order, with a 50% win estimate.",
+   "kind": "text"
+  },
+  "explain:PP-R-KXD-10198075": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "ACCEPT the claim and refund the $56 buyer because Northline Parcel shows the Brass Watering Can was not delivered and is returning to sender. There is no delivery photo at the door and no signature on delivery. The buyer says the item never came, and the carrier scan that would prove delivery is missing.",
+   "kind": "text"
+  },
+  "explain:PP-R-OGL-10198071": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "The shop rules decide this case, so we accept the claim and refund the buyer. The untracked post carrier left no delivery scan, no delivery photo, and no signature. The missing Mini Succulent and the 10% win estimate make the refund the required outcome.",
+   "kind": "text"
+  },
+  "draft:PP-R-PBU-10198073": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Hello,\n\nWe respectfully request that PayPal find in the seller's favour for claim PP-R-PBU-10198073. The buyer purchased one Terracotta Pot Set of 3, invoice JM-3046, for 38.00 USD. We shipped this item via Northline Parcel, tracking number NLP304613813US. This tracking number is listed on the PayPal order.\n\nOur store records confirm the carrier scan shows the package was delivered in Chicago, IL. The delivery occurred on Nov 6 at 08:38. The package was delivered to 712 Wrightwood Ln, Chicago, which is the exact address on the PayPal order. We also have two messages on file with the customer regarding this issue.\n\nThe evidence clearly shows the item was shipped to the correct address and marked as delivered by the carrier. We have fulfilled our obligation to ship the goods. We ask that the claim be closed in our favor.\n\nThank you, Juniper & Moss",
+   "kind": "text"
+  },
+  "draft:PP-R-QEJ-10198072": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Hello,\n\nWe are sorry to hear about your experience with the Monstera Deliciosa. Our records show the item shipped on Nov 4 and was delivered on Nov 8 to Minneapolis, MN. The product page included a size chart and measurements for the 6 inch pot. We have a packing photo on file showing the condition at dispatch. Our return policy includes a 14 day live arrival promise where we replace the plant or refund it upon receiving a photo.\n\nTo resolve this dispute quickly, we would like to offer a partial refund of $24. This amount reflects the value of the plant and our effort to settle the matter amicably. We believe this is a fair solution given the circumstances. Please let us know if you accept this offer so we can process the refund and close the case. We value your business and hope to make this right.\n\nThank you, Juniper & Moss",
+   "kind": "text"
+  },
+  "draft:PP-R-KXD-10198075": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "Hello,\n\nWe accept this claim for the Brass Watering Can, invoice JM-3047. The buyer may be refunded in full. We provided tracking number NLP304766299US on the PayPal order. We have one message on file with the customer. We acknowledge the item was not received. We will process the refund. Thank you, Juniper & Moss",
    "kind": "text"
   }
  }

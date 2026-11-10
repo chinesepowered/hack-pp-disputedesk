@@ -2,8 +2,9 @@
  * Model access: W&B Inference (OpenAI-compatible) through the Vercel AI SDK. Server-side only.
  *
  * - maxRetries 4 and a 60 s timeout on every call (the endpoint fails roughly 1 call in 20).
- * - After the primary model fails, one more attempt on the fallback model. The fallback always
- *   returns reasoning tokens first, so it gets a larger token budget and its content may be empty.
+ * - After the primary model fails, one more attempt on the fallback model.
+ * - The text models reason before they answer; the writing tasks switch that off (see
+ *   directAnswerOptions) and every call still gets token headroom in case a model ignores it.
  * - In Replay mode the recorded output is returned and tagged as replayed.
  */
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
@@ -32,6 +33,20 @@ export function model(id: string): LanguageModelV1 {
 
 const REASONING_HEADROOM = 3000;
 
+/**
+ * Request fields that stop a model reasoning before it answers. Both text models spend
+ * completion tokens on hidden reasoning, and on some prompts they spent the whole budget and
+ * returned nothing. Measured on W&B Inference with scripts/dev/reasoning-probe.ts: Qwen answers
+ * directly with the chat template switch, GLM with low reasoning effort. The writing tasks use
+ * this (the facts and the decision are already fixed by the rules); the tool-calling agent in
+ * lib/agent/run.ts keeps its reasoning.
+ */
+export function directAnswerOptions(id: string): Record<string, unknown> {
+  if (/qwen/i.test(id)) return { chat_template_kwargs: { enable_thinking: false } };
+  if (/glm/i.test(id)) return { reasoningEffort: "low" };
+  return {};
+}
+
 export class AiUnavailableError extends Error {
   constructor(message: string) {
     super(message);
@@ -52,7 +67,7 @@ export function stripReasoning(text: string): string {
 /** No em dashes anywhere in this product, including model output. */
 export function tidy(text: string): string {
   return stripReasoning(text)
-    .replace(/\s*[—–]\s*/g, ", ")
+    .replace(/\s*[\u2014\u2013]\s*/g, ", ")
     .replace(/\*\*/g, "")
     .trim();
 }
@@ -83,9 +98,10 @@ export async function generate(opts: {
       temperature: opts.temperature ?? 0.2,
       maxRetries: 4,
       abortSignal: AbortSignal.timeout(60_000),
+      ...(opts.vision ? {} : { providerOptions: { "wandb-inference": directAnswerOptions(id) as Record<string, never> } }),
     });
     const text = tidy(res.text ?? "");
-    if (!text) throw new Error("The model returned no content.");
+    if (!text) throw new Error(`The model returned no content (finish ${res.finishReason}, ${res.usage?.completionTokens ?? "?"} completion tokens, ${(res.text ?? "").length} raw characters).`);
     return text;
   };
 

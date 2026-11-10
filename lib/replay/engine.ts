@@ -16,7 +16,7 @@
  */
 import fixture from "@/fixtures/replay/tape.json";
 import type { AiTag } from "@/lib/desk/types";
-import { getDoc, setDoc } from "@/lib/store";
+import { getDoc, setDoc, withLock } from "@/lib/store";
 import { PayPalError, type PayPalRequest, type PayPalResponse } from "@/lib/paypal/http";
 import { currentSessionId, recordCall } from "@/lib/paypal/log";
 import type { Dispute } from "@/lib/paypal/types";
@@ -73,10 +73,23 @@ async function saveSession(session: Session): Promise<void> {
   await setDoc(`replay-${currentSessionId()}-engine`, session);
 }
 
+/**
+ * Read, change and save this browser session's place in the tape as one step. The board and a
+ * case file ask at the same moment; without this one of them would overwrite the other's move.
+ */
+async function withSession<T>(fn: (session: Session) => T): Promise<T> {
+  return withLock(`replay-session:${currentSessionId()}`, async () => {
+    const session = await loadSession();
+    const result = fn(session);
+    await saveSession(session);
+    return result;
+  });
+}
+
 /** Forget this session's replay progress (the Replay "start over" button). */
 export async function resetReplaySession(): Promise<void> {
   const recordedAt = tape.recordedAt ? new Date(tape.recordedAt).getTime() : Date.now();
-  await saveSession({ startedAt: Date.now(), delta: Date.now() - recordedAt, pos: {}, changedAt: {} });
+  await withLock(`replay-session:${currentSessionId()}`, () => saveSession({ startedAt: Date.now(), delta: Date.now() - recordedAt, pos: {}, changedAt: {} }));
 }
 
 function firstState(items: TapeItem[]): number {
@@ -135,28 +148,27 @@ export async function replayRequest<T>(req: PayPalRequest): Promise<PayPalRespon
   const match = path.match(DISPUTE_PATH);
   if (match) {
     const [, id, action] = match;
-    const session = await loadSession();
 
     if (!id) {
       // List: every recorded dispute at its current point in the tape.
-      let moved = false;
-      const items = Object.keys(tape.disputes).map((key) => {
-        moved = advance(session, key, tape.disputes[key].tape) || moved;
-        const d = shift(stateAt(session, key).dispute, session.delta);
-        return {
-          dispute_id: d.dispute_id,
-          create_time: d.create_time,
-          update_time: d.update_time,
-          reason: d.reason,
-          status: d.status,
-          dispute_state: d.dispute_state,
-          dispute_amount: d.dispute_amount,
-          dispute_life_cycle_stage: d.dispute_life_cycle_stage,
-          seller_response_due_date: d.seller_response_due_date,
-          links: (d.links ?? []).filter((l) => l.rel === "self"),
-        };
-      });
-      await saveSession(session);
+      const items = await withSession((session) =>
+        Object.keys(tape.disputes).map((key) => {
+          advance(session, key, tape.disputes[key].tape);
+          const d = shift(stateAt(session, key).dispute, session.delta);
+          return {
+            dispute_id: d.dispute_id,
+            create_time: d.create_time,
+            update_time: d.update_time,
+            reason: d.reason,
+            status: d.status,
+            dispute_state: d.dispute_state,
+            dispute_amount: d.dispute_amount,
+            dispute_life_cycle_stage: d.dispute_life_cycle_stage,
+            seller_response_due_date: d.seller_response_due_date,
+            links: (d.links ?? []).filter((l) => l.rel === "self"),
+          };
+        }),
+      );
       return reply({ items, links: [] }, 200, null, 180);
     }
 
@@ -164,27 +176,32 @@ export async function replayRequest<T>(req: PayPalRequest): Promise<PayPalRespon
     if (!entry) throw new PayPalError({ status: 404, code: "RESOURCE_NOT_FOUND", message: "This dispute is not part of the recording.", issue: "INVALID_RESOURCE_ID" });
 
     if (req.method === "GET") {
-      advance(session, id, entry.tape);
-      await saveSession(session);
-      const item = stateAt(session, id);
-      return reply(shift(item.dispute, session.delta), 200, item.debugId, item.ms);
+      const { item, delta } = await withSession((session) => {
+        advance(session, id, entry.tape);
+        return { item: stateAt(session, id), delta: session.delta };
+      });
+      return reply(shift(item.dispute, delta), 200, item.debugId, item.ms);
     }
 
     // A write: only the next recorded action is accepted.
-    const pos = session.pos[id] ?? firstState(entry.tape);
     const wanted = (action ?? "").replace(/-/g, "_");
-    const nextIndex = entry.tape.findIndex((i, n) => n > pos && i.type === "post");
-    const next = nextIndex >= 0 ? (entry.tape[nextIndex] as PostItem) : null;
     const outcome = (req.json as { adjudication_outcome?: string } | undefined)?.adjudication_outcome;
-    if (!next || next.action !== wanted || (next.outcome && outcome && next.outcome !== outcome)) {
+    const played = await withSession((session) => {
+      const pos = session.pos[id] ?? firstState(entry.tape);
+      const nextIndex = entry.tape.findIndex((i, n) => n > pos && i.type === "post");
+      const next = nextIndex >= 0 ? (entry.tape[nextIndex] as PostItem) : null;
+      if (!next || next.action !== wanted || (next.outcome && outcome && next.outcome !== outcome)) return { next, accepted: false };
+      const after = entry.tape.findIndex((i, n) => n > nextIndex && i.type === "state");
+      session.pos[id] = after >= 0 ? after : pos;
+      session.changedAt[id] = Date.now();
+      return { next, accepted: true };
+    });
+    const next = played.next;
+    if (!played.accepted || !next) {
       const covers = next ? `The recording's next step for this case is "${next.action.replace(/_/g, " ")}${next.outcome ? ` (${next.outcome.toLowerCase().replace(/_/g, " ")})` : ""}".` : "The recording for this case ends here.";
       recordCall({ method: req.method, path, status: 422, debugId: null, ms: 5, via: "rest", feature: req.feature, replay: true });
       throw new PayPalError({ status: 422, code: "REPLAY_NOT_RECORDED", issue: "REPLAY_NOT_RECORDED", message: `Replay only plays what was recorded. ${covers}` });
     }
-    const after = entry.tape.findIndex((i, n) => n > nextIndex && i.type === "state");
-    session.pos[id] = after >= 0 ? after : pos;
-    session.changedAt[id] = Date.now();
-    await saveSession(session);
     return reply(next.response ?? {}, next.status, next.debugId, next.ms);
   }
 

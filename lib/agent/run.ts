@@ -25,6 +25,7 @@ How you work:
 - To act on a decision: fight means provide_evidence with the draft_response as notes; offer means make_offer with rule_decision.offer_amount and a short friendly note; accept means accept_dispute_claim.
 - You cannot file anything by yourself. provide_evidence, make_offer and send_message record a proposal that a person approves. accept_dispute_claim only goes through when the merchant's auto-accept rule allows it; otherwise it becomes a proposal too.
 - A tool may answer "Refused in code". That is final for that action: say so plainly and do not retry it.
+- PayPal's stage name CHARGEBACK means a PayPal claim, not a card chargeback. Say "claim". INQUIRY means the buyer and the shop are still talking.
 - Use schedule_work_block when asked to book or move time. Team member ids: sam, jo, dee.
 
 When you are done, answer the merchant in at most 70 words: what you found, what you proposed or did, and what needs their approval. Plain sentences. Never use em dashes.`;

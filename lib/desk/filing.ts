@@ -32,7 +32,7 @@ import { isAllowed, type Dispute, type DisputeAction } from "@/lib/paypal/types"
 import { checkAllowedByPayPal, checkOfferAmount, mayAutoFile, pickEvidenceType } from "@/lib/rules/guards";
 import { ruleFor } from "@/lib/rules/evidence-table";
 import { strengthOf } from "@/lib/rules/assess";
-import { addTrail, loadCase, loadDesk, loadSettings, saveCase, saveDesk } from "./state";
+import { addTrail, loadCase, loadSettings, saveCase, updateDesk } from "./state";
 import { refreshCase } from "./sync";
 import type { CaseDetail, CaseMeta, Filing } from "./types";
 
@@ -89,33 +89,35 @@ function describe(action: DisputeAction, payload: FilingPayload): string {
 }
 
 async function claimFiling(disputeId: string, action: DisputeAction, by: Filing["by"], summary: string): Promise<Filing> {
-  const desk = await loadDesk();
   const key = `${disputeId}:${action}`;
-  const existing = desk.filings[key];
-  if (existing && existing.status === "pending" && Date.now() - new Date(existing.startedAt).getTime() < PENDING_TTL_MS) {
-    throw new DeskError(409, "FILING_IN_PROGRESS", "This filing is already being sent to PayPal.", existing);
-  }
-  const filing: Filing = {
-    key,
-    disputeId,
-    action,
-    status: "pending",
-    // A retry of the same pending filing reuses its request id so PayPal can deduplicate.
-    requestId: existing?.status === "pending" || existing?.status === "unknown" ? existing.requestId : randomUUID(),
-    startedAt: new Date().toISOString(),
-    by,
-    summary,
-  };
-  desk.filings[key] = filing;
-  await saveDesk(desk);
-  return filing;
+  let filing: Filing | null = null;
+  // The check and the claim are one step, so two requests cannot both claim the same filing.
+  await updateDesk((desk) => {
+    const existing = desk.filings[key];
+    if (existing && existing.status === "pending" && Date.now() - new Date(existing.startedAt).getTime() < PENDING_TTL_MS) {
+      throw new DeskError(409, "FILING_IN_PROGRESS", "This filing is already being sent to PayPal.", existing);
+    }
+    filing = {
+      key,
+      disputeId,
+      action,
+      status: "pending",
+      // A retry of the same pending filing reuses its request id so PayPal can deduplicate.
+      requestId: existing?.status === "pending" || existing?.status === "unknown" ? existing.requestId : randomUUID(),
+      startedAt: new Date().toISOString(),
+      by,
+      summary,
+    };
+    desk.filings[key] = filing;
+  });
+  return filing as unknown as Filing;
 }
 
 async function settleFiling(filing: Filing, patch: Partial<Filing>): Promise<Filing> {
-  const desk = await loadDesk();
   const next = { ...filing, ...patch, finishedAt: new Date().toISOString() };
-  desk.filings[filing.key] = next;
-  await saveDesk(desk);
+  await updateDesk((desk) => {
+    desk.filings[filing.key] = next;
+  });
   return next;
 }
 

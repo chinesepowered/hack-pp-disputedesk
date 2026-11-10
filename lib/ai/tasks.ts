@@ -121,7 +121,8 @@ export async function draftResponse(
       ? "ask PayPal to find in the seller's favour, citing each piece of evidence in the pack"
       : rec.action === "offer"
         ? `offer the buyer a partial refund of $${rec.offerAmount} to settle, politely, and say what the listing stated`
-        : "accept the claim politely and confirm the refund";
+        : "tell PayPal the shop accepts the claim and that the buyer may be refunded in full. Do not promise timing or say a refund has already been sent";
+  const length = rec.action === "accept" ? "40 to 70 words" : "90 to 150 words";
   const res = await generate({
     kind: "text",
     replayKey: `draft:${dispute.dispute_id}`,
@@ -133,7 +134,7 @@ export async function draftResponse(
         content:
           `Write the seller's response for PayPal case ${dispute.dispute_id} on behalf of ${STORE.name}. Goal: ${goal}.\n\n` +
           `${caseFacts(dispute, bundle, checklist)}\n\n` +
-          "Rules: 90 to 150 words. Plain text, no markdown, no greeting line beyond 'Hello,'. State dates and tracking numbers exactly as given. " +
+          `Rules: ${length}. Plain text, no markdown, no greeting line beyond 'Hello,'. State dates and tracking numbers exactly as given. ` +
           "Only mention evidence marked present. Do not mention evidence marked missing or against. End with 'Thank you, Juniper & Moss'.",
       },
     ],

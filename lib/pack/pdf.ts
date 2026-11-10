@@ -42,7 +42,7 @@ function ansi(text: string): string {
   return text
     .replace(/[‘’]/g, "'")
     .replace(/[“”]/g, '"')
-    .replace(/[–—]/g, "-")
+    .replace(/[\u2013\u2014]/g, "-")
     .replace(/…/g, "...")
     .replace(/[^\x09\x0A\x20-\x7E\xA0-\xFF]/g, "");
 }

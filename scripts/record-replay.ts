@@ -10,6 +10,8 @@
  *
  *   pnpm replay:record --list                      disputes found in the recording
  *   pnpm replay:record PP-R-ABC-123="Hero case" PP-R-DEF-456
+ *   pnpm replay:record PP-R-ABC-123@CHARGEBACK/WAITING_FOR_SELLER_RESPONSE="Hero case"
+ *                                                  start at the first state with that stage and status
  */
 import "./_env";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -94,8 +96,12 @@ function main() {
   const picks = args
     .filter((a) => !a.startsWith("--"))
     .map((a) => {
-      const [id, label] = a.split("=");
-      return { id, label };
+      const [target, label] = a.split("=");
+      // PP-R-ABC@CHARGEBACK/WAITING_FOR_SELLER_RESPONSE starts the tape at the first state with
+      // that stage and status: what happened before (seeding, escalation) is left out.
+      const [id, from] = target.split("@");
+      const [fromStage, fromStatus] = (from ?? "").split("/");
+      return { id, label, fromStage: fromStage || null, fromStatus: fromStatus || null };
     });
   const out: any = {
     recordedAt: entries.at(-1)?.t ?? null,
@@ -109,9 +115,15 @@ function main() {
     const tape: any[] = [];
     let lastSig = "";
     let last: any = null;
+    let started = !pick.fromStage;
     for (const e of entries) {
       const m = e.kind === "rest" ? e.path?.match(DISPUTE) : null;
       if (!m || m[1] !== pick.id) continue;
+      if (!started) {
+        const r = e.response;
+        if (e.method !== "GET" || e.status !== 200 || r?.dispute_life_cycle_stage !== pick.fromStage || (pick.fromStatus && r?.status !== pick.fromStatus)) continue;
+        started = true;
+      }
       if (e.method === "GET" && e.status === 200 && e.response?.dispute_id) {
         const sig = signature(e.response);
         if (sig === lastSig) continue;

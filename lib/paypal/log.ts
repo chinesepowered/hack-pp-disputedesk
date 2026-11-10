@@ -84,10 +84,10 @@ export async function withFeature<T>(feature: string, fn: () => Promise<T>): Pro
 export function recordCall(call: Omit<PayPalCall, "id" | "at" | "feature"> & { feature?: string }): PayPalCall {
   const ctx = storage.getStore();
   const full: PayPalCall = {
+    ...call,
     id: randomUUID(),
     at: new Date().toISOString(),
     feature: call.feature ?? ctx?.feature ?? "script",
-    ...call,
   } as PayPalCall;
   if (ctx) ctx.calls.push(full);
   else {

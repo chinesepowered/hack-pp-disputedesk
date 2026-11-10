@@ -13,7 +13,7 @@ import { mayAutoFile, pickEvidenceType } from "@/lib/rules/guards";
 import { reasonTitle, ruleFor } from "@/lib/rules/evidence-table";
 import { isTracked } from "./config";
 import { fillMissingPhotoReads, gatherEvidence } from "./evidence";
-import { addTrail, loadCase, loadDesk, loadSettings, saveCase, saveDesk } from "./state";
+import { addTrail, loadCase, loadDesk, loadSettings, saveCase, updateDesk } from "./state";
 import type { CaseDetail, CaseMeta, Desk, Settings } from "./types";
 
 async function pool<T, R>(items: T[], size: number, fn: (item: T) => Promise<R>): Promise<R[]> {
@@ -163,12 +163,13 @@ export type SyncResult = { desk: Desk; settings: Settings; newIds: string[]; cha
 
 /** Poll PayPal, pull details for anything new or changed, update the desk. */
 export async function syncDesk(opts: { feature?: string } = {}): Promise<SyncResult> {
+  // A snapshot to decide what needs re-reading. The desk itself is changed in one step at the end.
   const [desk, settings] = await Promise.all([loadDesk(), loadSettings()]);
   const summaries = (await listDisputes({ feature: opts.feature ?? "Intake: poll disputes" })).filter((d) => isTracked(d.create_time));
   // Cases the desk stopped tracking (the start time moved) are dropped from its own state.
-  for (const id of Object.keys(desk.cases)) {
-    if (!isTracked(summaries.find((d) => d.dispute_id === id)?.create_time ?? desk.cases[id].createdAt ?? undefined)) delete desk.cases[id];
-  }
+  const untracked = (cases: Desk["cases"]) =>
+    Object.keys(cases).filter((id) => !isTracked(summaries.find((d) => d.dispute_id === id)?.create_time ?? cases[id].createdAt ?? undefined));
+  for (const id of untracked(desk.cases)) delete desk.cases[id];
   const listed = new Map(summaries.map((s) => [s.dispute_id, s]));
 
   // New disputes can take minutes to show up in the list, so known ids are also re-read by id.
@@ -183,6 +184,7 @@ export async function syncDesk(opts: { feature?: string } = {}): Promise<SyncRes
 
   const newIds: string[] = [];
   const changedIds: string[] = [];
+  const fresh = new Map<string, { dispute: Dispute; detail: CaseDetail }>();
   await pool(stale, 4, async (id) => {
     let dispute: Dispute;
     try {
@@ -214,14 +216,17 @@ export async function syncDesk(opts: { feature?: string } = {}): Promise<SyncRes
       newIds.push(id);
     }
     await saveCase(detail);
-    desk.cases[id] = metaFrom(dispute, detail, before, settings);
+    fresh.set(id, { dispute, detail });
   });
 
-  // Resolved cases free their slot on the board.
-  desk.blocks = desk.blocks.filter((b) => desk.cases[b.disputeId]?.needsSeller);
-  desk.lastSyncAt = new Date().toISOString();
-  await saveDesk(desk);
-  return { desk, settings, newIds, changedIds };
+  const updated = await updateDesk((latest) => {
+    for (const id of untracked(latest.cases)) delete latest.cases[id];
+    for (const [id, { dispute, detail }] of fresh) latest.cases[id] = metaFrom(dispute, detail, latest.cases[id] ?? desk.cases[id], settings);
+    // Resolved cases free their slot on the board.
+    latest.blocks = latest.blocks.filter((b) => latest.cases[b.disputeId]?.needsSeller);
+    latest.lastSyncAt = new Date().toISOString();
+  });
+  return { desk: updated, settings, newIds, changedIds };
 }
 
 /** Re-read one dispute from PayPal and update its snapshot and summary. */
@@ -242,10 +247,10 @@ export async function refreshCase(id: string, feature = "Case file: read dispute
   reassess(detail, dispute, settings);
   await saveCase(detail);
   const meta = metaFrom(dispute, detail, before, settings);
-  const latest = await loadDesk();
-  latest.cases[id] = meta;
-  if (!meta.needsSeller) latest.blocks = latest.blocks.filter((b) => b.disputeId !== id);
-  await saveDesk(latest);
+  await updateDesk((latest) => {
+    latest.cases[id] = meta;
+    if (!meta.needsSeller) latest.blocks = latest.blocks.filter((b) => b.disputeId !== id);
+  });
   return { detail, meta, settings };
 }
 
@@ -326,11 +331,12 @@ export async function prepareCase(
   }
 
   await saveCase(detail);
-  const desk = await loadDesk();
-  const meta = metaFrom(dispute, detail, desk.cases[id], settings);
-  desk.cases[id] = meta;
-  await saveDesk(desk);
-  return { detail, meta };
+  let meta: CaseMeta | null = null;
+  await updateDesk((desk) => {
+    meta = metaFrom(dispute, detail, desk.cases[id], settings);
+    desk.cases[id] = meta;
+  });
+  return { detail, meta: meta as unknown as CaseMeta };
 }
 
 /** A plain template used when the model is unavailable. Built only from present evidence. */

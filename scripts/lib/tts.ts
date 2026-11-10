@@ -34,7 +34,7 @@ export function charactersUsed(): number {
 
 export async function speak(opts: { text: string; voice: keyof typeof VOICES; purpose: string; stability?: number }): Promise<Buffer> {
   const text = opts.text.trim();
-  if (/[—–]/.test(text)) throw new Error("Narration must not contain em or en dashes.");
+  if (/[\u2014\u2013]/.test(text)) throw new Error("Narration must not contain em or en dashes.");
   const key = createHash("sha256").update(`${MODEL}|${VOICES[opts.voice]}|${opts.stability ?? 0.5}|${text}`).digest("hex").slice(0, 24);
   const cached = path.join(CACHE, `${key}.mp3`);
   if (existsSync(cached)) return readFileSync(cached);

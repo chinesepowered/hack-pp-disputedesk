@@ -113,6 +113,15 @@ describe("fileAction", () => {
     expect(writes()).toEqual([]);
   });
 
+  it("sends one write when the same action is filed twice at the same moment", async () => {
+    const send = () => fileAction({ disputeId: current.dispute_id, action: "send_message", by: "person", payload: { text: "hello" } });
+    const results = await Promise.allSettled([send(), send()]);
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    const refused = results.find((r) => r.status === "rejected") as PromiseRejectedResult;
+    expect(refused.reason).toMatchObject({ status: 409, code: "FILING_IN_PROGRESS" });
+    expect(writes()).toEqual(["sendMessage"]);
+  });
+
   it("releases the claim when PayPal refuses, so a later attempt is not blocked", async () => {
     failWith = new PayPalError({ status: 422, code: "UNPROCESSABLE_ENTITY", message: "no", issue: "ACTION_NOT_ALLOWED_IN_CURRENT_STATE" });
     await expect(fileAction({ disputeId: current.dispute_id, action: "send_message", by: "person", payload: { text: "hello" } })).rejects.toMatchObject({ status: 422 });

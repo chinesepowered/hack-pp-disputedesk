@@ -8,6 +8,8 @@
  * own working state (who is booked when, drafts, settings), and everything money-related is
  * re-read from PayPal before it is shown or acted on.
  */
+import { AsyncLocalStorage } from "node:async_hooks";
+import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
@@ -124,7 +126,8 @@ export async function setDoc<T>(key: string, value: T): Promise<void> {
   }
   await fs.mkdir(dataDir(), { recursive: true });
   const target = filePath(key);
-  const tmp = `${target}.${process.pid}.${Date.now()}.tmp`;
+  // Unique per write: two writes of one key in the same millisecond must not share a file.
+  const tmp = `${target}.${process.pid}.${randomUUID()}.tmp`;
   await fs.writeFile(tmp, text, "utf8");
   await fs.rename(tmp, target);
 }
@@ -150,12 +153,40 @@ export async function listKeys(prefix: string): Promise<string[]> {
   }
 }
 
-/** Read, change and write one document. Callers keep documents small and updates short. */
-export async function updateDoc<T>(key: string, fallback: T, change: (doc: T) => T | void): Promise<T> {
-  const current = (await getDoc<T>(key)) ?? fallback;
-  const next = change(current) ?? current;
-  await setDoc(key, next);
-  return next;
+const lockTails = new Map<string, Promise<void>>();
+const heldLocks = new AsyncLocalStorage<Set<string>>();
+
+/**
+ * Run fn while holding a named lock, so a read, change and write of one document cannot
+ * interleave with another in this process. Re-entrant: code already holding the lock runs
+ * straight through. Server instances do not share it; across instances the last write wins,
+ * which is why money actions also carry a PayPal-Request-Id and are re-read from PayPal.
+ */
+export async function withLock<T>(name: string, fn: () => Promise<T>): Promise<T> {
+  const mine = heldLocks.getStore();
+  if (mine?.has(name)) return fn();
+  const previous = lockTails.get(name) ?? Promise.resolve();
+  let release: () => void = () => undefined;
+  const gate = new Promise<void>((resolve) => (release = resolve));
+  const tail = previous.then(() => gate);
+  lockTails.set(name, tail);
+  await previous;
+  try {
+    return await heldLocks.run(new Set([...(mine ?? []), name]), fn);
+  } finally {
+    release();
+    if (lockTails.get(name) === tail) lockTails.delete(name);
+  }
+}
+
+/** Read, change and write one document as one step. Callers keep the change short. */
+export async function updateDoc<T>(key: string, fallback: T, change: (doc: T) => T | void | Promise<T | void>): Promise<T> {
+  return withLock(`doc:${key}`, async () => {
+    const current = (await getDoc<T>(key)) ?? fallback;
+    const next = (await change(current)) ?? current;
+    await setDoc(key, next);
+    return next;
+  });
 }
 
 export function storeBackend(): "blob" | "files" {

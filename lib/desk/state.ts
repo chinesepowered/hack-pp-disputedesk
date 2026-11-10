@@ -1,5 +1,5 @@
 /** Reading and writing the desk's own working state through lib/store.ts. */
-import { deleteDoc, getDoc, listKeys, setDoc } from "@/lib/store";
+import { deleteDoc, getDoc, listKeys, setDoc, updateDoc } from "@/lib/store";
 import { currentMode, currentSessionId } from "@/lib/paypal/log";
 import { DEFAULT_SETTINGS, EMPTY_DESK, type CaseDetail, type Desk, type Settings, type TrailStep } from "./types";
 
@@ -18,6 +18,17 @@ export async function loadDesk(): Promise<Desk> {
 
 export async function saveDesk(desk: Desk): Promise<void> {
   await setDoc(`${ns()}desk`, desk);
+}
+
+/**
+ * Change the desk as one step: the latest copy is read, changed and written under a lock, so
+ * two requests (the board polling while a case is being filed, say) cannot drop each other's
+ * changes. Do the slow work (PayPal, the model) first and keep the change itself short.
+ */
+export async function updateDesk(change: (desk: Desk) => void | Promise<void>): Promise<Desk> {
+  return updateDoc<Desk>(`${ns()}desk`, structuredClone(EMPTY_DESK), async (desk) => {
+    await change(desk);
+  });
 }
 
 export async function loadSettings(): Promise<Settings> {

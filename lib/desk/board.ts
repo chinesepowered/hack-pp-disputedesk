@@ -3,7 +3,7 @@ import { explainSchedule } from "@/lib/ai/tasks";
 import { scheduleCases, type Placement, type SchedCase } from "@/lib/schedule/scheduler";
 import { reasonTitle } from "@/lib/rules/evidence-table";
 import { currentMode } from "@/lib/paypal/log";
-import { loadDesk, loadSettings, saveDesk } from "./state";
+import { loadSettings, updateDesk } from "./state";
 import type { AiTag, CaseMeta, Desk, Settings, WorkBlock } from "./types";
 
 const SLOT_MS = 15 * 60_000;
@@ -63,24 +63,26 @@ export type ScheduleOutcome = { blocks: WorkBlock[]; placements: Placement[]; no
  * `reflow` every unpinned block that has not started is placed again around them.
  */
 export async function autoSchedule(opts: { reflow?: boolean; explain?: boolean } = {}): Promise<ScheduleOutcome> {
-  const [desk, settings] = await Promise.all([loadDesk(), loadSettings()]);
+  const settings = await loadSettings();
   const now = new Date();
-  const open = Object.values(desk.cases).filter((c) => c.needsSeller);
-  const openIds = new Set(open.map((c) => c.disputeId));
-  const existing = desk.blocks.filter((b) => openIds.has(b.disputeId));
-  const fixed = existing.filter((b) => b.pinned || !opts.reflow || new Date(b.start).getTime() <= now.getTime());
-  const fixedIds = new Set(fixed.map((b) => b.disputeId));
-  const toPlace = open.filter((c) => !fixedIds.has(c.disputeId));
-
-  const { blocks, placements } = scheduleCases({
-    now,
-    timezone: settings.timezone,
-    people: settings.team,
-    fixed,
-    cases: toPlace.map(toSched),
+  let blocks: WorkBlock[] = [];
+  let placements: ScheduleOutcome["placements"] = [];
+  const desk = await updateDesk((latest) => {
+    const open = Object.values(latest.cases).filter((c) => c.needsSeller);
+    const openIds = new Set(open.map((c) => c.disputeId));
+    const existing = latest.blocks.filter((b) => openIds.has(b.disputeId));
+    const fixed = existing.filter((b) => b.pinned || !opts.reflow || new Date(b.start).getTime() <= now.getTime());
+    const fixedIds = new Set(fixed.map((b) => b.disputeId));
+    const toPlace = open.filter((c) => !fixedIds.has(c.disputeId));
+    ({ blocks, placements } = scheduleCases({
+      now,
+      timezone: settings.timezone,
+      people: settings.team,
+      fixed,
+      cases: toPlace.map(toSched),
+    }));
+    latest.blocks = blocks;
   });
-  desk.blocks = blocks;
-  await saveDesk(desk);
 
   let note: ScheduleOutcome["note"] = null;
   const booked = placements.filter((p) => p.block);
@@ -102,32 +104,32 @@ export async function autoSchedule(opts: { reflow?: boolean; explain?: boolean }
 
 /** A person dragged or resized a block: pin it where they put it, then reflow the rest. */
 export async function moveBlock(input: { disputeId: string; resourceId: string; start: string; end: string }): Promise<ScheduleOutcome> {
-  const [desk, settings] = await Promise.all([loadDesk(), loadSettings()]);
-  const meta = desk.cases[input.disputeId];
-  if (!meta) throw new Error("Unknown dispute.");
+  const settings = await loadSettings();
   const who = settings.team.find((p) => p.id === input.resourceId);
   if (!who) throw new Error("Unknown team member.");
-  if (who.isAgent && !meta.agentCanHandle) throw new Error("Marlow can only take cases your auto-accept rule covers. Assign this one to a person.");
   const start = Math.round(new Date(input.start).getTime() / SLOT_MS) * SLOT_MS;
   const end = Math.max(start + SLOT_MS, Math.round(new Date(input.end).getTime() / SLOT_MS) * SLOT_MS);
-  const block: WorkBlock = {
-    id: `blk-${input.disputeId}`,
-    disputeId: input.disputeId,
-    resourceId: input.resourceId,
-    start: new Date(start).toISOString(),
-    end: new Date(end).toISOString(),
-    pinned: true,
-    why: `Placed by hand on ${who.name.split(" ")[0]}'s row. Marlow plans around it.`,
-  };
-  desk.blocks = [...desk.blocks.filter((b) => b.disputeId !== input.disputeId), block];
-  meta.effortMinutes = Math.round((end - start) / 60_000);
-  await saveDesk(desk);
+  await updateDesk((desk) => {
+    const meta = desk.cases[input.disputeId];
+    if (!meta) throw new Error("Unknown dispute.");
+    if (who.isAgent && !meta.agentCanHandle) throw new Error("Marlow can only take cases your auto-accept rule covers. Assign this one to a person.");
+    const block: WorkBlock = {
+      id: `blk-${input.disputeId}`,
+      disputeId: input.disputeId,
+      resourceId: input.resourceId,
+      start: new Date(start).toISOString(),
+      end: new Date(end).toISOString(),
+      pinned: true,
+      why: `Placed by hand on ${who.name.split(" ")[0]}'s row. Marlow plans around it.`,
+    };
+    desk.blocks = [...desk.blocks.filter((b) => b.disputeId !== input.disputeId), block];
+    meta.effortMinutes = Math.round((end - start) / 60_000);
+  });
   return autoSchedule({ reflow: true });
 }
 
 export async function unscheduleBlock(disputeId: string): Promise<Desk> {
-  const desk = await loadDesk();
-  desk.blocks = desk.blocks.filter((b) => b.disputeId !== disputeId);
-  await saveDesk(desk);
-  return desk;
+  return updateDesk((desk) => {
+    desk.blocks = desk.blocks.filter((b) => b.disputeId !== disputeId);
+  });
 }
