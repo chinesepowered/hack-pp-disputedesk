@@ -336,9 +336,15 @@ export async function acceptOffer(session: BuyerSession, disputeId: string): Pro
   }
   await page.locator("#acceptAllButton").click({ timeout: 1500 }).catch(() => undefined);
   const accept = page.locator('[data-testid="accept-offer"]');
+  // The offer takes a little while to reach the buyer's page after the seller sends it.
+  for (let attempt = 0; attempt < 12 && !(await accept.isVisible().catch(() => false)); attempt++) {
+    await page.waitForTimeout(8000);
+    await page.reload({ waitUntil: "domcontentloaded", timeout: 60_000 }).catch(() => undefined);
+    await page.waitForTimeout(5000);
+  }
   if (!(await accept.isVisible().catch(() => false))) {
     await shot(page, "no-offer");
-    throw new Error("The buyer's case page shows no offer to accept (it can take a minute to appear after the seller sends it).");
+    throw new Error("The buyer's case page shows no offer to accept, two minutes after the seller sent it.");
   }
   await accept.click();
   await page.waitForTimeout(3000);
@@ -353,9 +359,11 @@ export async function acceptOffer(session: BuyerSession, disputeId: string): Pro
   }
   await page.waitForTimeout(4000);
   await shot(page, "offer-accepted");
+  // The page can keep showing the old buttons for a while after PayPal has taken the answer,
+  // so this only reports what it sees. The Disputes API is the place to confirm it.
+  await page.locator('[data-testid="accept-offer"]').waitFor({ state: "detached", timeout: 12_000 }).catch(() => undefined);
   const stillOffered = await page.locator('[data-testid="accept-offer"]').isVisible().catch(() => false);
-  if (stillOffered) throw new Error("The offer is still waiting on the buyer's page: PayPal did not take the acceptance.");
-  const closed = "accepted";
+  const closed = stillOffered ? "clicked accept (the page has not refreshed yet)" : "accepted";
   log(`offer on ${disputeId}: ${closed}`);
   return closed;
 }

@@ -11,6 +11,7 @@ import { allowedActions, type Dispute } from "@/lib/paypal/types";
 import { buildChecklist, effortMinutes, readinessOf, recommend, strengthOf, winLikelihood } from "@/lib/rules/assess";
 import { mayAutoFile, pickEvidenceType } from "@/lib/rules/guards";
 import { reasonTitle, ruleFor } from "@/lib/rules/evidence-table";
+import { isTracked } from "./config";
 import { fillMissingPhotoReads, gatherEvidence } from "./evidence";
 import { addTrail, loadCase, loadDesk, loadSettings, saveCase, saveDesk } from "./state";
 import type { CaseDetail, CaseMeta, Desk, Settings } from "./types";
@@ -77,7 +78,7 @@ export function metaFrom(dispute: Dispute, detail: CaseDetail | null, previous: 
   const actions = allowedActions(dispute);
   const sellerSpoke =
     (dispute.supporting_info ?? []).some((s) => s.source === "SUBMITTED_BY_SELLER") ||
-    (dispute.evidences ?? []).some((e) => e.source === "SUBMITTED_BY_SELLER" && e.dispute_life_cycle_stage === dispute.dispute_life_cycle_stage);
+    (dispute.evidences ?? []).some((e) => e.source === "SUBMITTED_BY_SELLER" && e.action_info?.action !== "ESCALATE" && e.dispute_life_cycle_stage === dispute.dispute_life_cycle_stage);
   // A claim PayPal is already reviewing has no seller deadline, but supporting information
   // only helps if it arrives before PayPal decides: the desk sets its own target for it.
   const reviewing = dispute.status === "UNDER_REVIEW" && actions.includes("provide_supporting_info") && !sellerSpoke;
@@ -86,6 +87,7 @@ export function metaFrom(dispute: Dispute, detail: CaseDetail | null, previous: 
   return {
     disputeId: dispute.dispute_id,
     firstSeenAt: previous?.firstSeenAt ?? new Date().toISOString(),
+    createdAt: dispute.create_time,
     updateTime: dispute.update_time ?? null,
     reason: dispute.reason,
     status: dispute.status,
@@ -107,6 +109,33 @@ export function metaFrom(dispute: Dispute, detail: CaseDetail | null, previous: 
     outcome: outcomeOf(dispute, amount),
     replay: currentMode() === "replay" ? true : undefined,
   };
+}
+
+/**
+ * The recommendation is advice for the seller's next move. Once the seller has acted (or the
+ * case is resolved) PayPal lists fewer actions, and recomputing would rewrite history, so the
+ * advice that was given is kept.
+ */
+function reassess(detail: CaseDetail, dispute: Dispute, settings: Settings): void {
+  if (!detail.evidence) return;
+  detail.checklist = buildChecklist(dispute, detail.evidence);
+  const actionable = allowedActions(dispute).some((a) => a !== "adjudicate" && a !== "require_evidence");
+  if (detail.recommendation && !actionable) return;
+  // A case the desk first sees after the seller's turn has passed is judged against the
+  // actions its stage normally offers, so the card says what the rules make of the evidence.
+  const usual = dispute.dispute_life_cycle_stage === "INQUIRY" ? ["accept_claim", "send_message", "make_offer", "escalate", "provide_evidence"] : ["accept_claim", "provide_evidence"];
+  const basis: Dispute = actionable
+    ? dispute
+    : {
+        ...dispute,
+        links: usual.map((rel) => ({ rel, href: "", method: "POST" })),
+        // PayPal rewrites the amount after an accepted offer: judge the case on what was at stake.
+        dispute_amount: { ...dispute.dispute_amount, value: originalAmountOf(dispute).toFixed(2) },
+      };
+  const explanation = detail.recommendation?.explanation;
+  const next = recommend(basis, detail.checklist, settings);
+  const same = detail.recommendation && detail.recommendation.action === next.action && detail.recommendation.likelihood === next.likelihood;
+  detail.recommendation = { ...next, explanation: same ? explanation : undefined };
 }
 
 function freshDetail(dispute: Dispute): CaseDetail {
@@ -135,7 +164,11 @@ export type SyncResult = { desk: Desk; settings: Settings; newIds: string[]; cha
 /** Poll PayPal, pull details for anything new or changed, update the desk. */
 export async function syncDesk(opts: { feature?: string } = {}): Promise<SyncResult> {
   const [desk, settings] = await Promise.all([loadDesk(), loadSettings()]);
-  const summaries = await listDisputes({ feature: opts.feature ?? "Intake: poll disputes" });
+  const summaries = (await listDisputes({ feature: opts.feature ?? "Intake: poll disputes" })).filter((d) => isTracked(d.create_time));
+  // Cases the desk stopped tracking (the start time moved) are dropped from its own state.
+  for (const id of Object.keys(desk.cases)) {
+    if (!isTracked(summaries.find((d) => d.dispute_id === id)?.create_time ?? desk.cases[id].createdAt ?? undefined)) delete desk.cases[id];
+  }
   const listed = new Map(summaries.map((s) => [s.dispute_id, s]));
 
   // New disputes can take minutes to show up in the list, so known ids are also re-read by id.
@@ -174,12 +207,8 @@ export async function syncDesk(opts: { feature?: string } = {}): Promise<SyncRes
       }
       detail.dispute = dispute;
       detail.syncedAt = new Date().toISOString();
-      // PayPal's allowed actions may have changed, so the recommendation is recomputed.
-      if (detail.evidence) {
-        detail.checklist = buildChecklist(dispute, detail.evidence);
-        const explanation = detail.recommendation?.explanation;
-        detail.recommendation = { ...recommend(dispute, detail.checklist, settings), explanation };
-      }
+      // PayPal's allowed actions may have changed, so the advice is checked again.
+      reassess(detail, dispute, settings);
       changedIds.push(id);
     } else {
       newIds.push(id);
@@ -210,11 +239,7 @@ export async function refreshCase(id: string, feature = "Case file: read dispute
   }
   detail.dispute = dispute;
   detail.syncedAt = new Date().toISOString();
-  if (detail.evidence) {
-    detail.checklist = buildChecklist(dispute, detail.evidence);
-    const explanation = detail.recommendation?.explanation;
-    detail.recommendation = { ...recommend(dispute, detail.checklist, settings), explanation };
-  }
+  reassess(detail, dispute, settings);
   await saveCase(detail);
   const meta = metaFrom(dispute, detail, before, settings);
   const latest = await loadDesk();
@@ -265,11 +290,10 @@ export async function prepareCase(
     }
   }
 
-  detail.checklist = buildChecklist(dispute, detail.evidence);
-  const previousExplanation = detail.recommendation?.explanation;
-  const rec = recommend(dispute, detail.checklist, settings);
-  const changed = !detail.recommendation || detail.recommendation.action !== rec.action || detail.recommendation.likelihood !== rec.likelihood;
-  detail.recommendation = { ...rec, explanation: changed ? undefined : previousExplanation };
+  const previous = detail.recommendation;
+  reassess(detail, dispute, settings);
+  const rec = detail.recommendation as NonNullable<CaseDetail["recommendation"]>;
+  const changed = !previous || previous.action !== rec.action || previous.likelihood !== rec.likelihood;
   if (changed) {
     addTrail(detail, {
       actor: "rules",
@@ -279,10 +303,10 @@ export async function prepareCase(
     });
   }
 
-  if (opts.explain && !detail.recommendation.explanation) {
+  if (opts.explain && !rec.explanation) {
     try {
-      detail.recommendation.explanation = await explainRecommendation(dispute, detail.evidence, detail.checklist, detail.recommendation);
-      addTrail(detail, { actor: "marlow", kind: "ai", title: "Explained the recommendation", detail: detail.recommendation.explanation.text, ai: detail.recommendation.explanation.ai });
+      rec.explanation = await explainRecommendation(dispute, detail.evidence, detail.checklist, rec);
+      addTrail(detail, { actor: "marlow", kind: "ai", title: "Explained the recommendation", detail: rec.explanation.text, ai: rec.explanation.ai });
     } catch (err) {
       addTrail(detail, { actor: "marlow", kind: "ai", title: "Could not write the explanation", detail: err instanceof AiUnavailableError ? "The model did not answer. The rule-based reasons are shown instead." : String(err), ok: false });
     }
@@ -291,7 +315,7 @@ export async function prepareCase(
   if (opts.draft && (!detail.draft || opts.force)) {
     const evidenceType = pickEvidenceType(dispute, ruleFor(dispute.reason).fileAs);
     try {
-      const draft = await draftResponse(dispute, detail.evidence, detail.checklist, detail.recommendation);
+      const draft = await draftResponse(dispute, detail.evidence, detail.checklist, rec);
       detail.draft = { letter: draft.text, evidenceType, notes: draft.text.slice(0, 1900), ai: draft.ai, generatedAt: new Date().toISOString() };
       addTrail(detail, { actor: "marlow", kind: "ai", title: "Drafted the response", detail: `${draft.text.split(/\s+/).length} words, to be filed as ${evidenceType ?? "a message"}.`, ai: draft.ai });
     } catch {

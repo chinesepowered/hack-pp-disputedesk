@@ -34,7 +34,10 @@ export function duration(file: string): number {
 /** Runs in the page: a pointer that follows the mouse, a click ripple and a caption bar. */
 const OVERLAY = `
 (() => {
-  if (window.__demo) return;
+  const install = () => {
+  if (window.__demo) return true;
+  // An init script can run before <html> exists.
+  if (!document.documentElement) return false;
   const css = document.createElement('style');
   css.textContent = \`
     #demo-cursor { position: fixed; left: 0; top: 0; width: 28px; height: 28px; z-index: 2147483647; pointer-events: none; transform: translate(-200px,-200px); transition: transform 60ms linear; }
@@ -54,8 +57,11 @@ const OVERLAY = `
   ripple.id = 'demo-ripple';
   const caption = document.createElement('div');
   caption.id = 'demo-caption';
-  const mount = () => { document.body.append(cursor, ripple, caption); };
-  if (document.body) mount(); else document.addEventListener('DOMContentLoaded', mount);
+  // Mounted on <html>, outside <body>, so the app's own rendering never removes them.
+  const mount = () => { for (const el of [cursor, ripple, caption]) if (!el.isConnected) document.documentElement.appendChild(el); };
+  mount();
+  document.addEventListener('DOMContentLoaded', mount);
+  setInterval(mount, 500);
   const z = () => Number(getComputedStyle(document.body).zoom || 1) || 1;
   window.addEventListener('mousemove', (e) => { cursor.style.transform = 'translate(' + (e.clientX / 1) + 'px,' + (e.clientY / 1) + 'px)'; }, true);
   window.addEventListener('mousedown', (e) => {
@@ -66,6 +72,12 @@ const OVERLAY = `
     caption(html) { if (!html) { caption.classList.remove('on'); return; } caption.innerHTML = html; caption.classList.add('on'); },
     zoom: z,
   };
+  return true;
+  };
+  if (!install()) {
+    const timer = setInterval(() => { if (install()) clearInterval(timer); }, 25);
+    document.addEventListener('DOMContentLoaded', install);
+  }
 })();
 `;
 

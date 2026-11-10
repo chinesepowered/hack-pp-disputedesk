@@ -49,8 +49,8 @@ let state: typeof import("@/lib/desk/state");
 const writes = () => calls.filter((c) => c.fn !== "getDispute").map((c) => c.fn);
 
 beforeAll(async () => {
-  // The store writes under <cwd>/.data: give the tests their own.
-  process.chdir(mkdtempSync(path.join(os.tmpdir(), "disputedesk-test-")));
+  // The store must never point at the app's own .data folder during tests.
+  process.env.DISPUTEDESK_DATA_DIR = mkdtempSync(path.join(os.tmpdir(), "disputedesk-test-"));
   ({ fileAction, DeskError } = await import("@/lib/desk/filing"));
   ({ PayPalError } = await import("@/lib/paypal/http"));
   state = await import("@/lib/desk/state");

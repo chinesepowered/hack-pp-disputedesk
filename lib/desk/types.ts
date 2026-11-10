@@ -147,6 +147,7 @@ export type Filing = {
 export type CaseMeta = {
   disputeId: string;
   firstSeenAt: string;
+  createdAt?: string;
   updateTime: string | null;
   reason: string;
   status: string;

@@ -108,7 +108,9 @@ export default function BoardPage() {
               ? { text: "No disputes. I will keep watching PayPal and book time the moment one lands.", ai: null, mood: "empty" }
               : needs === 0
                 ? { text: "Nothing needs you right now. Everything open is with PayPal or the buyer.", ai: null, mood: "empty" }
-                : { text: `${needs} ${needs === 1 ? "dispute needs" : "disputes need"} a response. Each one has time booked before its deadline.`, ai: null, mood: "calm" },
+                : view.unscheduled.length
+                  ? { text: `${view.unscheduled.length} ${view.unscheduled.length === 1 ? "dispute has" : "disputes have"} a deadline but no time booked yet. Say the word and I will book ${view.unscheduled.length === 1 ? "it" : "them"}.`, ai: null, mood: "calm" }
+                  : { text: `${needs} ${needs === 1 ? "dispute needs" : "disputes need"} a response. Each one has time booked before its deadline.`, ai: null, mood: "calm" },
           );
         }
       } catch (err) {

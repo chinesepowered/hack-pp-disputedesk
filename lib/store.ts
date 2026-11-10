@@ -11,7 +11,10 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-const DATA_DIR = path.join(process.cwd(), ".data");
+/** Resolved on every call so tests (and anything else) can point the store somewhere else. */
+function dataDir(): string {
+  return process.env.DISPUTEDESK_DATA_DIR || path.join(process.cwd(), ".data");
+}
 const BLOB_PREFIX = "disputedesk/";
 
 type BlobAccess = "public" | "private";
@@ -101,7 +104,7 @@ async function blobList(prefix: string): Promise<string[]> {
 }
 
 function filePath(key: string): string {
-  return path.join(DATA_DIR, `${safeKey(key)}.json`);
+  return path.join(dataDir(), `${safeKey(key)}.json`);
 }
 
 export async function getDoc<T>(key: string): Promise<T | null> {
@@ -119,7 +122,7 @@ export async function setDoc<T>(key: string, value: T): Promise<void> {
     await blobPut(key, text);
     return;
   }
-  await fs.mkdir(DATA_DIR, { recursive: true });
+  await fs.mkdir(dataDir(), { recursive: true });
   const target = filePath(key);
   const tmp = `${target}.${process.pid}.${Date.now()}.tmp`;
   await fs.writeFile(tmp, text, "utf8");
@@ -137,7 +140,7 @@ export async function deleteDoc(key: string): Promise<void> {
 export async function listKeys(prefix: string): Promise<string[]> {
   if (blobEnabled()) return blobList(prefix);
   try {
-    const files = await fs.readdir(DATA_DIR);
+    const files = await fs.readdir(dataDir());
     const safe = safeKey(prefix);
     return files
       .filter((f) => f.startsWith(safe) && f.endsWith(".json"))

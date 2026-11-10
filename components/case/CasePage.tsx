@@ -226,7 +226,7 @@ export default function CasePage({ id }: { id: string }) {
   const pending = (detail.proposals ?? []).filter((p) => p.status === "pending");
   const filed =
     filings.some((f) => f.status === "done" && !["require_evidence", "adjudicate", "escalate"].includes(f.action)) ||
-    (d.evidences ?? []).some((x) => x.source === "SUBMITTED_BY_SELLER") ||
+    (d.evidences ?? []).some((x) => x.source === "SUBMITTED_BY_SELLER" && x.action_info?.action !== "ESCALATE") ||
     (d.supporting_info ?? []).some((x) => x.source === "SUBMITTED_BY_SELLER") ||
     (d.offer?.history ?? []).some((h) => h.actor === "SELLER");
   const buyerWords = d.messages?.[0]?.content ?? d.evidences?.find((x) => x.source === "SUBMITTED_BY_BUYER")?.notes;
@@ -419,7 +419,7 @@ export default function CasePage({ id }: { id: string }) {
 
         {/* Right: decision, draft, actions */}
         <div className="flex min-w-0 flex-col gap-4">
-          {rec && <RecommendationCard rec={rec} amount={meta.amount} />}
+          {rec && <RecommendationCard rec={rec} amount={meta.amount} past={Boolean(outcome) || (filed && !meta.needsSeller)} />}
 
           {!outcome && (
             <Card className="px-5 py-4" aria-labelledby="draft-title" data-testid="draft-card">
@@ -701,14 +701,14 @@ function ChecklistRow({ c, detail }: { c: ChecklistItem; detail: CaseDetail }) {
   );
 }
 
-function RecommendationCard({ rec, amount }: { rec: Recommendation; amount: number }) {
+function RecommendationCard({ rec, amount, past }: { rec: Recommendation; amount: number; past?: boolean }) {
   const label = rec.action === "fight" ? "Fight it" : rec.action === "offer" ? `Offer ${money(rec.offerAmount ?? 0)}` : "Accept it";
   const tone = rec.strength === "strong" ? "ready" : rec.strength === "partial" ? "partial" : "missing";
   return (
     <Card className="px-5 py-4" aria-labelledby="rec-title" data-testid="recommendation">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[12.5px] font-semibold uppercase tracking-wide text-muted">Recommendation</p>
+          <p className="text-[12.5px] font-semibold uppercase tracking-wide text-muted">{past ? "What Marlow recommended" : "Recommendation"}</p>
           <h2 id="rec-title" className="text-2xl font-extrabold" data-testid="rec-action">{label}</h2>
         </div>
         <div className="min-w-[150px] text-right">
@@ -769,13 +769,21 @@ function Photo({ src, title, read, note }: { src: string; title: string; read?: 
 function FundMovements({ d }: { d: CaseDetail["dispute"] }) {
   const moves = d.fund_movements ?? [];
   if (!moves.length) return null;
+  const phrase = (m: (typeof moves)[number]) => {
+    const amount = money(m.amount?.value);
+    const who = m.party === "BUYER" ? "the buyer" : "the seller";
+    if (m.reason === "HOLD_PLACED") return `PayPal put a hold on ${amount}`;
+    if (m.reason === "HOLD_RELEASED") return `released the hold on ${amount}`;
+    if (m.reason === "DISPUTE_SETTLEMENT") return m.type === "CREDIT" ? `paid ${amount} to ${who}` : `took ${amount} from ${who}`;
+    return `${(m.reason ?? m.type ?? "moved").replace(/_/g, " ").toLowerCase()} ${amount}`;
+  };
   return (
     <p className="mt-2 text-[13.5px]" data-testid="fund-movements">
       <span className="font-semibold">Money in PayPal: </span>
       {moves.map((m, i) => (
         <span key={i}>
           {i > 0 ? ", then " : ""}
-          {(m.reason ?? m.type ?? "").replace(/_/g, " ").toLowerCase()} {money(m.amount?.value)} ({fmtDate(m.initiated_time, TZ)})
+          {phrase(m)} ({fmtDate(m.initiated_time, TZ)})
         </span>
       ))}
       .

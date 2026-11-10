@@ -1,6 +1,6 @@
 {
   "budget": 15000,
-  "used": 285,
+  "used": 2402,
   "requests": [
     {
       "at": "2026-11-10T16:41:03.646Z",
@@ -31,6 +31,66 @@
       "voice": "marlow",
       "characters": 52,
       "purpose": "in-product line: won"
+    },
+    {
+      "at": "2026-11-10T16:52:18.102Z",
+      "voice": "narrator",
+      "characters": 196,
+      "purpose": "video narration s01-open"
+    },
+    {
+      "at": "2026-11-10T16:52:19.069Z",
+      "voice": "narrator",
+      "characters": 163,
+      "purpose": "video narration s02-problem"
+    },
+    {
+      "at": "2026-11-10T16:52:20.839Z",
+      "voice": "narrator",
+      "characters": 300,
+      "purpose": "video narration s03-board"
+    },
+    {
+      "at": "2026-11-10T16:52:23.124Z",
+      "voice": "narrator",
+      "characters": 387,
+      "purpose": "video narration s04-case"
+    },
+    {
+      "at": "2026-11-10T16:52:24.083Z",
+      "voice": "narrator",
+      "characters": 139,
+      "purpose": "video narration s05-file"
+    },
+    {
+      "at": "2026-11-10T16:52:25.100Z",
+      "voice": "narrator",
+      "characters": 149,
+      "purpose": "video narration s06-settle"
+    },
+    {
+      "at": "2026-11-10T16:52:26.697Z",
+      "voice": "narrator",
+      "characters": 283,
+      "purpose": "video narration s07-offer"
+    },
+    {
+      "at": "2026-11-10T16:52:27.576Z",
+      "voice": "narrator",
+      "characters": 125,
+      "purpose": "video narration s08-prevent"
+    },
+    {
+      "at": "2026-11-10T16:52:28.902Z",
+      "voice": "narrator",
+      "characters": 319,
+      "purpose": "video narration s09-guard"
+    },
+    {
+      "at": "2026-11-10T16:52:29.489Z",
+      "voice": "narrator",
+      "characters": 56,
+      "purpose": "video narration s10-end"
     }
   ]
 }

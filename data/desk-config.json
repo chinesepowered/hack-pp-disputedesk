@@ -1,0 +1,4 @@
+{
+  "trackFrom": "2026-11-10T16:30:00Z",
+  "note": "The desk ignores disputes opened before this time. The sandbox account also holds disputes from early build experiments (see docs/build-log.md); this keeps the demo board to the seeded pool. Override with the DESK_TRACK_FROM environment variable, or set it to null to track everything."
+}

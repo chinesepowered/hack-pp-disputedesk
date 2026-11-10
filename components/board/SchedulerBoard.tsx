@@ -221,6 +221,16 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
       }
     }
     timers.push(setTimeout(() => (applying.current = false), delay + 200));
+    // Bring Marlow's first new booking into view, so the change is seen where it happens.
+    const firstNew = blocks.find((b) => justBooked.includes(b.disputeId));
+    if (firstNew) {
+      timers.push(
+        setTimeout(() => {
+          const record = store.getById(firstNew.id) as EventModel | null;
+          if (record) void scheduler.scrollEventIntoView(record, { animate: true, block: "center" } as any).catch(() => undefined);
+        }, 150),
+      );
+    }
     return () => timers.forEach(clearTimeout);
   }, [blocks, justBooked]);
 

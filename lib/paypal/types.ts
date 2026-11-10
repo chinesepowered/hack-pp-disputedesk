@@ -41,6 +41,8 @@ export type DisputeEvidence = {
   source?: string;
   date?: string;
   dispute_life_cycle_stage?: string;
+  /** Set when the entry records an action rather than evidence, for example ESCALATE. */
+  action_info?: { action?: string };
   documents?: { name?: string; url?: string }[];
   evidence_info?: {
     tracking_info?: { carrier_name?: string; carrier_name_other?: string; tracking_number?: string; tracking_url?: string }[];

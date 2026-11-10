@@ -59,7 +59,7 @@ export default function PreventionPage() {
                 <p className="text-[14.5px] font-semibold">{card.fix}</p>
               </div>
               <details className="mt-3 text-[13.5px]">
-                <summary className="cursor-pointer font-semibold text-forest-deep">The numbers behind this ({card.cases.length} cases)</summary>
+                <summary className="cursor-pointer font-semibold text-forest-deep">The numbers behind this ({card.cases.length} {card.cases.length === 1 ? "case" : "cases"})</summary>
                 <ul className="mt-1.5 list-disc space-y-0.5 pl-5 text-muted">
                   {card.facts.map((f, i) => <li key={i}>{f}</li>)}
                 </ul>

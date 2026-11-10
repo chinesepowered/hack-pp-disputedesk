@@ -53,9 +53,13 @@ export async function readPhoto(photo: string, kind: keyof typeof PHOTO_QUESTION
 const storeTime = (iso: string) =>
   new Intl.DateTimeFormat("en-US", { timeZone: STORE.timezone, month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso));
 
+/** PayPal names the claim stage CHARGEBACK. In plain words it is a claim, not a card chargeback. */
+const stageWords = (stage?: string) =>
+  stage === "INQUIRY" ? "an inquiry between buyer and seller" : stage === "CHARGEBACK" ? "a PayPal claim (say claim, never chargeback)" : stage === "PRE_ARBITRATION" || stage === "ARBITRATION" ? "an appeal of an earlier decision" : "stage unknown";
+
 function caseFacts(dispute: Dispute, bundle: EvidenceBundle, checklist: ChecklistItem[]): string {
   const lines = [
-    `Dispute ${dispute.dispute_id}: ${reasonTitle(dispute.reason)}, ${dispute.dispute_amount.value} ${dispute.dispute_amount.currency_code}, stage ${dispute.dispute_life_cycle_stage ?? "unknown"}, status ${dispute.status}.`,
+    `Dispute ${dispute.dispute_id}: ${reasonTitle(dispute.reason)}, ${dispute.dispute_amount.value} ${dispute.dispute_amount.currency_code}, ${stageWords(dispute.dispute_life_cycle_stage)}, status ${dispute.status}.`,
     `Buyer's words: "${dispute.messages?.[0]?.content ?? dispute.evidences?.[0]?.notes ?? "(none)"}"`,
     `Order: ${bundle.paypal.items.map((i) => `${i.quantity} x ${i.name}`).join(", ") || bundle.store.product?.name || "unknown item"}, invoice ${bundle.paypal.invoiceId ?? "unknown"}.`,
     `Ship to: ${bundle.paypal.shipTo ? `${bundle.paypal.shipTo.name}, ${bundle.paypal.shipTo.line1}, ${bundle.paypal.shipTo.city} ${bundle.paypal.shipTo.state}` : "unknown"}.`,
