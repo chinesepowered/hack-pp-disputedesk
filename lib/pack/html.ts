@@ -3,9 +3,8 @@
  * photos. It is shown in the app, printed to PDF with Playwright where Chromium is available,
  * and its content drives the pdf-lib fallback (lib/pack/pdf.ts).
  */
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import type { CaseDetail } from "@/lib/desk/types";
+import { readPublicFile } from "@/lib/public-file";
 import { reasonTitle } from "@/lib/rules/evidence-table";
 import { STORE } from "@/lib/shop/catalog";
 
@@ -100,11 +99,7 @@ export function packModel(detail: CaseDetail): PackModel {
 }
 
 export async function photoBytes(file: string): Promise<Uint8Array | null> {
-  try {
-    return await fs.readFile(path.join(process.cwd(), "public", file.replace(/^\//, "")));
-  } catch {
-    return null;
-  }
+  return readPublicFile(file);
 }
 
 export async function packHtml(detail: CaseDetail): Promise<string> {

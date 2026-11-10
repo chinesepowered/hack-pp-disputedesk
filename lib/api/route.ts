@@ -17,6 +17,9 @@ type Handler = (req: NextRequest, ctx: RouteContext) => Promise<Record<string, u
 export function toHttp(err: unknown): { status: number; body: { code: string; message: string; debugId?: string | null; extra?: unknown } } {
   if (err instanceof DeskError) return { status: err.status, body: { code: err.code, message: err.message, extra: err.extra } };
   if (err instanceof PayPalError) {
+    if (err.code === "MISSING_CREDENTIALS") {
+      return { status: 503, body: { code: "NOT_CONFIGURED", message: "PayPal sandbox credentials are not set on this server (PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET). Switch to Replay in the header to see the recorded cases." } };
+    }
     if (err.unknownOutcome || err.status === 0) return { status: 502, body: { code: "PAYPAL_NO_RESPONSE", message: "PayPal did not answer. Try again." } };
     if (err.status === 401 || err.status === 403) return { status: 502, body: { code: "PAYPAL_AUTH", message: "PayPal refused our credentials.", debugId: err.debugId } };
     if (err.status === 429) return { status: 503, body: { code: "PAYPAL_RATE_LIMIT", message: "PayPal is rate limiting this app. Try again shortly.", debugId: err.debugId } };

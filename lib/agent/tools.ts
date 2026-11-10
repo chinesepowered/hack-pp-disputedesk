@@ -1,8 +1,10 @@
 /**
  * Marlow's tools.
  *
- * From @paypal/agent-toolkit: list_disputes, get_dispute, accept_dispute_claim.
- * Written here: gather_evidence, provide_evidence, make_offer, send_message, schedule_work_block.
+ * From @paypal/agent-toolkit, used as they come: list_disputes and get_dispute.
+ * Written here: accept_dispute_claim (the toolkit's tool of that name moves money, so the agent
+ * gets a guarded one instead), gather_evidence, provide_evidence, make_offer, send_message and
+ * schedule_work_block.
  *
  * The rule for every tool that can move money or speak for the merchant: the model may ask for
  * anything, but the tool checks the request in code (the dispute's links, PayPal's allowed
@@ -105,9 +107,10 @@ export function buildTools(ai: AiTag, events: ToolEvent[]): Record<string, Tool>
     get_dispute: wrapRead("get_dispute", "Agent tool: get_dispute (Agent Toolkit)"),
 
     /**
-     * The toolkit's accept_dispute_claim moves money (PayPal refunds the buyer), so it is wrapped:
-     * links, then thresholds. If the merchant's auto-accept rule covers the case the toolkit tool
-     * runs; otherwise this becomes a proposal.
+     * The toolkit's accept_dispute_claim moves money (PayPal refunds the buyer), so the agent
+     * gets this guarded tool under the same name instead: links, then thresholds. If the
+     * merchant's auto-accept rule covers the case it files through fileAction (the one path
+     * every dispute write takes: claim, call, record); otherwise it becomes a proposal.
      */
     accept_dispute_claim: tool({
       description:

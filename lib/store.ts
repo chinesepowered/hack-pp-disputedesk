@@ -13,17 +13,26 @@ import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-/** Resolved on every call so tests (and anything else) can point the store somewhere else. */
+/**
+ * Resolved on every call so tests (and anything else) can point the store somewhere else.
+ * A serverless host only lets a function write under /tmp, so that is used there when no Blob
+ * store is connected (or it is failing). State kept that way lasts as long as the instance:
+ * the desk reads PayPal again on a fresh one.
+ */
 function dataDir(): string {
-  return process.env.DISPUTEDESK_DATA_DIR || path.join(process.cwd(), ".data");
+  if (process.env.DISPUTEDESK_DATA_DIR) return process.env.DISPUTEDESK_DATA_DIR;
+  return process.env.VERCEL ? "/tmp/disputedesk-data" : path.join(process.cwd(), ".data");
 }
 const BLOB_PREFIX = "disputedesk/";
 
 type BlobAccess = "public" | "private";
 let blobAccess: BlobAccess = process.env.BLOB_ACCESS === "public" ? "public" : "private";
 
+/** Set when a Blob write failed with both access levels: the store then keeps files instead. */
+let blobFailure: string | null = null;
+
 function blobEnabled(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN) && !blobFailure;
 }
 
 function safeKey(key: string): string {
@@ -121,8 +130,15 @@ export async function getDoc<T>(key: string): Promise<T | null> {
 export async function setDoc<T>(key: string, value: T): Promise<void> {
   const text = JSON.stringify(value, null, blobEnabled() ? 0 : 2);
   if (blobEnabled()) {
-    await blobPut(key, text);
-    return;
+    try {
+      await blobPut(key, text);
+      return;
+    } catch (err) {
+      // Keep the desk working: fall back to files for the rest of this instance's life, and
+      // say so in /api/health.
+      blobFailure = err instanceof Error ? err.message.slice(0, 200) : String(err).slice(0, 200);
+      console.error("[store] Vercel Blob write failed, using files instead:", blobFailure);
+    }
   }
   await fs.mkdir(dataDir(), { recursive: true });
   const target = filePath(key);
@@ -191,4 +207,12 @@ export async function updateDoc<T>(key: string, fallback: T, change: (doc: T) =>
 
 export function storeBackend(): "blob" | "files" {
   return blobEnabled() ? "blob" : "files";
+}
+
+/** For /api/health: where state is kept, and whether that is the durable place. */
+export function storeStatus(): { backend: "blob" | "files"; durable: boolean; note: string | null } {
+  if (blobEnabled()) return { backend: "blob", durable: true, note: null };
+  if (blobFailure) return { backend: "files", durable: false, note: `Vercel Blob failed (${blobFailure}). State is kept in temporary files on this instance.` };
+  if (process.env.VERCEL) return { backend: "files", durable: false, note: "No Blob store is connected (BLOB_READ_WRITE_TOKEN). State is kept in temporary files on this instance." };
+  return { backend: "files", durable: true, note: null };
 }

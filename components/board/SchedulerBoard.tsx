@@ -299,7 +299,7 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
 
   return (
     <div className="flex flex-col gap-3 xl:flex-row" data-testid="board">
-      <div className="desk-scheduler min-w-0 flex-1 overflow-hidden rounded-[14px] border border-line bg-surface" style={{ height: 40 + team.length * 64 + 16 }} data-testid="scheduler">
+      <div className="desk-scheduler min-w-0 flex-none overflow-hidden rounded-[14px] border border-line bg-surface xl:flex-1" style={{ height: 40 + team.length * 64 + 16 }} data-testid="scheduler">
         <BryntumScheduler
           ref={schedulerRef}
           startDate={range.start}

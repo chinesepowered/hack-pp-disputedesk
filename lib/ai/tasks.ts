@@ -3,12 +3,11 @@
  * response, summarize patterns. It never decides money: every prompt is handed the decision the
  * rules already made and asked to explain or write around it.
  */
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import type { AiTag, ChecklistItem, EvidenceBundle, PhotoRead, Recommendation } from "@/lib/desk/types";
 import type { Dispute } from "@/lib/paypal/types";
 import { reasonTitle } from "@/lib/rules/evidence-table";
 import { STORE } from "@/lib/shop/catalog";
+import { readPublicFile } from "@/lib/public-file";
 import { extractJson, generate } from "./client";
 
 const VOICE =
@@ -23,8 +22,8 @@ export const PHOTO_QUESTIONS = {
 /** Vision: answer one yes/no question about one photo. */
 export async function readPhoto(photo: string, kind: keyof typeof PHOTO_QUESTIONS): Promise<PhotoRead> {
   const question = PHOTO_QUESTIONS[kind];
-  const file = path.join(process.cwd(), "public", photo.replace(/^\//, ""));
-  const image = await fs.readFile(file);
+  const image = await readPublicFile(photo);
+  if (!image) throw new Error(`Photo ${photo} could not be read.`);
   const res = await generate({
     kind: "vision",
     vision: true,

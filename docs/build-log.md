@@ -77,3 +77,104 @@ how we got around them. Times are UTC.
 - **A disputed capture reads as `PENDING`** in `GET /v2/payments/captures/{id}` while the hold is on.
 - **Transaction Search had nothing for a payment made an hour earlier** (the documented lag), so
   the case file treats an empty result as "not indexed yet".
+
+### More Disputes API behaviour (later the same day)
+
+- **"Not received" plus tracking is escalated by PayPal, even when the tracking is added
+  seconds after the dispute.** Within about three minutes the case is at the claim stage
+  (`CHARGEBACK`), `UNDER_REVIEW`, and it cannot be settled in the sandbox (`adjudicate` and
+  `require-evidence` answer 422 `EVIDENCE_TYPE_IS_NOT_ALLOWED`). Tracking added to an inquiry that
+  has already settled into `WAITING_FOR_SELLER_RESPONSE` does not trigger this. The seed was
+  restructured into flows (`inquiry`, `claim`, `direct_claim`, `ready_to_settle`) and adds
+  tracking in a later staging pass where the scenario needs a clean claim.
+- **An escalation shows up as seller evidence.** After `escalate`, the dispute's `evidences`
+  holds an entry with `source: SUBMITTED_BY_SELLER`, `evidence_type: OTHER` and
+  `action_info.action: ESCALATE`. Our stepper counted that as "Approved and filed" on a claim
+  nobody had answered yet. Escalation entries are now ignored when deciding whether the seller
+  has responded.
+- **An accepted partial refund offer resolves as `RESOLVED_BUYER_FAVOUR`** with
+  `outcome_reason: INQUIRY_OFFER_PARTIAL_REFUND` and `amount_refunded`, and PayPal rewrites
+  `dispute_amount` to the refunded amount. Our first outcome banner said "$0 kept" on a $62 case
+  settled for $31. The desk now keeps the original amount (from the disputed transaction) and
+  reports what was kept.
+- **An accepted claim resolves as `RESOLVED_BUYER_FAVOUR` / `SELLER_ISSUED_REFUND`** about a
+  minute after `accept-claim` returns.
+- **Right after `send-message` an inquiry reads `UNDER_REVIEW` with no actions listed.** A few
+  minutes later it is `WAITING_FOR_BUYER_RESPONSE` with `accept_claim`, `send_message` and
+  `escalate` (no `make_offer`). `provide-supporting-info` on a claim PayPal is reviewing keeps
+  `provide_supporting_info` and `accept_claim` in `links`, so it can be sent more than once.
+- **Timings we measured for one claim:** evidence filed at 17:08:50 UTC; `adjudicate` first
+  listed in `links` between 17:36:40 and 17:37:29 (about 28 minutes); settled 152 seconds after
+  the `adjudicate` call. The video cuts both waits and says so.
+- **PayPal's fee page and User Agreement.** The merchant fees page could be fetched (standard
+  dispute fee 15.00 USD, high volume 30.00 USD, "We may charge a Dispute Fee when a buyer files a
+  dispute claim or chargeback"). The User Agreement, which lists when the fee is not charged,
+  returned no body text to our fetcher, and the Seller Protection page returned 403. So the
+  video and README say a lost claim "can" cost a fee, and the economics treat the fee as a
+  setting.
+
+### Models (W&B Inference)
+
+- **Both text models reason before they answer, and the reasoning counts against
+  `max_tokens`.** A 260 token budget came back empty with `finish_reason: length`. We first
+  added 3,000 tokens of headroom to every call.
+- **Headroom was not enough for some prompts.** Drafts for "offer" and "accept" cases came back
+  empty from both models after 45 seconds: 3,420 completion tokens, zero characters of content.
+  The template letter was being used without anyone noticing, because the error was swallowed.
+  The error now reports the finish reason and token count.
+- **What stops the reasoning differs by model** (`scripts/dev/reasoning-probe.ts`, same prompt):
+  Qwen answered in 2 seconds with `chat_template_kwargs: {"enable_thinking": false}` (195
+  completion tokens instead of 1,613) and ignored `reasoning_effort`; GLM answered in 1.5
+  seconds with `reasoning_effort: "low"` and ignored the chat template switch; `/no_think` in
+  the prompt did nothing for either. The writing tasks now send the right field for each model.
+  A case builds in 4 to 8 seconds instead of 45 or more. The tool-calling agent keeps its
+  reasoning.
+- **A model asked for "the most urgent booking" will pick one.** The scheduling note named the
+  wrong case as most urgent because nothing in its input said which was. The list is now sorted
+  by deadline in code and the prompt says the first line is the nearest deadline.
+- **The model called a PayPal claim a "chargeback"** because PayPal's stage name is
+  `CHARGEBACK`. Prompts and the evidence pack now translate the stage to "claim".
+
+### Agent Toolkit
+
+- **Two builds of axios.** `@paypal/agent-toolkit` is CommonJS and loads `axios` with
+  `require`, which resolves to `dist/node/axios.cjs`. Our server bundle imported the ES module
+  build. They are separate instances with separate interceptors, so the logging we attached saw
+  every toolkit call under `tsx` and none in the production build. The logger now attaches to
+  both builds (the second one through `process.getBuiltinModule("node:module").createRequire`,
+  because webpack rewrites a plain `createRequire` import).
+- **The toolkit's `accept_dispute_claim` moves money**, so the agent is given a guarded tool
+  with the same name instead: links, thresholds, then the same filing path as a person's click.
+  Run live: a $12 "not received" inquiry with no tracking was accepted by Marlow under the
+  owner's under $15 rule.
+
+### Bryntum Scheduler
+
+- **Turbopack ran out of memory** compiling the Scheduler module (the dev server was killed at
+  12 GB). `pnpm dev` and `pnpm build` use webpack.
+- **The event editor's `items` and `editorConfig` threw** "Cannot destructure property
+  'startDateField'" in 7.3.8 when customized, so the default editor is used.
+  `createEventOnDblClick` is not a prop in 7.x.
+- **Timeline rows are as wide as the whole time span**, so a row's bounding box starts far to
+  the left of the visible area once the timeline is scrolled. Aim drags at the Scheduler's own
+  box, not the row's.
+- **A calendar board goes stale.** Blocks booked this morning are in the past by lunch, and a
+  judge opening the board a day later would see an empty week. Blocks whose time has passed with
+  no response now go back to Unscheduled and are booked again, and the timeline opens at the
+  next booked block.
+- The trial package was only run on localhost in the build environment. Whether the hosted
+  build shows a trial notice is on the list in `docs/needs-user.md`.
+
+### Our own mistakes
+
+- **A test run wiped the working desk.** The store resolved its folder when the module was
+  imported, before the test set its own folder, so `pnpm test` wrote an empty desk over
+  `.data/desk.json`. The store now resolves the folder on every call and Vitest sets it in its
+  config. The desk was rebuilt by reading PayPal again (which is the design: PayPal is the
+  record).
+- **Two writes of one document in the same millisecond shared a temp file**, and one rename
+  failed. In Replay that silently dropped three of seven cases from the first board load. Temp
+  files are now unique, and read, change, write on one document runs under a lock, which also
+  makes the filing claim atomic within a server instance.
+- **The first narration overstated two things** ("under a minute", "about twenty minutes").
+  Both were replaced with what we measured ("three clicks", "almost half an hour").
