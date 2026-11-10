@@ -2,6 +2,7 @@
 import { explainSchedule } from "@/lib/ai/tasks";
 import { scheduleCases, type Placement, type SchedCase } from "@/lib/schedule/scheduler";
 import { reasonTitle } from "@/lib/rules/evidence-table";
+import { currentMode } from "@/lib/paypal/log";
 import { loadDesk, loadSettings, saveDesk } from "./state";
 import type { AiTag, CaseMeta, Desk, Settings, WorkBlock } from "./types";
 
@@ -85,7 +86,9 @@ export async function autoSchedule(opts: { reflow?: boolean; explain?: boolean }
   const booked = placements.filter((p) => p.block);
   if (booked.length) {
     const lines = booked.slice(0, 8).map((p) => `${caseLabel(desk.cases[p.disputeId])}: ${p.why}`);
-    if (opts.explain) {
+    // Replay keeps the scheduler's own sentence: a recorded explanation would describe
+    // bookings from the day it was recorded.
+    if (opts.explain && currentMode() !== "replay") {
       try {
         const res = await explainSchedule(lines);
         note = { text: res.text, ai: res.ai };

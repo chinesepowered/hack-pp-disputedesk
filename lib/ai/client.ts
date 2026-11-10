@@ -11,6 +11,7 @@ import { generateText, type CoreMessage, type LanguageModelV1 } from "ai";
 import { env } from "@/lib/env";
 import type { AiTag } from "@/lib/desk/types";
 import { currentMode } from "@/lib/paypal/log";
+import { record } from "@/lib/replay/recorder";
 
 let provider: ReturnType<typeof createOpenAICompatible> | null = null;
 
@@ -88,15 +89,20 @@ export async function generate(opts: {
     return text;
   };
 
+  const keep = (text: string, id: string, fallback: boolean) => {
+    if (opts.replayKey) record({ kind: "ai", key: opts.replayKey, aiKind: opts.kind, model: id, text, ...(fallback ? { fallback: true } : {}) });
+    return text;
+  };
+
   try {
     // Both text models reason before they answer and the reasoning counts against max_tokens
     // (a 260 token budget came back empty with finish_reason "length"), so every call gets headroom.
-    return { text: await attempt(primary, (opts.maxTokens ?? 700) + REASONING_HEADROOM), ai: { model: primary, kind: opts.kind } };
+    return { text: keep(await attempt(primary, (opts.maxTokens ?? 700) + REASONING_HEADROOM), primary, false), ai: { model: primary, kind: opts.kind } };
   } catch (first) {
     // The text fallback cannot read images, so a failed vision call is reported, not guessed.
     if (opts.vision) throw new AiUnavailableError(`Vision model failed: ${first instanceof Error ? first.message : first}`);
     try {
-      const text = await attempt(env.aiFallbackModel, (opts.maxTokens ?? 700) + REASONING_HEADROOM);
+      const text = keep(await attempt(env.aiFallbackModel, (opts.maxTokens ?? 700) + REASONING_HEADROOM), env.aiFallbackModel, true);
       return { text, ai: { model: env.aiFallbackModel, kind: opts.kind, fallback: true } };
     } catch (second) {
       throw new AiUnavailableError(

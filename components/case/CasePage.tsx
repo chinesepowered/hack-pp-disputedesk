@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Marlow } from "@/components/marlow/Marlow";
 import { ACTION_LABEL, AiTag, Button, Card, Chip, cx, dueText, fmtDate, money, OUTCOME_TEXT, READINESS_LABEL, reasonLabel, stageLabel, statusLabel } from "@/components/ui/atoms";
-import { announce, api, ApiError, toast } from "@/lib/client/store";
+import { announce, api, ApiError, say, setMode, toast } from "@/lib/client/store";
 import type { AiTag as AiTagType, CaseDetail, CaseMeta, ChecklistItem, Filing, Proposal, Recommendation, TrailStep, WorkBlock } from "@/lib/desk/types";
 import type { DisputeAction } from "@/lib/paypal/types";
 
-type Loaded = { detail: CaseDetail; meta: CaseMeta; block: WorkBlock | null; filings: Filing[] };
+type Loaded = { detail: CaseDetail; meta: CaseMeta; block: WorkBlock | null; filings: Filing[]; replayNext?: string | null; replayable?: boolean };
 const TZ = "America/Los_Angeles";
 
 const ENDPOINT: Record<DisputeAction, string> = {
@@ -63,6 +63,7 @@ export default function CasePage({ id }: { id: string }) {
         const res = await api<{ detail: CaseDetail; meta: CaseMeta }>(`/api/cases/${id}/prepare`, { method: "POST", body: { explain: true, draft: true, force } });
         apply(res);
         announce(`Case built. Marlow recommends: ${res.detail.recommendation?.action ?? "no recommendation"}.`);
+        say("ready");
       } catch (err) {
         toast("error", "Marlow could not build the case", err instanceof ApiError ? err.message : undefined);
       } finally {
@@ -115,7 +116,10 @@ export default function CasePage({ id }: { id: string }) {
   useEffect(() => {
     if (outcomeCode && prevOutcome.current === undefined && data && started.current && prevOutcome.current !== outcomeCode) {
       const o = OUTCOME_TEXT(outcomeCode, data.meta.outcome!.wonAmount, data.meta.amount);
-      if (seenOpen.current) toast(o.tone === "missing" ? "info" : "success", o.title, "PayPal resolved the case.");
+      if (seenOpen.current) {
+        toast(o.tone === "missing" ? "info" : "success", o.title, "PayPal resolved the case.");
+        if (o.tone === "ready") say("won");
+      }
     }
     if (data && !outcomeCode) seenOpen.current = true;
     prevOutcome.current = outcomeCode;
@@ -140,7 +144,11 @@ export default function CasePage({ id }: { id: string }) {
       const res = await api<{ filing: Filing; detail: CaseDetail; meta: CaseMeta; unknown: boolean }>(`/api/cases/${id}/file`, { method: "POST", body: { action, ...body } });
       apply({ detail: res.detail, meta: res.meta, filings: [...(data?.filings ?? []).filter((f) => f.key !== res.filing.key), res.filing] });
       if (res.unknown) toast("info", "PayPal did not answer", "The outcome is unknown. The dispute shows no change yet, so check again in a minute before retrying.");
-      else toast("success", res.filing.summary, `POST /v1/customer/disputes/${id}/${ENDPOINT[action]} accepted by PayPal.`);
+      else {
+        toast("success", res.filing.summary, `POST /v1/customer/disputes/${id}/${ENDPOINT[action]} accepted by PayPal.`);
+        if (FILE_ACTIONS.includes(action)) say("filed");
+        else if (action === "make_offer") say("offer");
+      }
       setConfirmAccept(false);
       setMessage("");
     } catch (err) {
@@ -258,6 +266,31 @@ export default function CasePage({ id }: { id: string }) {
           {requested.length > 0 && <> · Evidence PayPal asked for: {requested.map((r) => (r ?? "").replace(/_/g, " ").toLowerCase()).join(", ")}</>}
         </p>
       </Card>
+
+      {meta.replay && (
+        <Card className="border-partial-edge bg-partial-tint px-4 py-2.5 text-[14px] text-partial" role="note" data-testid="replay-hint">
+          <span className="font-bold">This case is a recording. </span>
+          {data.replayNext
+            ? `It plays what really happened in the sandbox. The next recorded step is: ${data.replayNext.replace(/_/g, " ").toLowerCase()}.`
+            : "The recording for this case has reached its end."}
+        </Card>
+      )}
+      {!meta.replay && data.replayable && outcome && (
+        <Card className="flex flex-wrap items-center gap-3 px-4 py-2.5 text-[14px]" role="note" data-testid="replay-offer">
+          <span className="flex-1">This live dispute is finished: a sandbox dispute can only be filed once. Its real run was recorded, so you can play it again from the start.</span>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              setMode("replay");
+              window.location.reload();
+            }}
+            data-testid="replay-this-case"
+          >
+            Replay this case
+          </Button>
+        </Card>
+      )}
 
       {busy && (
         <Card className="flex items-center gap-3 border-forest bg-forest-tint px-4 py-3" role="status" data-testid="case-busy">

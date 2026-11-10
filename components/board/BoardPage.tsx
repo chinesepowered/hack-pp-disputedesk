@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Marlow, type MarlowMood } from "@/components/marlow/Marlow";
 import { AiTag, Button, Card, Chip, cx, dueText, fmtDate, money, OUTCOME_TEXT, READINESS_LABEL, reasonLabel, stageLabel, statusLabel } from "@/components/ui/atoms";
-import { announce, api, ApiError, toast } from "@/lib/client/store";
+import { announce, api, ApiError, say, setMode, toast } from "@/lib/client/store";
 import type { BoardView } from "@/lib/desk/board";
 import type { AiTag as AiTagType, CaseMeta } from "@/lib/desk/types";
 
@@ -21,6 +21,7 @@ const SchedulerBoard = dynamic(() => import("./SchedulerBoard"), {
 });
 
 type Note = { text: string; ai: AiTagType | null; mood: MarlowMood };
+type Pool = { untouched: number; low: boolean; replayCases: { disputeId: string; label: string }[] };
 
 export default function BoardPage() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function BoardPage() {
   const [note, setNote] = useState<Note>({ text: "Checking PayPal for disputes.", ai: null, mood: "working" });
   const [justBooked, setJustBooked] = useState<string[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  const [pool, setPool] = useState<Pool | null>(null);
   const working = useRef(false);
 
   const fail = (err: unknown, fallback: string) => {
@@ -73,6 +75,7 @@ export default function BoardPage() {
       if (res.note) {
         setNote({ text: res.note.text, ai: res.note.ai, mood: "success" });
         announce(`Marlow booked ${booked.length} ${booked.length === 1 ? "dispute" : "disputes"}. ${res.note.text}`);
+        if (booked.length) say("intake");
       }
       const missed = res.placements.filter((p) => !p.block);
       if (missed.length) toast("error", `${missed.length} could not be booked`, missed[0].why);
@@ -89,9 +92,10 @@ export default function BoardPage() {
       working.current = true;
       if (!quiet) setBusy("Checking PayPal for disputes");
       try {
-        const res = await api<{ board: BoardView; newIds: string[] }>("/api/board");
+        const res = await api<{ board: BoardView; newIds: string[]; pool: Pool }>("/api/board");
         setError(null);
         setBoard(res.board);
+        setPool(res.pool);
         let view = res.board;
         if (res.newIds.length && quiet) toast("info", `${res.newIds.length} new ${res.newIds.length === 1 ? "dispute" : "disputes"} from PayPal`, "Marlow is reading them now.");
         view = await assess(view);
@@ -209,6 +213,33 @@ export default function BoardPage() {
         <Card className="border-missing-edge bg-missing-tint px-4 py-3 text-missing" role="alert">
           <p className="font-bold">The board could not be loaded.</p>
           <p className="text-sm">{error}</p>
+        </Card>
+      )}
+
+      {pool?.low && pool.replayCases.length > 0 && (
+        <Card className="border-partial-edge bg-partial-tint px-4 py-3" role="note" data-testid="pool-low">
+          <p className="font-bold text-partial">
+            {pool.untouched === 0 ? "Every live dispute has been handled." : `Only ${pool.untouched} live ${pool.untouched === 1 ? "dispute still needs" : "disputes still need"} a response.`}
+          </p>
+          <p className="text-[14px] text-partial">
+            Each sandbox dispute can only be filed once, so this pool gets used up. These cases were recorded from the real sandbox and can be played again in Replay, clearly marked as recordings:
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {pool.replayCases.map((c) => (
+              <button
+                key={c.disputeId}
+                type="button"
+                className="min-h-10 rounded-lg border border-partial-edge bg-surface px-3 text-[13.5px] font-semibold text-partial hover:bg-white"
+                onClick={() => {
+                  setMode("replay");
+                  router.push(`/cases/${c.disputeId}`);
+                }}
+                data-testid="pool-replay-case"
+              >
+                Replay: {c.label}
+              </button>
+            ))}
+          </div>
         </Card>
       )}
 

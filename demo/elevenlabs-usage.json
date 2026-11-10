@@ -1,0 +1,36 @@
+{
+  "budget": 15000,
+  "used": 285,
+  "requests": [
+    {
+      "at": "2026-11-10T16:41:03.646Z",
+      "voice": "marlow",
+      "characters": 73,
+      "purpose": "in-product line: intake"
+    },
+    {
+      "at": "2026-11-10T16:41:04.182Z",
+      "voice": "marlow",
+      "characters": 64,
+      "purpose": "in-product line: ready"
+    },
+    {
+      "at": "2026-11-10T16:41:04.670Z",
+      "voice": "marlow",
+      "characters": 39,
+      "purpose": "in-product line: filed"
+    },
+    {
+      "at": "2026-11-10T16:41:05.212Z",
+      "voice": "marlow",
+      "characters": 57,
+      "purpose": "in-product line: offer"
+    },
+    {
+      "at": "2026-11-10T16:41:05.687Z",
+      "voice": "marlow",
+      "characters": 52,
+      "purpose": "in-product line: won"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import { prepareCase } from "@/lib/desk/sync";
 import type { AiTag, CaseDetail, CaseMeta } from "@/lib/desk/types";
 import { env } from "@/lib/env";
 import { currentMode } from "@/lib/paypal/log";
+import { record } from "@/lib/replay/recorder";
 import { formatInZone } from "@/lib/schedule/time";
 import { buildTools, type ToolEvent } from "./tools";
 
@@ -108,6 +109,7 @@ export async function runAgent(input: { disputeId: string; instruction: string }
       }
     }
     if (!answer) answer = events.length ? events[events.length - 1].summary : "Done.";
+    if (ai) record({ kind: "ai", key: `agent:${disputeId}`, aiKind: "agent", model: ai.model, text: answer, ...(ai.fallback ? { fallback: true } : {}) });
   }
 
   const detail = (await loadCase(disputeId)) as CaseDetail;

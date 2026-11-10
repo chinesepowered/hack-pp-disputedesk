@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { MarlowMark } from "@/components/marlow/Marlow";
 import { cx } from "@/components/ui/atoms";
-import { clearCalls, dismissToast, setDrawer, setMode, useDeskStore } from "@/lib/client/store";
+import { clearCalls, dismissToast, setDrawer, setMode, setVoice, useDeskStore } from "@/lib/client/store";
 
 const NAV = [
   { href: "/", label: "Board" },
@@ -37,6 +37,26 @@ function ModeToggle() {
         </button>
       ))}
     </div>
+  );
+}
+
+function VoiceToggle() {
+  const voice = useDeskStore((s) => s.voice);
+  return (
+    <button
+      type="button"
+      aria-pressed={voice}
+      onClick={() => setVoice(!voice)}
+      className={cx("hidden min-h-10 items-center gap-1.5 rounded-lg border px-3 text-[13px] font-semibold md:inline-flex", voice ? "border-capy bg-[#f1e3d3] text-capy-dark" : "border-line bg-surface text-muted hover:bg-sunken")}
+      title="Marlow says a short line when something important happens. The same words are always on screen."
+      data-testid="voice-toggle"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M11 5 6 9H3v6h3l5 4z" />
+        {voice ? <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" /> : <path d="m16 9 5 6m0-6-5 6" />}
+      </svg>
+      Voice {voice ? "on" : "off"}
+    </button>
   );
 }
 
@@ -151,6 +171,7 @@ function Toasts() {
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const calls = useDeskStore((s) => s.calls.length);
   const mode = useDeskStore((s) => s.mode);
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
@@ -180,6 +201,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-2">
+            <VoiceToggle />
             <ModeToggle />
             <button
               type="button"
@@ -195,7 +217,19 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
         {mode === "replay" && (
           <div className="border-t border-partial-edge bg-partial-tint px-4 py-1.5 text-center text-[13.5px] font-semibold text-partial" role="note" data-testid="replay-banner">
-            Replay mode: this screen is showing recorded PayPal sandbox and AI responses, not live calls. Switch to Live sandbox for the real thing.
+            Replay mode: recorded PayPal sandbox and AI responses, not live calls. Waits that took minutes in the sandbox are played in seconds.{" "}
+            <button
+              type="button"
+              className="underline underline-offset-2 hover:no-underline"
+              onClick={async () => {
+                await fetch("/api/replay/reset", { method: "POST" }).catch(() => undefined);
+                if (pathname === "/") window.location.reload();
+                else router.push("/");
+              }}
+              data-testid="replay-restart"
+            >
+              Start the recording over
+            </button>
           </div>
         )}
       </header>

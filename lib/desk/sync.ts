@@ -6,6 +6,7 @@
 import { explainRecommendation, draftResponse } from "@/lib/ai/tasks";
 import { AiUnavailableError } from "@/lib/ai/client";
 import { getDispute, listDisputes } from "@/lib/paypal/disputes";
+import { currentMode } from "@/lib/paypal/log";
 import { allowedActions, type Dispute } from "@/lib/paypal/types";
 import { buildChecklist, effortMinutes, readinessOf, recommend, strengthOf, winLikelihood } from "@/lib/rules/assess";
 import { mayAutoFile, pickEvidenceType } from "@/lib/rules/guards";
@@ -37,7 +38,11 @@ export function outcomeOf(dispute: Dispute): CaseMeta["outcome"] {
   if (dispute.status !== "RESOLVED") return null;
   const code = dispute.dispute_outcome?.outcome_code ?? "NONE";
   const amount = Number(dispute.dispute_amount?.value ?? 0);
-  const refunded = Number(dispute.dispute_outcome?.amount_refunded?.value ?? NaN);
+  // What PayPal actually refunded: the outcome's own figure, else the refund transactions on
+  // the dispute (an accepted partial refund offer shows up there).
+  const reported = Number(dispute.dispute_outcome?.amount_refunded?.value ?? NaN);
+  const transactions = dispute.refund_details?.transactions ?? [];
+  const refunded = Number.isFinite(reported) ? reported : transactions.length ? transactions.reduce((sum, t) => sum + Number(t.gross_amount?.value ?? 0), 0) : NaN;
   let won = 0;
   if (SELLER_WON.has(code)) won = amount;
   else if (Number.isFinite(refunded)) won = Math.max(0, amount - refunded);
@@ -87,7 +92,7 @@ export function metaFrom(dispute: Dispute, detail: CaseDetail | null, previous: 
     effortMinutes: effortMinutes(dispute.reason, action ?? "fight", dispute.dispute_life_cycle_stage),
     agentCanHandle: auto,
     outcome: outcomeOf(dispute),
-    replay: previous?.replay,
+    replay: currentMode() === "replay" ? true : undefined,
   };
 }
 

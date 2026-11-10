@@ -5,6 +5,7 @@
  */
 import { randomUUID } from "node:crypto";
 import { assertSandbox, env, PAYPAL_BASE_URL } from "@/lib/env";
+import { record } from "@/lib/replay/recorder";
 import { currentMode, displayPath, recordCall } from "./log";
 
 export class PayPalError extends Error {
@@ -211,6 +212,9 @@ export async function liveRequest<T = any>(req: PayPalRequest): Promise<PayPalRe
       }
     }
 
+    if (req.path !== "/v1/notifications/verify-webhook-signature") {
+      record({ kind: "rest", method: req.method, path: shownPath, status: res.status, debugId, ms: Date.now() - started, response: data, request: req.json });
+    }
     if (res.ok) return { data: data as T, status: res.status, debugId, requestId };
 
     if (res.status === 401 && attempt === 0) {

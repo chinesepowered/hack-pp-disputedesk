@@ -1,0 +1,859 @@
+{
+ "recordedAt": "2026-11-10T16:38:34.669Z",
+ "note": "Built by pnpm replay:record from real PayPal sandbox and model responses. Do not edit by hand.",
+ "disputes": {
+  "PP-R-KBX-10198048": {
+   "label": "Planter not as described, $62",
+   "tape": [
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-KBX-10198048",
+      "create_time": "2026-11-10T15:27:17.015Z",
+      "update_time": "2026-11-10T15:30:54.048Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "03V13045G39811707",
+        "seller_transaction_id": "2JK13464BF925663Y",
+        "create_time": "2026-11-10T15:17:59.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "62.00"
+        },
+        "invoice_number": "JM-1042",
+        "custom": "planter-not-as-described",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-CER-8",
+          "item_name": "Speckled Ceramic Planter, 8 inch",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+          "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+      "status": "WAITING_FOR_SELLER_RESPONSE",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "62.00"
+      },
+      "dispute_state": "REQUIRED_ACTION",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "59.35"
+        },
+        "initiated_time": "2026-11-10T15:30:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T15:27:17.015Z",
+        "content": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": false,
+       "buyer_contacted_time": "2026-11-10T15:27:16.188Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T15:27:17.015Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "seller_response_due_date": "2026-11-30T15:27:17.015Z",
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "62.00"
+       }
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "62.00"
+       }
+      },
+      "allowed_response_options": {
+       "accept_claim": {
+        "accept_claim_types": [
+         "PARTIAL_REFUND",
+         "REFUND_WITH_RETURN",
+         "REFUND"
+        ]
+       },
+       "make_offer": {
+        "offer_types": [
+         "REFUND",
+         "REFUND_WITH_RETURN"
+        ]
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048/accept-claim",
+        "rel": "accept_claim",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048/send-message",
+        "rel": "send_message",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048/make-offer",
+        "rel": "make_offer",
+        "method": "POST",
+        "encType": "application/json"
+       },
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048/escalate",
+        "rel": "escalate",
+        "method": "POST",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca58678bf3bc4",
+     "ms": 1396
+    },
+    {
+     "type": "post",
+     "action": "make_offer",
+     "status": 200,
+     "response": {
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048",
+        "rel": "detail",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca58678d74ed6",
+     "ms": 1190
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-KBX-10198048",
+      "create_time": "2026-11-10T15:27:17.015Z",
+      "update_time": "2026-11-10T16:35:44.680Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "03V13045G39811707",
+        "seller_transaction_id": "2JK13464BF925663Y",
+        "create_time": "2026-11-10T15:17:59.000Z",
+        "transaction_status": "HELD",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "62.00"
+        },
+        "invoice_number": "JM-1042",
+        "custom": "planter-not-as-described",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-CER-8",
+          "item_name": "Speckled Ceramic Planter, 8 inch",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+          "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "62.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "59.35"
+        },
+        "initiated_time": "2026-11-10T15:30:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T15:27:17.015Z",
+        "content": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       },
+       {
+        "posted_by": "SELLER",
+        "time_posted": "2026-11-10T16:35:44.680Z",
+        "content": "Hi, we're sorry the plant didn't match what you expected. As a gesture of goodwill we'd like to offer a $31 partial refund. No return needed. Hope that works for you."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": false,
+       "buyer_contacted_time": "2026-11-10T15:27:16.188Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T15:27:17.015Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "62.00"
+       },
+       "seller_offered_amount": {
+        "currency_code": "USD",
+        "value": "31.00"
+       },
+       "offer_type": "REFUND",
+       "history": [
+        {
+         "offer_time": "2026-11-10T16:35:44.680Z",
+         "actor": "SELLER",
+         "event_type": "PROPOSED",
+         "offer_type": "REFUND",
+         "offer_amount": {
+          "currency_code": "USD",
+          "value": "31.00"
+         }
+        }
+       ]
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "62.00"
+       }
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "ca58678debd07",
+     "ms": 922
+    },
+    {
+     "type": "state",
+     "dispute": {
+      "dispute_id": "PP-R-KBX-10198048",
+      "create_time": "2026-11-10T15:27:17.015Z",
+      "update_time": "2026-11-10T16:37:04.155Z",
+      "disputed_transactions": [
+       {
+        "buyer_transaction_id": "03V13045G39811707",
+        "seller_transaction_id": "2JK13464BF925663Y",
+        "create_time": "2026-11-10T15:17:59.000Z",
+        "transaction_status": "PARTIALLY_REFUNDED",
+        "gross_amount": {
+         "currency_code": "USD",
+         "value": "62.00"
+        },
+        "invoice_number": "JM-1042",
+        "custom": "planter-not-as-described",
+        "buyer": {
+         "email": "buyer@example.com",
+         "payer_id": "SHB5GFLEDVTY6",
+         "name": "Test Buyer"
+        },
+        "seller": {
+         "email": "seller@juniperandmoss.example",
+         "merchant_id": "B86SUP6NGTBX2",
+         "name": "Test Store"
+        },
+        "items": [
+         {
+          "item_id": "JM-CER-8",
+          "item_name": "Speckled Ceramic Planter, 8 inch",
+          "item_quantity": "1",
+          "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+          "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+          "item_type": "PRODUCT"
+         }
+        ],
+        "seller_protection_eligible": true,
+        "seller_protection_type": "EXPANDED_SELLER_PROTECTION"
+       }
+      ],
+      "reason": "MERCHANDISE_OR_SERVICE_NOT_AS_DESCRIBED",
+      "status": "UNDER_REVIEW",
+      "dispute_amount": {
+       "currency_code": "USD",
+       "value": "31.00"
+      },
+      "dispute_state": "UNDER_PAYPAL_REVIEW",
+      "money_movements": [
+       {
+        "affected_party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T16:37:04.008Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "affected_party": "BUYER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T16:37:04.008Z",
+        "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       }
+      ],
+      "fund_movements": [
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "59.35"
+        },
+        "initiated_time": "2026-11-10T15:30:34.000Z",
+        "type": "DEBIT",
+        "reason": "HOLD_PLACED"
+       },
+       {
+        "party": "SELLER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T16:37:04.008Z",
+        "type": "DEBIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       },
+       {
+        "party": "BUYER",
+        "amount": {
+         "currency_code": "USD",
+         "value": "31.00"
+        },
+        "initiated_time": "2026-11-10T16:37:04.008Z",
+        "type": "CREDIT",
+        "reason": "DISPUTE_SETTLEMENT"
+       }
+      ],
+      "dispute_life_cycle_stage": "INQUIRY",
+      "dispute_channel": "INTERNAL",
+      "messages": [
+       {
+        "posted_by": "BUYER",
+        "time_posted": "2026-11-10T15:27:17.015Z",
+        "content": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help."
+       },
+       {
+        "posted_by": "SELLER",
+        "time_posted": "2026-11-10T16:35:44.680Z",
+        "content": "Hi, we're sorry the plant didn't match what you expected. As a gesture of goodwill we'd like to offer a $31 partial refund. No return needed. Hope that works for you."
+       }
+      ],
+      "extensions": {
+       "merchant_contacted": false,
+       "buyer_contacted_time": "2026-11-10T15:27:16.188Z"
+      },
+      "evidences": [
+       {
+        "evidence_type": "CREATE",
+        "notes": "The planter is much smaller than the photo suggests and the colour is different. I want some of my money back. I contacted the seller about this first and we could not agree on how to fix it, so I am asking PayPal to step in and help.",
+        "source": "SUBMITTED_BY_BUYER",
+        "date": "2026-11-10T15:27:17.015Z",
+        "dispute_life_cycle_stage": "INQUIRY"
+       }
+      ],
+      "offer": {
+       "buyer_requested_amount": {
+        "currency_code": "USD",
+        "value": "31.00"
+       },
+       "seller_offered_amount": {
+        "currency_code": "USD",
+        "value": "31.00"
+       },
+       "offer_type": "REFUND",
+       "history": [
+        {
+         "offer_time": "2026-11-10T16:35:44.680Z",
+         "actor": "SELLER",
+         "event_type": "PROPOSED",
+         "offer_type": "REFUND",
+         "offer_amount": {
+          "currency_code": "USD",
+          "value": "31.00"
+         }
+        },
+        {
+         "offer_time": "2026-11-10T16:37:04.155Z",
+         "actor": "BUYER",
+         "event_type": "ACCEPTED"
+        }
+       ]
+      },
+      "refund_details": {
+       "allowed_refund_amount": {
+        "currency_code": "USD",
+        "value": "31.00"
+       },
+       "transactions": [
+        {
+         "id": "0CK1135812738554A",
+         "gross_amount": {
+          "currency_code": "USD",
+          "value": "31.00"
+         },
+         "create_time": "2026-11-10T16:37:03.000Z"
+        }
+       ]
+      },
+      "links": [
+       {
+        "href": "https://api-m.sandbox.paypal.com/v1/customer/disputes/PP-R-KBX-10198048",
+        "rel": "self",
+        "method": "GET",
+        "encType": "application/json"
+       }
+      ]
+     },
+     "debugId": "f156621289092",
+     "ms": 1686
+    }
+   ]
+  }
+ },
+ "sdk": {
+  "/v2/payments/captures/2JK13464BF925663Y": {
+   "status": 200,
+   "debugId": "f5161037d7656",
+   "ms": 1297,
+   "response": {
+    "status": "PARTIALLY_REFUNDED",
+    "id": "2JK13464BF925663Y",
+    "amount": {
+     "currencyCode": "USD",
+     "value": "62.00"
+    },
+    "invoiceId": "JM-1042",
+    "customId": "planter-not-as-described",
+    "sellerProtection": {
+     "status": "ELIGIBLE",
+     "disputeCategories": [
+      "ITEM_NOT_RECEIVED",
+      "UNAUTHORIZED_TRANSACTION"
+     ]
+    },
+    "finalCapture": true,
+    "sellerReceivableBreakdown": {
+     "grossAmount": {
+      "currencyCode": "USD",
+      "value": "62.00"
+     },
+     "paypalFee": {
+      "currencyCode": "USD",
+      "value": "2.65"
+     },
+     "netAmount": {
+      "currencyCode": "USD",
+      "value": "59.35"
+     }
+    },
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y",
+      "rel": "self",
+      "method": "GET"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y/refund",
+      "rel": "refund",
+      "method": "POST"
+     },
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J",
+      "rel": "up",
+      "method": "GET"
+     }
+    ],
+    "createTime": "2026-11-10T15:17:59Z",
+    "updateTime": "2026-11-10T16:37:03Z",
+    "supplementaryData": {
+     "relatedIds": {
+      "orderId": "6B4215973U738122J"
+     }
+    },
+    "payee": {
+     "emailAddress": "seller@juniperandmoss.example",
+     "merchantId": "B86SUP6NGTBX2"
+    }
+   }
+  },
+  "/v2/checkout/orders/6B4215973U738122J": {
+   "status": 200,
+   "debugId": "f356345373939",
+   "ms": 688,
+   "response": {
+    "createTime": "2026-11-10T15:17:59Z",
+    "updateTime": "2026-11-10T16:37:03Z",
+    "id": "6B4215973U738122J",
+    "paymentSource": {
+     "paypal": {
+      "emailAddress": "buyer@example.com",
+      "accountId": "SHB5GFLEDVTY6",
+      "accountStatus": "VERIFIED",
+      "name": {
+       "givenName": "Test",
+       "surname": "Buyer"
+      },
+      "address": {
+       "countryCode": "US"
+      }
+     }
+    },
+    "intent": "CAPTURE",
+    "payer": {
+     "emailAddress": "buyer@example.com",
+     "payerId": "SHB5GFLEDVTY6",
+     "name": {
+      "givenName": "Test",
+      "surname": "Buyer"
+     },
+     "address": {
+      "countryCode": "US"
+     }
+    },
+    "purchaseUnits": [
+     {
+      "referenceId": "JM-1042",
+      "amount": {
+       "currencyCode": "USD",
+       "value": "62.00",
+       "breakdown": {
+        "itemTotal": {
+         "currencyCode": "USD",
+         "value": "62.00"
+        }
+       }
+      },
+      "payee": {
+       "emailAddress": "seller@juniperandmoss.example",
+       "merchantId": "B86SUP6NGTBX2"
+      },
+      "description": "Juniper & Moss: Speckled Ceramic Planter, 8 inch",
+      "customId": "planter-not-as-described",
+      "invoiceId": "JM-1042",
+      "items": [
+       {
+        "name": "Speckled Ceramic Planter, 8 inch",
+        "unitAmount": {
+         "currencyCode": "USD",
+         "value": "62.00"
+        },
+        "quantity": "1",
+        "description": "A hand-glazed planter with a drainage hole and saucer.",
+        "sku": "JM-CER-8",
+        "category": "PHYSICAL_GOODS"
+       }
+      ],
+      "shipping": {
+       "trackers": [
+        {
+         "id": "2JK13464BF925663Y-NLP104290056US",
+         "status": "SHIPPED",
+         "items": [],
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J",
+           "rel": "up",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J/trackers/2JK13464BF925663Y-NLP104290056US",
+           "rel": "update",
+           "method": "PATCH"
+          }
+         ]
+        }
+       ],
+       "name": {
+        "fullName": "Marcus Bell"
+       },
+       "address": {
+        "addressLine1": "905 Pecan Hollow Rd",
+        "adminArea2": "Austin",
+        "adminArea1": "TX",
+        "postalCode": "78704",
+        "countryCode": "US"
+       }
+      },
+      "payments": {
+       "captures": [
+        {
+         "status": "PARTIALLY_REFUNDED",
+         "id": "2JK13464BF925663Y",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "62.00"
+         },
+         "invoiceId": "JM-1042",
+         "customId": "planter-not-as-described",
+         "sellerProtection": {
+          "status": "ELIGIBLE",
+          "disputeCategories": [
+           "ITEM_NOT_RECEIVED",
+           "UNAUTHORIZED_TRANSACTION"
+          ]
+         },
+         "finalCapture": true,
+         "sellerReceivableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "62.00"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "2.65"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "59.35"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y/refund",
+           "rel": "refund",
+           "method": "POST"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T15:17:59Z",
+         "updateTime": "2026-11-10T16:37:03Z"
+        }
+       ],
+       "refunds": [
+        {
+         "status": "COMPLETED",
+         "id": "0CK1135812738554A",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "31.00"
+         },
+         "invoiceId": "JM-1042",
+         "customId": "planter-not-as-described",
+         "noteToPayer": "31.0 USD; 2026-11-10 Credit has been processed and claim is now closed. Please refer Dispute ID PP-R-KBX-10198048. Thank you.",
+         "sellerPayableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "31.00"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "31.00"
+          },
+          "platformFees": [
+           {
+            "amount": {
+             "currencyCode": "USD",
+             "value": "0.00"
+            }
+           }
+          ],
+          "totalRefundedAmount": {
+           "currencyCode": "USD",
+           "value": "31.00"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/0CK1135812738554A",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T08:37:03-08:00",
+         "updateTime": "2026-11-10T08:37:03-08:00"
+        },
+        {
+         "status": "FAILED",
+         "id": "6H204244WP3341437",
+         "amount": {
+          "currencyCode": "USD",
+          "value": "59.35"
+         },
+         "invoiceId": "JM-1042",
+         "customId": "planter-not-as-described",
+         "noteToPayer": "31.0 USD; 2026-11-10 Credit has been processed and claim is now closed. Please refer Dispute ID PP-R-KBX-10198048. Thank you.",
+         "sellerPayableBreakdown": {
+          "grossAmount": {
+           "currencyCode": "USD",
+           "value": "59.35"
+          },
+          "paypalFee": {
+           "currencyCode": "USD",
+           "value": "0.00"
+          },
+          "netAmount": {
+           "currencyCode": "USD",
+           "value": "59.35"
+          },
+          "platformFees": [
+           {
+            "amount": {
+             "currencyCode": "USD",
+             "value": "0.00"
+            }
+           }
+          ],
+          "totalRefundedAmount": {
+           "currencyCode": "USD",
+           "value": "31.00"
+          }
+         },
+         "links": [
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/refunds/6H204244WP3341437",
+           "rel": "self",
+           "method": "GET"
+          },
+          {
+           "href": "https://api.sandbox.paypal.com/v2/payments/captures/2JK13464BF925663Y",
+           "rel": "up",
+           "method": "GET"
+          }
+         ],
+         "createTime": "2026-11-10T07:30:33-08:00",
+         "updateTime": "2026-11-10T08:37:03-08:00"
+        }
+       ]
+      }
+     }
+    ],
+    "status": "COMPLETED",
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v2/checkout/orders/6B4215973U738122J",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  },
+  "/v1/reporting/transactions?transaction_id=2JK13464BF925663Y": {
+   "status": 200,
+   "debugId": "f50549349c682",
+   "ms": 415,
+   "response": {
+    "accountNumber": "B86SUP6NGTBX2",
+    "startDate": "2026-11-08T15:17:59Z",
+    "endDate": "2026-11-10T14:29:59Z",
+    "lastRefreshedDatetime": "2026-11-10T14:29:59Z",
+    "page": 1,
+    "totalItems": 0,
+    "totalPages": 0,
+    "links": [
+     {
+      "href": "https://api.sandbox.paypal.com/v1/reporting/transactions?start_date=2026-11-08T15%3A17%3A59Z&fields=all&transaction_id=2JK13464BF925663Y&end_date=2026-11-10T16%3A38%3A22Z&page_size=10&page=1",
+      "rel": "self",
+      "method": "GET"
+     }
+    ]
+   }
+  }
+ },
+ "ai": {
+  "photo:delivery:/seed/photos/delivery-door-2.jpg": {
+   "model": "google/gemma-4-31B-it",
+   "text": "```json\n{\"verdict\":\"yes\",\"summary\":\"A cardboard parcel with a fragile label is sitting on a carpeted floor next to a door.\"}\n```",
+   "kind": "vision"
+  },
+  "explain:PP-R-KBX-10198048": {
+   "model": "Qwen/Qwen3.8-27B",
+   "text": "We accept the claim and refund Marcus because the product page has no size chart or measurements, and no packing photo was taken. Northline Parcel shows delivered in Austin, TX, and no signature was required because the order is under $150. The buyer sent no damage photo, but the size and colour complaint is supported by the missing product detail, our offered fix, and the return policy on file.",
+   "kind": "text"
+  }
+ }
+}

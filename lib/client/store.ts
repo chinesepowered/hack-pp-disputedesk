@@ -6,14 +6,15 @@
  */
 import { useSyncExternalStore } from "react";
 import type { PayPalCall } from "@/lib/paypal/log";
+import type { MarlowLine } from "./voice-lines";
 
 export type Toast = { id: number; kind: "info" | "success" | "error"; title: string; body?: string };
 export type Mode = "live" | "replay";
 
-type State = { calls: PayPalCall[]; toasts: Toast[]; announcement: string; mode: Mode; drawerOpen: boolean };
+type State = { calls: PayPalCall[]; toasts: Toast[]; announcement: string; mode: Mode; drawerOpen: boolean; voice: boolean };
 
 const CALLS_KEY = "dd_calls";
-let state: State = { calls: [], toasts: [], announcement: "", mode: "live", drawerOpen: false };
+let state: State = { calls: [], toasts: [], announcement: "", mode: "live", drawerOpen: false, voice: false };
 let hydrated = false;
 const listeners = new Set<() => void>();
 
@@ -36,7 +37,13 @@ function hydrate() {
     calls = [];
   }
   const mode: Mode = /(?:^|; )dd_mode=replay/.test(document.cookie) ? "replay" : "live";
-  state = { ...state, calls, mode };
+  let voice = false;
+  try {
+    voice = localStorage.getItem("dd_voice") === "1";
+  } catch {
+    voice = false;
+  }
+  state = { ...state, calls, mode, voice };
 }
 
 function subscribe(listener: () => void) {
@@ -47,7 +54,7 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
-const SERVER_STATE: State = { calls: [], toasts: [], announcement: "", mode: "live", drawerOpen: false };
+const SERVER_STATE: State = { calls: [], toasts: [], announcement: "", mode: "live", drawerOpen: false, voice: false };
 
 export function useDeskStore<T>(select: (s: State) => T): T {
   return useSyncExternalStore(
@@ -96,6 +103,31 @@ export function announce(message: string) {
 export function setMode(mode: Mode) {
   document.cookie = `dd_mode=${mode}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
   set({ mode });
+}
+
+/** Marlow's voice is off until someone turns it on. The lines are pre-rendered audio files. */
+export function setVoice(on: boolean) {
+  try {
+    localStorage.setItem("dd_voice", on ? "1" : "0");
+  } catch {
+    // ignore
+  }
+  set({ voice: on });
+  if (on) say("ready");
+}
+
+let playing: HTMLAudioElement | null = null;
+
+export function say(line: MarlowLine) {
+  hydrate();
+  if (!state.voice || typeof Audio === "undefined") return;
+  try {
+    playing?.pause();
+    playing = new Audio(`/audio/marlow-${line}.mp3`);
+    void playing.play().catch(() => undefined);
+  } catch {
+    // Audio is a nicety: the same words are always on screen.
+  }
 }
 
 export function setDrawer(open: boolean) {

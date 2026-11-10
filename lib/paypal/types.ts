@@ -99,7 +99,7 @@ export type Dispute = {
     offer_type?: string;
     history?: { offer_time?: string; actor?: string; event_type?: string; offer_type?: string; offer_amount?: Money; notes?: string }[];
   };
-  refund_details?: { allowed_refund_amount?: Money };
+  refund_details?: { allowed_refund_amount?: Money; transactions?: { id?: string; gross_amount?: Money; create_time?: string }[] };
   allowed_response_options?: {
     acknowledge_return_item?: { acknowledgement_types?: string[] };
     accept_claim?: { accept_claim_types?: string[] };

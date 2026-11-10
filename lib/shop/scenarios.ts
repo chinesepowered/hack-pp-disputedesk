@@ -53,8 +53,20 @@ export type Scenario = {
   dispute?: {
     reason: "not_received" | "not_as_described" | "unauthorized";
     note: string;
-    /** The seed escalates these to a PayPal claim so later stages show up on the board. */
-    escalate?: boolean;
+    /**
+     * The state the seed stages this dispute into (what the sandbox taught us is in
+     * docs/build-log.md):
+     * - inquiry (default): opened and left for the seller. Offers and messages are possible.
+     * - claim: opened without tracking on the order, tracking added afterwards, then sent on to
+     *   PayPal as a claim. PayPal asks the seller for evidence, so provide-evidence and (later)
+     *   the sandbox settle action are available.
+     * - direct_claim: "not received" on an order that already has tracking. PayPal turns it
+     *   into a claim by itself and reviews it; the seller can only add supporting information
+     *   or accept.
+     * - ready_to_settle: like claim, and the seed also files the evidence, so the sandbox
+     *   settle action shows up for whoever opens the case next.
+     */
+    flow?: "inquiry" | "claim" | "direct_claim" | "ready_to_settle";
   };
 };
 
@@ -90,7 +102,7 @@ export const SCENARIOS: Scenario[] = [
       { from: "customer", atDays: 6, text: "Nobody here has it. I am going to ask PayPal for my money back." },
     ],
     packingPhoto: "/seed/photos/fiddle-leaf-fig.jpg",
-    dispute: { reason: "not_received", note: "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it.", escalate: true },
+    dispute: { reason: "not_received", note: "My fiddle leaf fig never arrived. The seller says it was delivered but I do not have it.", flow: "claim" },
   },
   {
     key: "planter-not-as-described",
@@ -149,7 +161,7 @@ export const SCENARIOS: Scenario[] = [
     },
     risk: { ipRegion: "Washington, US", ipMatchesShipTo: true, billingMatchesShipTo: true, deviceSeenBefore: true },
     thread: [],
-    dispute: { reason: "unauthorized", note: "I did not make this purchase.", escalate: false },
+    dispute: { reason: "unauthorized", note: "I did not make this purchase." },
   },
   {
     key: "monstera-damaged",
@@ -194,7 +206,7 @@ export const SCENARIOS: Scenario[] = [
       { from: "customer", atDays: 6, text: "Tracking says delivered but there is no box here. My building has a shared lobby." },
       { from: "store", atDays: 6.3, text: "Thanks Imani. We have asked the carrier where exactly it was left and will come back to you." },
     ],
-    dispute: { reason: "not_received", note: "Tracking says delivered but I never got the pots.", escalate: true },
+    dispute: { reason: "not_received", note: "Tracking says delivered but I never got the pots.", flow: "claim" },
   },
   {
     key: "watering-can-returned",
@@ -216,7 +228,7 @@ export const SCENARIOS: Scenario[] = [
     },
     risk: { ipRegion: "Massachusetts, US", ipMatchesShipTo: true, billingMatchesShipTo: true, deviceSeenBefore: false },
     thread: [{ from: "customer", atDays: 9, text: "Where is my watering can? It should have been here days ago." }],
-    dispute: { reason: "not_received", note: "The watering can never came." },
+    dispute: { reason: "not_received", note: "The watering can never came.", flow: "direct_claim" },
   },
   {
     key: "snake-plant-unauthorized",
@@ -234,7 +246,7 @@ export const SCENARIOS: Scenario[] = [
     },
     risk: { ipRegion: "Arizona, US", ipMatchesShipTo: true, billingMatchesShipTo: false, deviceSeenBefore: false },
     thread: [],
-    dispute: { reason: "unauthorized", note: "I do not recognise this payment.", escalate: false },
+    dispute: { reason: "unauthorized", note: "I do not recognise this payment." },
   },
   {
     key: "calathea-wrong-plant",
@@ -257,7 +269,7 @@ export const SCENARIOS: Scenario[] = [
       { from: "store", atDays: 4.2, text: "Hi Noor, our packing photo shows a Calathea Medallion going into your box. New leaves come in plainer and pattern up over a few weeks. Happy to take it back if you would rather." },
     ],
     packingPhoto: "/seed/photos/calathea.jpg",
-    dispute: { reason: "not_as_described", note: "The plant I received is not the one shown in the listing." },
+    dispute: { reason: "not_as_described", note: "The plant I received is not the one shown in the listing.", flow: "claim" },
   },
   {
     key: "succulents-not-received",
@@ -276,7 +288,7 @@ export const SCENARIOS: Scenario[] = [
     },
     risk: { ipRegion: "California, US", ipMatchesShipTo: true, billingMatchesShipTo: true, deviceSeenBefore: true },
     thread: [{ from: "customer", atDays: 6, text: "My succulents are marked delivered but I cannot find them." }],
-    dispute: { reason: "not_received", note: "Marked as delivered but I have not received it.", escalate: true },
+    dispute: { reason: "not_received", note: "Marked as delivered but I have not received it.", flow: "ready_to_settle" },
   },
   {
     key: "pothos-not-as-described",
@@ -312,7 +324,7 @@ export const SCENARIOS: Scenario[] = [
     },
     risk: { ipRegion: "Wisconsin, US", ipMatchesShipTo: true, billingMatchesShipTo: true, deviceSeenBefore: false },
     thread: [],
-    dispute: { reason: "not_received", note: "Never received my order." },
+    dispute: { reason: "not_received", note: "Never received my order.", flow: "direct_claim" },
   },
   {
     key: "planter-colour-not-as-described",

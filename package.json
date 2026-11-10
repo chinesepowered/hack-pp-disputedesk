@@ -17,6 +17,8 @@
     "test": "vitest run",
     "seed": "tsx scripts/seed.ts",
     "paypal:webhook": "tsx scripts/paypal-webhook.ts",
+    "buyer": "tsx scripts/buyer.ts",
+    "voice": "tsx scripts/voice-lines.ts",
     "replay:record": "tsx scripts/record-replay.ts",
     "screenshots": "tsx scripts/screenshots.ts",
     "video": "tsx scripts/video/make.ts"

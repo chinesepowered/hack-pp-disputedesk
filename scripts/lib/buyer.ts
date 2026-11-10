@@ -320,3 +320,42 @@ export async function fileDispute(
   log(`filed ${input.reason} as ${caseId}`);
   return caseId;
 }
+
+/**
+ * Accepts the seller's offer as the buyer, in PayPal's Resolution Center. Used by
+ * `pnpm buyer accept-offer <dispute-id>` to play the other side of an offer in a demo.
+ */
+export async function acceptOffer(session: BuyerSession, disputeId: string): Promise<string> {
+  const { page } = session;
+  const url = `${WEB}/resolutioncenter/${disputeId}`;
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  await page.waitForTimeout(6000);
+  if (await loginIfNeeded(page)) {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+    await page.waitForTimeout(6000);
+  }
+  await page.locator("#acceptAllButton").click({ timeout: 1500 }).catch(() => undefined);
+  const accept = page.locator('[data-testid="accept-offer"]');
+  if (!(await accept.isVisible().catch(() => false))) {
+    await shot(page, "no-offer");
+    throw new Error("The buyer's case page shows no offer to accept (it can take a minute to appear after the seller sends it).");
+  }
+  await accept.click();
+  await page.waitForTimeout(3000);
+  // PayPal asks once more before closing the case.
+  for (const name of [/^accept$/i, /accept offer/i, /confirm/i, /^yes/i]) {
+    const confirm = page.getByRole("button", { name }).last();
+    if (await confirm.isVisible().catch(() => false)) {
+      await confirm.click().catch(() => undefined);
+      await page.waitForTimeout(3000);
+      break;
+    }
+  }
+  await page.waitForTimeout(4000);
+  await shot(page, "offer-accepted");
+  const stillOffered = await page.locator('[data-testid="accept-offer"]').isVisible().catch(() => false);
+  if (stillOffered) throw new Error("The offer is still waiting on the buyer's page: PayPal did not take the acceptance.");
+  const closed = "accepted";
+  log(`offer on ${disputeId}: ${closed}`);
+  return closed;
+}

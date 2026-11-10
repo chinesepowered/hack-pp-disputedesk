@@ -20,6 +20,7 @@ export function toHttp(err: unknown): { status: number; body: { code: string; me
     if (err.unknownOutcome || err.status === 0) return { status: 502, body: { code: "PAYPAL_NO_RESPONSE", message: "PayPal did not answer. Try again." } };
     if (err.status === 401 || err.status === 403) return { status: 502, body: { code: "PAYPAL_AUTH", message: "PayPal refused our credentials.", debugId: err.debugId } };
     if (err.status === 429) return { status: 503, body: { code: "PAYPAL_RATE_LIMIT", message: "PayPal is rate limiting this app. Try again shortly.", debugId: err.debugId } };
+    if (err.code === "REPLAY_NOT_RECORDED") return { status: 422, body: { code: err.code, message: err.message } };
     if (err.status >= 400 && err.status < 500) {
       // The caller's request was refused: hand back PayPal's own reason.
       return { status: err.status, body: { code: err.issue ?? err.code, message: `PayPal said no: ${err.issue ?? err.code}.`, debugId: err.debugId } };

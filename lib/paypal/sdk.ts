@@ -27,6 +27,7 @@ import {
 } from "@paypal/paypal-server-sdk";
 import { assertSandbox, env } from "@/lib/env";
 import { PayPalError } from "./http";
+import { record } from "@/lib/replay/recorder";
 import { currentMode, recordCall } from "./log";
 
 let client: Client | null = null;
@@ -76,6 +77,7 @@ async function sdkCall<T>(
     } catch {
       raw = null;
     }
+    record({ kind: "sdk", method: meta.method, path: meta.path, status: res.statusCode, debugId, ms: Date.now() - started, response: res.result });
     return { result: res.result, raw, debugId };
   } catch (err) {
     if (err instanceof ApiError) {
