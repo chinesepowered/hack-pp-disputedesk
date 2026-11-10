@@ -1,0 +1,61 @@
+{
+  "name": "hack-pp-disputedesk",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "description": "Dispute Desk: an AI dispute and chargeback desk for small PayPal sellers.",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=20.9"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "seed": "tsx scripts/seed.ts",
+    "paypal:webhook": "tsx scripts/paypal-webhook.ts",
+    "replay:record": "tsx scripts/record-replay.ts",
+    "screenshots": "tsx scripts/screenshots.ts",
+    "video": "tsx scripts/video/make.ts"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "0.2.16",
+    "@bryntum/scheduler": "npm:@bryntum/scheduler-trial@7.3.8",
+    "@bryntum/scheduler-react": "7.3.8",
+    "@paypal/agent-toolkit": "1.11.0",
+    "@paypal/paypal-server-sdk": "2.5.0",
+    "@vercel/blob": "^2.9.0",
+    "ai": "4.3.19",
+    "axios": "1.21.1",
+    "lucide-react": "^1.71.0",
+    "next": "16.4.6",
+    "pdf-lib": "^1.17.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "swr": "^2.5.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^10.14.0",
+    "eslint-config-next": "16.4.6",
+    "playwright": "1.63.0",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
