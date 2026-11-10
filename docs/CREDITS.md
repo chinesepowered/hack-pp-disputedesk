@@ -32,7 +32,7 @@ Marlow the capybara clerk (the SVG in `components/marlow/Marlow.tsx`, the app ic
 
 ## Voices
 
-Narration and Marlow's lines were generated with ElevenLabs (`eleven_multilingual_v2`, premade voices) for this project. The character count is tracked in `demo/elevenlabs-usage.json`. There is no music.
+Narration and Marlow's lines were generated with ElevenLabs (`eleven_multilingual_v2`) for this project, with two premade voices: the narrator is Jessica (`cgSgspJ2msm6clMCkdW9`) and Marlow is `pqHfZKP75CvOlQylNhV4`. The character count is tracked in `demo/elevenlabs-usage.json` (5,325 of the 15,000 allowed for this build). There is no music.
 
 ## Software
 

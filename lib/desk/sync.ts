@@ -122,7 +122,9 @@ export function metaFrom(dispute: Dispute, detail: CaseDetail | null, previous: 
 function reassess(detail: CaseDetail, dispute: Dispute, settings: Settings): void {
   if (!detail.evidence) return;
   detail.checklist = buildChecklist(dispute, detail.evidence);
-  const actionable = allowedActions(dispute).some((a) => a !== "adjudicate" && a !== "require_evidence");
+  // While the buyer has the next move (after a message or an offer) PayPal still lists a few
+  // seller actions, but the advice that led to that move stands until the case comes back.
+  const actionable = dispute.status !== "WAITING_FOR_BUYER_RESPONSE" && allowedActions(dispute).some((a) => a !== "adjudicate" && a !== "require_evidence");
   if (detail.recommendation && !actionable) return;
   // A case the desk first sees after the seller's turn has passed is judged against the
   // actions its stage normally offers, so the card says what the rules make of the evidence.
