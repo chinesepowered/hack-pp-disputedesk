@@ -1,6 +1,7 @@
 /** Dev helper: print a dispute's state and links, or run one action. Not part of the app. */
 import "../_env";
-import { getDispute, listDisputes, escalateDispute, requireEvidence, adjudicate, sendMessage } from "@/lib/paypal/disputes";
+import { PDFDocument, StandardFonts } from "pdf-lib";
+import { getDispute, listDisputes, escalateDispute, requireEvidence, adjudicate, sendMessage, provideSupportingInfo, provideEvidence } from "@/lib/paypal/disputes";
 import { looseCalls } from "@/lib/paypal/log";
 
 function redact(o: any): any {
@@ -24,6 +25,15 @@ async function main() {
     else if (cmd === "require") console.log((await requireEvidence(id, (arg as any) ?? "SELLER_EVIDENCE")).data);
     else if (cmd === "adjudicate") console.log((await adjudicate(id, (arg as any) ?? "SELLER_FAVOR")).data);
     else if (cmd === "message") console.log((await sendMessage(id, arg ?? "Hello from the seller.")).data);
+    else if (cmd === "support" || cmd === "evidence") {
+      const pdf = await PDFDocument.create();
+      const page = pdf.addPage([595, 842]);
+      page.drawText(`Juniper & Moss evidence pack (dev probe) for ${id}`, { x: 50, y: 780, size: 14, font: await pdf.embedFont(StandardFonts.Helvetica) });
+      const file = { name: "evidence-pack.pdf", type: "application/pdf", data: await pdf.save() };
+      const notes = "Shipped with tracking and delivered to the address on the order. Evidence pack attached.";
+      const res = cmd === "support" ? await provideSupportingInfo(id, notes, [file]) : await provideEvidence(id, { evidence_type: arg ?? "PROOF_OF_FULFILLMENT", notes, evidence_info: { tracking_info: [{ carrier_name: "OTHER", carrier_name_other: "Harbor Post", tracking_number: "HBP0000TEST" }] } }, [file]);
+      console.log(res.status, JSON.stringify(res.data).slice(0, 300));
+    }
     else console.log("usage: list | get <id> [full] | escalate <id> | require <id> | adjudicate <id> | message <id>");
   } catch (e: any) {
     console.log("ERROR", e.status, e.code, e.message, e.debugId);

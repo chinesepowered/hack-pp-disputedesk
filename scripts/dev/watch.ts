@@ -21,7 +21,7 @@ async function tick() {
   }
 }
 (async () => {
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 110; i++) {
     await tick();
     await new Promise((r) => setTimeout(r, 45_000));
   }

@@ -103,6 +103,8 @@ export type PayPalRequest = {
   path: string;
   query?: Record<string, string | number | undefined>;
   json?: unknown;
+  /** A JSON body that is already serialized and must be sent byte for byte (webhook verification). */
+  rawJson?: string;
   /** Multipart body, used by provide-evidence and the other document endpoints. */
   form?: () => FormData;
   feature?: string;
@@ -150,6 +152,9 @@ export async function liveRequest<T = any>(req: PayPalRequest): Promise<PayPalRe
     let body: BodyInit | undefined;
     if (req.form) {
       body = req.form(); // fetch sets the multipart boundary itself
+    } else if (req.rawJson !== undefined) {
+      headers["Content-Type"] = "application/json";
+      body = req.rawJson;
     } else if (req.json !== undefined) {
       headers["Content-Type"] = "application/json";
       body = JSON.stringify(req.json);

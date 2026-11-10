@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@paypal/agent-toolkit", "axios", "playwright", "pdf-lib"],
   images: { unoptimized: true },
   devIndicators: false,
+  // next dev writes an AGENTS.md by default. This repo keeps its own docs instead.
+  agentRules: false,
 };
 
 export default nextConfig;

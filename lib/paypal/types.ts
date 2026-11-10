@@ -86,6 +86,8 @@ export type Dispute = {
   dispute_outcome?: { outcome_code?: DisputeOutcomeCode; outcome_reason?: string; amount_refunded?: Money };
   adjudications?: { type?: string; adjudication_time?: string; reason?: string; dispute_life_cycle_stage?: string }[];
   money_movements?: { affected_party?: string; amount?: Money; initiated_time?: string; type?: string; reason?: string }[];
+  /** Holds placed and released on the seller's balance while the dispute runs. */
+  fund_movements?: { party?: string; amount?: Money; initiated_time?: string; type?: string; reason?: string }[];
   messages?: { posted_by?: string; time_posted?: string; content?: string; documents?: { name?: string; url?: string }[] }[];
   evidences?: DisputeEvidence[];
   supporting_info?: { notes?: string; source?: string; provided_time?: string }[];

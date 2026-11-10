@@ -166,11 +166,17 @@ export async function escalateDispute(id: string, note: string, opts: { requestI
   });
 }
 
-export async function provideSupportingInfo(id: string, notes: string, opts: { requestId?: string; feature?: string } = {}) {
+/** POST provide-supporting-info: notes plus documents for a claim PayPal is already reviewing. */
+export async function provideSupportingInfo(
+  id: string,
+  notes: string,
+  files: EvidenceFile[] = [],
+  opts: { requestId?: string; feature?: string } = {},
+) {
   return paypalRequest({
     method: "POST",
     path: `${BASE}/${encodeURIComponent(id)}/provide-supporting-info`,
-    form: inputForm({ notes }),
+    form: inputForm({ notes }, files),
     requestId: opts.requestId,
     feature: opts.feature ?? "File: supporting info",
   });

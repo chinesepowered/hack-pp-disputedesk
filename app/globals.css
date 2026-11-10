@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+/*
+  Design tokens. Contrast was checked against WCAG 2.2 AA:
+  ink on paper 13.6:1, muted on surface 6.4:1, white on forest 7.5:1, white on clay 5.6:1,
+  amber text on its tint 6.1:1, green text on its tint 6.3:1, clay text on its tint 6.4:1.
+*/
+@theme {
+  --color-paper: #f7f5ef;
+  --color-surface: #ffffff;
+  --color-sunken: #efece3;
+  --color-ink: #1f2a24;
+  --color-muted: #55625b;
+  --color-line: #ddd8cb;
+  --color-forest: #2f5d4a;
+  --color-forest-deep: #24493a;
+  --color-forest-tint: #e6efea;
+  --color-ready: #1e5c41;
+  --color-ready-tint: #e0f1e7;
+  --color-ready-edge: #2e7d5b;
+  --color-partial: #7a4a00;
+  --color-partial-tint: #fcefd6;
+  --color-partial-edge: #c47f10;
+  --color-missing: #8a2d1f;
+  --color-missing-tint: #fbe4df;
+  --color-missing-edge: #b3402e;
+  --color-slate: #3b4f63;
+  --color-slate-tint: #e8edf2;
+  --color-capy: #a9764b;
+  --color-capy-dark: #7b5234;
+  --color-capy-light: #dcb992;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --radius-card: 14px;
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+
+/* One visible focus style everywhere, including inside the Scheduler. */
+:focus-visible {
+  outline: 3px solid #1d6fd6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.sr-only-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Bryntum Scheduler: theme matched to the app ---------- */
+.b-bryntum:not(.b-nothing),
+:root:not(.b-nothing) {
+  --b-primary: #2f5d4a;
+  --b-secondary: #c47f10;
+  --b-widget-border-radius: 8px;
+  --b-widget-font-family: var(--font-sans);
+  --b-grid-header-font-weight: 650;
+  --b-grid-header-color: #1f2a24;
+  --b-grid-header-background: #f7f5ef;
+  --b-grid-cell-border-color: #e6e2d6;
+  --b-grid-background: #ffffff;
+  --b-toast-background: #1f2a24;
+}
+
+.desk-scheduler,
+.desk-unscheduled {
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+/* Work blocks: coloured by evidence readiness, with a text label so colour is never the only cue. */
+.desk-scheduler .b-sch-event {
+  border-radius: 8px;
+  border: 1px solid rgb(0 0 0 / 0.12);
+  border-left-width: 5px;
+  color: #1f2a24;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgb(31 42 36 / 0.12);
+}
+.desk-scheduler .b-sch-event-wrap.ready .b-sch-event {
+  background: var(--color-ready-tint);
+  border-left-color: var(--color-ready-edge);
+}
+.desk-scheduler .b-sch-event-wrap.partial .b-sch-event {
+  background: var(--color-partial-tint);
+  border-left-color: var(--color-partial-edge);
+}
+.desk-scheduler .b-sch-event-wrap.missing .b-sch-event {
+  background: var(--color-missing-tint);
+  border-left-color: var(--color-missing-edge);
+}
+.desk-scheduler .b-sch-event-wrap.unknown .b-sch-event {
+  background: var(--color-slate-tint);
+  border-left-color: var(--color-slate);
+}
+.desk-scheduler .b-sch-event-wrap.pinned .b-sch-event {
+  outline: 2px dashed rgb(31 42 36 / 0.45);
+  outline-offset: -4px;
+}
+.desk-scheduler .b-sch-event-wrap.just-booked .b-sch-event {
+  animation: desk-pop 900ms ease-out;
+}
+@keyframes desk-pop {
+  0% { transform: scale(0.7); opacity: 0; box-shadow: 0 0 0 0 rgb(47 93 74 / 0.6); }
+  60% { transform: scale(1.04); opacity: 1; box-shadow: 0 0 0 10px rgb(47 93 74 / 0); }
+  100% { transform: scale(1); }
+}
+.desk-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  padding: 2px 6px;
+  overflow: hidden;
+  min-width: 0;
+}
+.desk-block b { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desk-block span { font-weight: 500; font-size: 11.5px; color: #3c4a43; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Deadlines: PayPal's are solid clay lines, the desk's own targets are dashed amber. */
+.desk-scheduler .b-sch-time-range.deadline {
+  background: transparent;
+  border-left: 3px solid var(--color-missing-edge);
+  color: var(--color-missing);
+}
+.desk-scheduler .b-sch-time-range.deadline.target {
+  border-left: 3px dashed var(--color-partial-edge);
+  color: var(--color-partial);
+}
+.desk-scheduler .b-sch-time-range.deadline label,
+.desk-scheduler .b-sch-header-time-range.deadline {
+  background: var(--color-missing-edge);
+  color: #fff;
+  font-weight: 700;
+  font-size: 11px;
+  border-radius: 4px;
+}
+.desk-scheduler .b-sch-header-time-range.deadline.target {
+  background: var(--color-partial-edge);
+  color: #2a1a00;
+}
+.desk-scheduler .b-sch-resource-time-range.off-hours {
+  background: repeating-linear-gradient(135deg, rgb(31 42 36 / 0.045) 0 6px, rgb(31 42 36 / 0.085) 6px 12px);
+  color: transparent;
+  pointer-events: none;
+}
+.desk-resource {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.desk-resource .avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  background: var(--color-forest);
+  flex: none;
+}
+.desk-resource .avatar.agent { background: var(--color-capy); }
+.desk-resource .who { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.desk-resource .who b { font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desk-resource .who span { font-size: 11.5px; color: var(--color-muted); }
+
+.desk-tip { font-size: 13px; line-height: 1.45; max-width: 290px; }
+.desk-tip h4 { font-weight: 700; margin: 0 0 4px; }
+.desk-tip dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 6px 0 0; }
+.desk-tip dt { color: #c9d2cc; }
+.desk-tip dd { margin: 0; font-weight: 600; }
+.desk-tip .why { margin-top: 6px; color: #dfe6e1; }
+
+/* The drag proxy when a dispute is pulled from the Unscheduled panel onto the timeline. */
+.desk-drag-proxy {
+  background: var(--color-forest);
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: 600 13px var(--font-sans);
+  box-shadow: 0 8px 24px rgb(31 42 36 / 0.3);
+  white-space: nowrap;
+  z-index: 10000;
+}
+.desk-drag-proxy.invalid { background: var(--color-missing-edge); }
+.desk-unscheduled .b-grid-row { cursor: grab; }
+.desk-unscheduled .b-grid-cell { align-items: stretch; }
+.desk-urow { display: flex; flex-direction: column; justify-content: center; line-height: 1.25; padding: 4px 0; min-width: 0; }
+.desk-urow b { font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desk-urow span { font-size: 12px; color: var(--color-muted); }
+.desk-urow .due { color: var(--color-missing); font-weight: 650; }
