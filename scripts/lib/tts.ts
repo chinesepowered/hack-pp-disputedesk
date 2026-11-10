@@ -10,8 +10,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 export const VOICES = {
-  /** The narrator voice named in the brief. */
-  narrator: "nPczCjzI2devNBz1zQrb",
+  /** The narrator: Jessica, a young female premade voice (the owner's choice, replacing the brief's first id). */
+  narrator: "cgSgspJ2msm6clMCkdW9",
   /** Marlow: a calm, older premade voice. */
   marlow: "pqHfZKP75CvOlQylNhV4",
 } as const;
@@ -21,7 +21,7 @@ const BUDGET = 15_000;
 const CACHE = path.join(process.cwd(), "demo", "raw", "tts-cache");
 const LEDGER = path.join(process.cwd(), "demo", "elevenlabs-usage.json");
 
-type Ledger = { budget: number; used: number; requests: { at: string; voice: string; characters: number; purpose: string }[] };
+type Ledger = { budget: number; used: number; requests: { at: string; voice: string; voiceId?: string; characters: number; purpose: string }[] };
 
 function ledger(): Ledger {
   if (!existsSync(LEDGER)) return { budget: BUDGET, used: 0, requests: [] };
@@ -59,7 +59,7 @@ export async function speak(opts: { text: string; voice: keyof typeof VOICES; pu
   writeFileSync(cached, audio);
 
   book.used += text.length;
-  book.requests.push({ at: new Date().toISOString(), voice: opts.voice, characters: text.length, purpose: opts.purpose });
+  book.requests.push({ at: new Date().toISOString(), voice: opts.voice, voiceId: VOICES[opts.voice], characters: text.length, purpose: opts.purpose });
   mkdirSync(path.dirname(LEDGER), { recursive: true });
   writeFileSync(LEDGER, `${JSON.stringify(book, null, 2)}\n`);
   return audio;

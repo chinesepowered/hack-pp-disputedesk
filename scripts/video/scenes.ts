@@ -52,7 +52,7 @@ export const SCENES: Scene[] = [
     kind: "clip",
     title: "Approve and file",
     narration: "The owner reads it and approves. It goes to PayPal's provide evidence endpoint with the pack attached. Three clicks from a new dispute to a filed response.",
-    marlow: { line: "filed", at: 9.4 },
+    marlow: { line: "filed", at: 10.6 },
     // The filing is shown in real time (about seven seconds), so this scene runs past its narration.
     tail: 5.6,
   },
@@ -61,7 +61,7 @@ export const SCENES: Scene[] = [
     kind: "clip",
     title: "PayPal settles it",
     narration: "In the sandbox we can play PayPal's reviewer and settle the claim. The hold on the money is released. Won: one hundred eighty four dollars recovered.",
-    marlow: { line: "won", at: 10.3 },
+    marlow: { line: "won", at: 9.9 },
     // Runs past the narration so the Recovered this month counter is on screen.
     tail: 5.4,
   },

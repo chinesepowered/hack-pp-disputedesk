@@ -3,8 +3,11 @@ import { chromium } from "playwright";
 
 async function main() {
   const [path = "/", out = ".data/shot.png", waitMs = "6000", mode = "desktop"] = process.argv.slice(2);
-  const browser = await chromium.launch();
+  // PROXY=1 lets the page reach outside hosts (the PayPal JS SDK) through the session proxy.
+  const proxy = process.env.PROXY ? process.env.HTTPS_PROXY || process.env.https_proxy : undefined;
+  const browser = await chromium.launch(proxy ? { proxy: { server: proxy, bypass: "localhost,127.0.0.1" } } : {});
   const context = await browser.newContext({
+    ignoreHTTPSErrors: Boolean(proxy),
     viewport: mode === "mobile" ? { width: 390, height: 844 } : { width: 1440, height: 960 },
     timezoneId: "America/Los_Angeles",
     deviceScaleFactor: 1,

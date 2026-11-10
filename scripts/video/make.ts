@@ -5,6 +5,7 @@
  *   pnpm video cards              title and end cards, and the thumbnail
  *   pnpm video record <scene...>  record app scenes against the running app (see record.ts)
  *   pnpm video compose            cut every scene to its narration and join them
+ *   pnpm video check              no line cut off or talked over, length and size limits
  *   pnpm video status             what is recorded and how long everything is
  *
  * The app scenes are real runs against the PayPal sandbox, recorded with Playwright. Some
@@ -12,9 +13,10 @@
  * demo/raw/ (git-ignored) until compose.
  */
 import "../_env";
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { charactersUsed, speak } from "../lib/tts";
+import { charactersUsed, speak, VOICES } from "../lib/tts";
 import { renderCards } from "./cards";
 import { AUDIO, CARDS, CLIPS, duration, ensureDirs, ffmpeg, ROOT, SEGMENTS } from "./lib";
 import { SCENES, type Scene } from "./scenes";
@@ -41,7 +43,7 @@ async function narrate() {
     if (s.marlow) lines.push(`  Marlow (in-product voice line, pre-rendered): see lib/client/voice-lines.ts, "${s.marlow.line}"`, "");
     console.log(`${s.id}  ${secs.toFixed(1)} s  ${s.narration.length} characters`);
   }
-  lines.push(`Narrator: ElevenLabs eleven_multilingual_v2, voice nPczCjzI2devNBz1zQrb. Marlow: a second premade voice.`, `No music.`);
+  lines.push(`Narrator: ElevenLabs eleven_multilingual_v2, voice ${VOICES.narrator} (Jessica). Marlow: a second premade voice, ${VOICES.marlow}.`, `No music.`);
   writeFileSync(path.join(ROOT, "demo", "narration.txt"), `${lines.join("\n")}\n`);
   console.log(`\nPlanned length ${Math.floor(total / 60)}:${String(Math.round(total % 60)).padStart(2, "0")}. ElevenLabs characters used so far: ${charactersUsed()} of 15000.`);
 }
@@ -124,12 +126,55 @@ function compose() {
   if (mb >= 50) console.log("WARNING: the video is 50 MB or larger.");
 }
 
+/** Peak level in dB of a slice of a file's audio. Silence reads as a very low number. */
+function peakDb(file: string, from: number, length: number): number {
+  const res = spawnSync("ffmpeg", ["-hide_banner", "-ss", from.toFixed(3), "-t", length.toFixed(3), "-i", file, "-vn", "-af", "volumedetect", "-f", "null", "-"], { encoding: "utf8" });
+  const m = /max_volume: (-?[\d.]+|-inf) dB/.exec(res.stderr ?? "");
+  return !m || m[1] === "-inf" ? -120 : Number(m[1]);
+}
+
+/**
+ * Checks that no spoken line is cut off or talked over: every scene is long enough for its
+ * narration, Marlow's line starts after the narrator stops and ends before the scene does,
+ * and the last moments of each scene's sound are quiet.
+ */
+function check() {
+  let problems = 0;
+  const flag = (ok: boolean, text: string) => {
+    if (!ok) problems++;
+    return `${ok ? "ok  " : "FAIL"} ${text}`;
+  };
+  for (const s of SCENES) {
+    const secs = duration(segFile(s));
+    const narrationEnd = LEAD + duration(audioFile(s));
+    console.log(flag(secs >= narrationEnd + 0.25, `${s.id}: scene ${secs.toFixed(2)} s, narration ends at ${narrationEnd.toFixed(2)} s`));
+    if (s.marlow) {
+      const length = duration(path.join(ROOT, "public", "audio", `marlow-${s.marlow.line}.mp3`));
+      const end = s.marlow.at + length;
+      console.log(flag(s.marlow.at >= narrationEnd + 0.2, `${s.id}: Marlow starts at ${s.marlow.at.toFixed(2)} s, ${(s.marlow.at - narrationEnd).toFixed(2)} s after the narrator stops`));
+      console.log(flag(end <= secs - 0.2, `${s.id}: Marlow ends at ${end.toFixed(2)} s, ${(secs - end).toFixed(2)} s before the scene ends`));
+    }
+    const tailPeak = peakDb(segFile(s), Math.max(0, secs - 0.2), 0.2);
+    const headPeak = peakDb(segFile(s), 0, 0.15);
+    console.log(flag(tailPeak < -40 && headPeak < -40, `${s.id}: sound in the first 0.15 s peaks at ${headPeak.toFixed(0)} dB, in the last 0.2 s at ${tailPeak.toFixed(0)} dB`));
+  }
+  const out = path.join(ROOT, "demo", "video.mp4");
+  const secs = duration(out);
+  const mb = statSync(out).size / 1024 / 1024;
+  const sum = SCENES.reduce((n, s) => n + duration(segFile(s)), 0);
+  console.log(flag(secs < 180, `demo/video.mp4 is ${Math.floor(secs / 60)}:${String(Math.floor(secs % 60)).padStart(2, "0")} (${secs.toFixed(1)} s), scenes add up to ${sum.toFixed(1)} s`));
+  console.log(flag(mb < 50, `demo/video.mp4 is ${mb.toFixed(1)} MB`));
+  console.log(`ElevenLabs characters used: ${charactersUsed()} of 15000.`);
+  if (problems) throw new Error(`${problems} check(s) failed.`);
+}
+
 async function main() {
   const [step, ...rest] = process.argv.slice(2);
   if (step === "narrate") await narrate();
   else if (step === "cards") await renderCards();
   else if (step === "status") status();
   else if (step === "compose") compose();
+  else if (step === "check") check();
   else if (step === "record") {
     const { recordScenes } = await import("./record");
     await recordScenes(rest);

@@ -1,6 +1,6 @@
 {
   "budget": 15000,
-  "used": 3178,
+  "used": 5325,
   "requests": [
     {
       "at": "2026-11-10T16:41:03.646Z",
@@ -115,6 +115,76 @@
       "voice": "narrator",
       "characters": 318,
       "purpose": "video narration s09-guard"
+    },
+    {
+      "at": "2026-11-10T18:29:53.381Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 196,
+      "purpose": "video narration s01-open"
+    },
+    {
+      "at": "2026-11-10T18:29:54.527Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 176,
+      "purpose": "video narration s02-problem"
+    },
+    {
+      "at": "2026-11-10T18:29:56.081Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 300,
+      "purpose": "video narration s03-board"
+    },
+    {
+      "at": "2026-11-10T18:29:58.037Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 387,
+      "purpose": "video narration s04-case"
+    },
+    {
+      "at": "2026-11-10T18:29:58.726Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 155,
+      "purpose": "video narration s05-file"
+    },
+    {
+      "at": "2026-11-10T18:29:59.680Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 149,
+      "purpose": "video narration s06-settle"
+    },
+    {
+      "at": "2026-11-10T18:30:01.120Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 283,
+      "purpose": "video narration s07-offer"
+    },
+    {
+      "at": "2026-11-10T18:30:02.147Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 127,
+      "purpose": "video narration s08-prevent"
+    },
+    {
+      "at": "2026-11-10T18:30:03.759Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 318,
+      "purpose": "video narration s09-guard"
+    },
+    {
+      "at": "2026-11-10T18:30:04.387Z",
+      "voice": "narrator",
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "characters": 56,
+      "purpose": "video narration s10-end"
     }
   ]
 }
