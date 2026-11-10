@@ -30,7 +30,7 @@ export function model(id: string): LanguageModelV1 {
   return wandb().chatModel(id);
 }
 
-const REASONING_HEADROOM = 1800;
+const REASONING_HEADROOM = 3000;
 
 export class AiUnavailableError extends Error {
   constructor(message: string) {

@@ -11,7 +11,7 @@ import { allowedActions, type Dispute } from "@/lib/paypal/types";
 import { buildChecklist, effortMinutes, readinessOf, recommend, strengthOf, winLikelihood } from "@/lib/rules/assess";
 import { mayAutoFile, pickEvidenceType } from "@/lib/rules/guards";
 import { reasonTitle, ruleFor } from "@/lib/rules/evidence-table";
-import { gatherEvidence } from "./evidence";
+import { fillMissingPhotoReads, gatherEvidence } from "./evidence";
 import { addTrail, loadCase, loadDesk, loadSettings, saveCase, saveDesk } from "./state";
 import type { CaseDetail, CaseMeta, Desk, Settings } from "./types";
 
@@ -34,10 +34,23 @@ const REVIEW_TARGET_DAYS = 3;
 
 const SELLER_WON = new Set(["RESOLVED_SELLER_FAVOUR", "CANCELED_BY_BUYER", "DENIED"]);
 
-export function outcomeOf(dispute: Dispute): CaseMeta["outcome"] {
+/**
+ * What was at stake when the dispute arrived. After a partial refund offer is accepted PayPal
+ * rewrites dispute_amount to the refunded amount, so the first amount the desk saw is kept, and
+ * for a case first seen after that, the disputed transaction's gross amount is used.
+ */
+export function originalAmountOf(dispute: Dispute, previous?: number): number {
+  const amount = Number(dispute.dispute_amount?.value ?? 0);
+  if (previous && previous >= amount) return previous;
+  const gross = Number(dispute.disputed_transactions?.[0]?.gross_amount?.value ?? NaN);
+  const accepted = (dispute.offer?.history ?? []).some((h) => h.event_type === "ACCEPTED");
+  return accepted && Number.isFinite(gross) && gross > amount ? gross : amount;
+}
+
+export function outcomeOf(dispute: Dispute, atStake?: number): CaseMeta["outcome"] {
   if (dispute.status !== "RESOLVED") return null;
   const code = dispute.dispute_outcome?.outcome_code ?? "NONE";
-  const amount = Number(dispute.dispute_amount?.value ?? 0);
+  const amount = atStake ?? originalAmountOf(dispute);
   // What PayPal actually refunded: the outcome's own figure, else the refund transactions on
   // the dispute (an accepted partial refund offer shows up there).
   const reported = Number(dispute.dispute_outcome?.amount_refunded?.value ?? NaN);
@@ -54,7 +67,7 @@ export function metaFrom(dispute: Dispute, detail: CaseDetail | null, previous: 
   const txn = dispute.disputed_transactions?.[0];
   const rec = detail?.recommendation ?? null;
   const checklist = detail?.checklist ?? [];
-  const amount = Number(dispute.dispute_amount?.value ?? 0);
+  const amount = originalAmountOf(dispute, previous?.amount);
   const action = rec?.action ?? null;
   const likelihood = checklist.length ? winLikelihood(dispute, checklist) : null;
   const auto =
@@ -91,7 +104,7 @@ export function metaFrom(dispute: Dispute, detail: CaseDetail | null, previous: 
     recommendation: action,
     effortMinutes: effortMinutes(dispute.reason, action ?? "fight", dispute.dispute_life_cycle_stage),
     agentCanHandle: auto,
-    outcome: outcomeOf(dispute),
+    outcome: outcomeOf(dispute, amount),
     replay: currentMode() === "replay" ? true : undefined,
   };
 }
@@ -242,6 +255,12 @@ export async function prepareCase(
       ok: e.store.found,
     });
     for (const read of e.photoReads) {
+      addTrail(detail, { actor: "marlow", kind: "ai", title: `Read photo: ${read.verdict}`, detail: `${read.question} ${read.summary}`, ai: read.ai });
+    }
+  }
+
+  else {
+    for (const read of await fillMissingPhotoReads(detail.evidence)) {
       addTrail(detail, { actor: "marlow", kind: "ai", title: `Read photo: ${read.verdict}`, detail: `${read.question} ${read.summary}`, ai: read.ai });
     }
   }

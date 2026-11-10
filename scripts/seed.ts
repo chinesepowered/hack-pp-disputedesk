@@ -5,7 +5,7 @@
  *   pnpm seed --batch B          top up the pool with a fresh batch (B, C, ...)
  *   pnpm seed --only fig-not-received,planter-not-as-described
  *   pnpm seed --status           print what exists, change nothing
- *   pnpm seed --no-disputes      orders and tracking only
+ *   pnpm seed --no-disputes      do not open disputes (orders only; existing disputes are still staged)
  *
  *   pnpm seed --wait 40          keep staging for up to 40 minutes (default 25)
  *
@@ -29,7 +29,7 @@ import { addOrderTracking, captureStoreOrder, createStoreOrder } from "@/lib/pay
 import { fileAction } from "@/lib/desk/filing";
 import { prepareCase } from "@/lib/desk/sync";
 import { renderPackPdf } from "@/lib/pack/pdf";
-import { escalateDispute, getDispute } from "@/lib/paypal/disputes";
+import { escalateDispute, getDispute, listDisputes } from "@/lib/paypal/disputes";
 import { isAllowed } from "@/lib/paypal/types";
 import { looseCalls } from "@/lib/paypal/log";
 import { approveOrder, fileDispute, findBuyerTransaction, openBuyerSession, type BuyerSession } from "./lib/buyer";
@@ -81,9 +81,33 @@ function trackingNumber(scenario: Scenario, invoiceId: string): string {
   return `${prefix}${digits}${(scenario.key.length * 7919) % 100000}US`.toUpperCase();
 }
 
-function tracksLate(scenario: Scenario, withDisputes: boolean): boolean {
+function tracksLate(scenario: Scenario): boolean {
   const flow = scenario.dispute?.flow ?? "inquiry";
-  return withDisputes && scenario.dispute?.reason === "not_received" && (flow === "claim" || flow === "ready_to_settle");
+  return scenario.dispute?.reason === "not_received" && (flow === "claim" || flow === "ready_to_settle");
+}
+
+/**
+ * Finds disputes that already exist for this batch's orders (opened by hand, or by a run whose
+ * state file was lost) by matching PayPal capture ids, so they are staged instead of duplicated.
+ */
+async function adoptDisputes(state: SeedState, batch: string) {
+  const orders = Object.entries(state.batches[batch].orders).filter(([, st]) => st.captureId && !st.disputeId);
+  if (!orders.length) return;
+  let listed: Awaited<ReturnType<typeof listDisputes>> = [];
+  try {
+    listed = await listDisputes({ feature: "Seed: look for existing disputes" });
+  } catch {
+    return;
+  }
+  for (const [key, st] of orders) {
+    const hit = listed.find((d) => ((d as any).disputed_transactions ?? []).some((t: any) => t.seller_transaction_id === st.captureId));
+    if (hit) {
+      st.disputeId = hit.dispute_id;
+      st.disputedAt = hit.create_time;
+      console.log(`  ${st.invoiceId} ${key}: found existing dispute ${hit.dispute_id}`);
+    }
+  }
+  saveState(state);
 }
 
 async function addTracking(state: SeedState, st: OrderState, scenario: Scenario) {
@@ -149,7 +173,7 @@ async function seedOrder(
   // tracking (even tracking added seconds after the dispute). For the flows that need the
   // seller to be asked for evidence, tracking goes on later, in the staging pass, once the
   // dispute has settled as an inquiry.
-  if (!tracksLate(scenario, withDisputes)) await addTracking(state, st, scenario);
+  if (!tracksLate(scenario)) await addTracking(state, st, scenario);
 
   if (withDisputes && scenario.dispute && !st.disputeId) {
     const s = await session();
@@ -286,6 +310,7 @@ async function main() {
   saveState(state);
 
   console.log(`Seeding batch ${batch}: ${scenarios.length} orders for ${STORE.name} in the PayPal sandbox.`);
+  await adoptDisputes(state, batch);
   let buyer: BuyerSession | null = null;
   const session = async () => (buyer ??= await openBuyerSession());
   let failures = 0;
@@ -307,7 +332,8 @@ async function main() {
     if (buyer) await (buyer as BuyerSession).close();
   }
 
-  if (withDisputes) await stagingPass(state, batch, scenarios, Number(arg("wait") ?? 25));
+  await adoptDisputes(state, batch);
+  await stagingPass(state, batch, scenarios, Number(arg("wait") ?? 25));
   printSummary(state);
 
   const calls = looseCalls();

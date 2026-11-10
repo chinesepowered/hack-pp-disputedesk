@@ -193,7 +193,7 @@ export default function BoardPage() {
             </div>
           </div>
         </Card>
-        <Card className="flex min-w-[220px] flex-col justify-center px-5 py-3" aria-label="Recovered this month" data-testid="recovered-card">
+        <Card className="flex min-w-[220px] flex-1 flex-col justify-center px-5 py-3 sm:flex-none" aria-label="Recovered this month" data-testid="recovered-card">
           <p className="text-[12.5px] font-semibold uppercase tracking-wide text-muted">Recovered this month</p>
           <p className="text-[34px] font-extrabold leading-tight text-ready" data-testid="recovered-amount" aria-live="polite">
             {money(board?.recovered.amount ?? 0)}
@@ -202,7 +202,7 @@ export default function BoardPage() {
             {board?.recovered.won ?? 0} won of {board?.recovered.resolved ?? 0} resolved
           </p>
         </Card>
-        <Card className="grid min-w-[240px] grid-cols-3 gap-2 px-4 py-3 text-center" aria-label="Open disputes">
+        <Card className="grid min-w-[240px] flex-1 grid-cols-3 items-center gap-2 px-4 py-3 text-center sm:flex-none" aria-label="Open disputes">
           <Stat label="Need you" value={needs} tone="missing" />
           <Stat label="With PayPal" value={board?.waiting.length ?? 0} tone="slate" />
           <Stat label="Resolved" value={board?.resolved.length ?? 0} tone="ready" />

@@ -46,7 +46,7 @@ export function storeRecords(scenario: Scenario | undefined, capturedAt: string 
 }
 
 /** Photo reads are cached by photo: the same picture gets the same answer without a new call. */
-async function cachedPhotoRead(photo: string, kind: "delivery" | "damage"): Promise<PhotoRead | null> {
+export async function cachedPhotoRead(photo: string, kind: "delivery" | "damage"): Promise<PhotoRead | null> {
   if (currentMode() === "replay") {
     try {
       return await readPhoto(photo, kind);
@@ -151,4 +151,21 @@ export async function gatherEvidence(dispute: Dispute): Promise<EvidenceBundle> 
   for (const read of await Promise.all(jobs)) if (read) photoReads.push(read);
 
   return { gatheredAt: new Date().toISOString(), scenarioKey, paypal, store, photoReads };
+}
+
+/** Photos that were on file but could not be read earlier (model down, file missing) get another try. */
+export async function fillMissingPhotoReads(bundle: EvidenceBundle): Promise<PhotoRead[]> {
+  const wanted: [string, "delivery" | "damage"][] = [];
+  if (bundle.store.carrier?.photo) wanted.push([bundle.store.carrier.photo, "delivery"]);
+  if (bundle.store.buyerPhoto) wanted.push([bundle.store.buyerPhoto, "damage"]);
+  const added: PhotoRead[] = [];
+  for (const [photo, kind] of wanted) {
+    if (bundle.photoReads.some((r) => r.photo === photo)) continue;
+    const read = await cachedPhotoRead(photo, kind);
+    if (read) {
+      bundle.photoReads.push(read);
+      added.push(read);
+    }
+  }
+  return added;
 }

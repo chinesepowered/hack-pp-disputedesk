@@ -294,7 +294,7 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
             {
               text: "Team",
               field: "name",
-              width: 214,
+              width: typeof window !== "undefined" && window.innerWidth < 640 ? 132 : 214,
               htmlEncode: false,
               renderer: ({ record }: any) =>
                 `<div class="desk-resource"><span class="avatar ${record.isAgent ? "agent" : ""}" aria-hidden="true">${enc(initials(record.name))}</span><span class="who"><b>${enc(record.name)}</b><span>${enc(record.role)} · ${enc(record.hours)}</span></span></div>`,

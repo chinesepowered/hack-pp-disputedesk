@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { recoveredThisMonth } from "@/lib/desk/board";
-import { outcomeOf } from "@/lib/desk/sync";
+import { originalAmountOf, outcomeOf } from "@/lib/desk/sync";
 import { EMPTY_DESK, type CaseMeta, type Desk } from "@/lib/desk/types";
 import { dispute } from "./helpers";
 
@@ -27,6 +27,18 @@ describe("outcomes", () => {
     const d = dispute("planter-not-as-described", { status: "RESOLVED", links: [] });
     d.dispute_outcome = { outcome_code: "RESOLVED_WITH_PAYOUT", amount_refunded: { currency_code: "USD", value: "31.00" } };
     expect(outcomeOf(d)?.wonAmount).toBe(31);
+  });
+
+  it("keeps the original amount when PayPal rewrites it after an accepted offer", () => {
+    // Recorded from the sandbox: a $62 dispute, $31 offer accepted, dispute_amount becomes 31.00.
+    const d = dispute("planter-not-as-described", { status: "RESOLVED", links: [] });
+    d.dispute_amount = { currency_code: "USD", value: "31.00" };
+    d.disputed_transactions = [{ gross_amount: { currency_code: "USD", value: "62.00" } }];
+    d.offer = { history: [{ actor: "SELLER", event_type: "PROPOSED" }, { actor: "BUYER", event_type: "ACCEPTED" }] };
+    d.dispute_outcome = { outcome_code: "RESOLVED_BUYER_FAVOUR", outcome_reason: "INQUIRY_OFFER_PARTIAL_REFUND", amount_refunded: { currency_code: "USD", value: "31.00" } };
+    expect(originalAmountOf(d)).toBe(62);
+    expect(originalAmountOf(d, 62)).toBe(62);
+    expect(outcomeOf(d)).toMatchObject({ wonAmount: 31 });
   });
 
   it("the recovered counter adds up this month's wins only", () => {

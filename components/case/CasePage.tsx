@@ -224,6 +224,11 @@ export default function CasePage({ id }: { id: string }) {
   const requested = (d.evidences ?? []).filter((x) => x.source === "REQUESTED_FROM_SELLER").map((x) => x.evidence_type);
   const offerTypes = d.allowed_response_options?.make_offer?.offer_types ?? [];
   const pending = (detail.proposals ?? []).filter((p) => p.status === "pending");
+  const filed =
+    filings.some((f) => f.status === "done" && !["require_evidence", "adjudicate", "escalate"].includes(f.action)) ||
+    (d.evidences ?? []).some((x) => x.source === "SUBMITTED_BY_SELLER") ||
+    (d.supporting_info ?? []).some((x) => x.source === "SUBMITTED_BY_SELLER") ||
+    (d.offer?.history ?? []).some((h) => h.actor === "SELLER");
   const buyerWords = d.messages?.[0]?.content ?? d.evidences?.find((x) => x.source === "SUBMITTED_BY_BUYER")?.notes;
 
   return (
@@ -257,9 +262,17 @@ export default function CasePage({ id }: { id: string }) {
               {meta.dueKind === "target" ? "Desk target" : "PayPal deadline"} {fmtDate(meta.dueAt, TZ)} · {due.text.toLowerCase()}
             </Chip>
           )}
-          {block && <Chip tone="forest">Booked {fmtDate(block.start, TZ)}</Chip>}
           {meta.replay && <Chip tone="partial">Replay</Chip>}
         </div>
+        <Steps
+          steps={[
+            { label: "Arrived from PayPal", done: true },
+            { label: block ? `Booked ${fmtDate(block.start, TZ)}` : "Time booked", done: Boolean(block) || filed || Boolean(outcome) },
+            { label: "Case built", done: Boolean(e && rec) },
+            { label: "Approved and filed", done: filed || Boolean(outcome) },
+            { label: outcome ? outcome.title : "Outcome", done: Boolean(outcome) },
+          ]}
+        />
         <p className="mt-3 text-[13.5px] text-muted" data-testid="allowed-actions">
           <span className="font-semibold text-ink">PayPal allows right now</span> (from the dispute&apos;s <code className="font-mono">links</code>):{" "}
           {actions.length ? actions.map((a) => ACTION_LABEL[a].toLowerCase()).join(", ") : "nothing. The next move is PayPal's or the buyer's."}
@@ -629,6 +642,30 @@ export default function CasePage({ id }: { id: string }) {
   );
 }
 
+function Steps({ steps }: { steps: { label: string; done: boolean }[] }) {
+  const current = steps.findIndex((s) => !s.done);
+  return (
+    <ol className="mt-3 flex flex-wrap items-center gap-x-1 gap-y-1.5 text-[13px]" aria-label="Progress of this case" data-testid="case-steps">
+      {steps.map((s, i) => (
+        <li key={i} className="flex items-center gap-1">
+          <span
+            className={cx(
+              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-semibold",
+              s.done ? "bg-forest text-white" : i === current ? "border-2 border-forest bg-surface text-forest-deep" : "border border-line bg-surface text-muted",
+            )}
+            aria-current={i === current ? "step" : undefined}
+          >
+            <span aria-hidden="true">{s.done ? "✓" : i + 1}</span>
+            {s.label}
+            <span className="sr-only">{s.done ? " (done)" : i === current ? " (next)" : " (not yet)"}</span>
+          </span>
+          {i < steps.length - 1 && <span aria-hidden="true" className={cx("h-0.5 w-4 rounded", s.done ? "bg-forest" : "bg-line")} />}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 function ActionRow({ children, endpoint, recommended, id, plain }: { children: React.ReactNode; endpoint: string; recommended?: boolean; id: string; plain?: boolean }) {
   return (
     <div className={cx("rounded-xl px-3 py-3", plain ? "" : recommended ? "border-2 border-forest bg-forest-tint" : "border border-line")}>
@@ -694,14 +731,14 @@ function RecommendationCard({ rec, amount }: { rec: Recommendation; amount: numb
       )}
       <p className="mt-3 text-[12.5px] text-muted">The estimate and the decision come from fixed rules: each checklist item adds or removes points. The model only explains them.</p>
       <table className="mt-3 w-full border-collapse text-[14px]" data-testid="economics">
-        <caption className="pb-1 text-left text-[13px] font-bold">The economics <span className="font-normal text-muted">(net of staff time and fees; accepting refunds the full amount)</span></caption>
+        <caption className="pb-1 text-left text-[13px] font-bold">The economics <span className="font-normal text-muted">(what you expect to keep of this sale, after staff time and fee risk)</span></caption>
         <tbody>
           <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">At stake</th><td className="py-1.5 text-right font-semibold">{money(amount)}</td></tr>
           <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">Staff time to respond</th><td className="py-1.5 text-right font-semibold">{rec.economics.staffMinutes} min · {money(rec.economics.staffCost)}</td></tr>
           <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">Dispute fee if a claim is lost</th><td className="py-1.5 text-right font-semibold">{money(rec.economics.fee)}</td></tr>
-          <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">If you fight: expected net</th><td className={cx("py-1.5 text-right font-semibold", rec.action === "fight" && "text-ready")}>{money(rec.economics.fight)}</td></tr>
-          {rec.economics.offer !== null && <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">If the offer is accepted: net</th><td className={cx("py-1.5 text-right font-semibold", rec.action === "offer" && "text-ready")}>{money(rec.economics.offer)}</td></tr>}
-          <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">If you accept: net</th><td className="py-1.5 text-right font-semibold">{money(rec.economics.accept)}</td></tr>
+          <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">If you fight</th><td className={cx("py-1.5 text-right font-semibold", rec.action === "fight" && "text-ready")}>{money(rec.economics.fight)}</td></tr>
+          {rec.economics.offer !== null && <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">If the offer is accepted</th><td className={cx("py-1.5 text-right font-semibold", rec.action === "offer" && "text-ready")}>{money(rec.economics.offer)}</td></tr>}
+          <tr className="border-t border-line"><th scope="row" className="py-1.5 text-left font-medium text-muted">If you accept</th><td className="py-1.5 text-right font-semibold">{money(rec.economics.accept)}</td></tr>
         </tbody>
       </table>
       <p className="mt-2 rounded-lg bg-sunken px-3 py-2 text-[13.5px]" data-testid="approval-rule">
