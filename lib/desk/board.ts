@@ -104,6 +104,7 @@ export async function moveBlock(input: { disputeId: string; resourceId: string; 
   if (!meta) throw new Error("Unknown dispute.");
   const who = settings.team.find((p) => p.id === input.resourceId);
   if (!who) throw new Error("Unknown team member.");
+  if (who.isAgent && !meta.agentCanHandle) throw new Error("Marlow can only take cases your auto-accept rule covers. Assign this one to a person.");
   const start = Math.round(new Date(input.start).getTime() / SLOT_MS) * SLOT_MS;
   const end = Math.max(start + SLOT_MS, Math.round(new Date(input.end).getTime() / SLOT_MS) * SLOT_MS);
   const block: WorkBlock = {

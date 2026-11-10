@@ -14,7 +14,7 @@ import type { EvidenceBundle, PhotoRead } from "./types";
 
 const DAY = 24 * 3600 * 1000;
 
-function storeRecords(scenario: Scenario | undefined, capturedAt: string | null, trackingNumber: string | null): EvidenceBundle["store"] {
+export function storeRecords(scenario: Scenario | undefined, capturedAt: string | null, trackingNumber: string | null): EvidenceBundle["store"] {
   if (!scenario) {
     return { found: false, orderPlacedAt: null, product: null, carrier: null, thread: [], risk: null, packingPhoto: null, buyerPhoto: null, returnPolicy: RETURN_POLICY.points };
   }

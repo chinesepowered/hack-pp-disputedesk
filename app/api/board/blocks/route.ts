@@ -18,7 +18,7 @@ export const PUT = route("Board: move a work block", async (req) => {
   try {
     outcome = await moveBlock({ disputeId: body.disputeId, resourceId: body.resourceId, start: body.start, end: body.end });
   } catch (err) {
-    throw new DeskError(404, "UNKNOWN_BLOCK", err instanceof Error ? err.message : "Unknown block.");
+    throw new DeskError(409, "BLOCK_NOT_ALLOWED", err instanceof Error ? err.message : "That block cannot go there.");
   }
   const [desk, settings] = await Promise.all([loadDesk(), loadSettings()]);
   return { board: boardView(desk, settings), placements: outcome.placements, note: outcome.note };

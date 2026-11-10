@@ -77,6 +77,7 @@ class UnscheduledDrag extends DragHelper {
   declare grid: Grid;
   declare schedule: Scheduler;
   declare onBook: (disputeId: string, resourceId: string, date: Date) => void;
+  declare canAgentTake: (disputeId: string) => boolean;
 
   createProxy(element: HTMLElement) {
     const record = this.grid.getRecordFromElement(element) as any;
@@ -96,7 +97,8 @@ class UnscheduledDrag extends DragHelper {
   onDrag = ({ context }: any) => {
     const date = this.schedule.getDateFromCoordinate(context.newX, "round", false);
     const resource = context.target && this.schedule.resolveResourceRecord(context.target);
-    context.valid = Boolean(date && resource);
+    const allowedRow = !resource?.isAgent || Boolean(this.canAgentTake?.(context.record?.disputeId));
+    context.valid = Boolean(date && resource && allowedRow);
     context.date = date;
     context.resource = resource;
     (context.element as HTMLElement | undefined)?.classList.toggle("invalid", !context.valid);
@@ -249,6 +251,7 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
       grid,
       schedule: scheduler,
       outerElement: grid.element,
+      canAgentTake: (disputeId: string) => Boolean(caseMapRef.current.get(disputeId)?.agentCanHandle),
       onBook: (disputeId: string, resourceId: string, date: Date) => {
         const c = caseMapRef.current.get(disputeId);
         const minutes = c?.effortMinutes ?? 30;
@@ -267,13 +270,13 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
 
   return (
     <div className="flex flex-col gap-3 xl:flex-row" data-testid="board">
-      <div className="desk-scheduler min-w-0 flex-1 overflow-hidden rounded-[14px] border border-line bg-surface" style={{ height: 52 + team.length * 64 + 18 }} data-testid="scheduler">
+      <div className="desk-scheduler min-w-0 flex-1 overflow-hidden rounded-[14px] border border-line bg-surface" style={{ height: 40 + team.length * 64 + 16 }} data-testid="scheduler">
         <BryntumScheduler
           ref={schedulerRef}
           startDate={range.start}
           endDate={range.end}
           timeZone={timezone}
-          viewPreset={{ base: "hourAndDay", tickWidth: 200, headers: [{ unit: "day", dateFormat: "ddd MMM D" }, { unit: "hour", dateFormat: "HH" }] } as any}
+          viewPreset={{ base: "hourAndDay", tickWidth: 200, headers: [{ unit: "hour", dateFormat: "ddd D MMM, HH:mm" }] } as any}
           workingTime={{ fromHour: DAY_START, toHour: DAY_END }}
           rowHeight={64}
           barMargin={7}
@@ -303,15 +306,29 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
             renderData.wrapperCls.add(readiness);
             if (eventRecord.pinned) renderData.wrapperCls.add("pinned");
             const label = readiness === "unknown" ? "Not assessed yet" : READINESS_LABEL[readiness as keyof typeof READINESS_LABEL];
+            const short = label.replace("Evidence ", "").replace(/^./, (ch: string) => ch.toUpperCase());
+            // Very short blocks (Marlow's own quick jobs) only have room for the amount.
+            const tiny = eventRecord.endDate - eventRecord.startDate <= 15 * 60_000;
             return {
               className: "desk-block",
-              children: [
-                { tag: "b", text: c ? `${(c.customer ?? "Customer").split(" ")[0]} · ${money(c.amount)}` : eventRecord.name },
-                { tag: "span", text: c ? `${reasonLabel(c.reason)} · ${label.replace("Evidence ", "")}` : label },
-              ],
+              children: tiny
+                ? [{ tag: "b", text: c ? money(c.amount) : "" }]
+                : [
+                    { tag: "b", text: c ? `${(c.customer ?? "Customer").split(" ")[0]} · ${money(c.amount)}` : eventRecord.name },
+                    { tag: "span", text: c ? `${short} · ${reasonLabel(c.reason)}` : short },
+                  ],
             };
           }}
-          eventDragFeature={{ constrainDragToTimeline: true, showExactDropPosition: true }}
+          eventDragFeature={{
+            constrainDragToTimeline: true,
+            showExactDropPosition: true,
+            // Marlow's row only takes work Marlow may finish alone (the auto-accept rule).
+            validatorFn: ({ eventRecords, newResource }: any) => {
+              if (!newResource?.isAgent) return true;
+              const ok = eventRecords.every((r: any) => caseMapRef.current.get(r.disputeId)?.agentCanHandle);
+              return ok ? true : { valid: false, message: "Marlow can only take cases your auto-accept rule covers" };
+            },
+          }}
           eventResizeFeature={{ showExactResizePosition: true }}
           eventDragCreateFeature={false}
           timeRangesFeature={{ showCurrentTimeLine: true, showHeaderElements: true, enableResizing: false }}
@@ -336,19 +353,7 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
               },
             },
           } as any}
-          eventEditFeature={{
-            editorConfig: { title: "Work block", width: "24em" },
-            items: {
-              nameField: { label: "Dispute", readOnly: true },
-              resourceField: { label: "Assigned to" },
-              startDateField: { label: "Start" },
-              startTimeField: {},
-              endDateField: { label: "End" },
-              endTimeField: {},
-              recurrenceCombo: false,
-              editRecurrenceButton: false,
-            },
-          } as any}
+          eventEditFeature
           eventTooltipFeature={{
             template: ({ eventRecord }: any) => {
               const c = caseMapRef.current.get(eventRecord.disputeId);
