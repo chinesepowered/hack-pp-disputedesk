@@ -234,6 +234,25 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
     return () => timers.forEach(clearTimeout);
   }, [blocks, justBooked]);
 
+  // Open on the present: the next booked block, or the current time when nothing is booked.
+  // Without this the timeline opens at the start of the day, with the afternoon's work off screen.
+  const openedOnPresent = useRef(false);
+  useEffect(() => {
+    const scheduler = schedulerRef.current?.instance;
+    if (!scheduler || openedOnPresent.current) return;
+    const now = Date.now();
+    const next = blocks.filter((b) => new Date(b.end).getTime() > now).sort((a, b) => a.start.localeCompare(b.start))[0];
+    // New bookings scroll themselves into view (above), so only settled boards need this.
+    if (next && justBooked.includes(next.disputeId)) return;
+    const timer = setTimeout(() => {
+      openedOnPresent.current = true;
+      const record = next ? (scheduler.eventStore.getById(next.id) as EventModel | null) : null;
+      if (record) void scheduler.scrollEventIntoView(record, { animate: false, block: "start", edgeOffset: 90 } as any).catch(() => undefined);
+      else void (scheduler as any).scrollToNow?.({ animate: false, block: "center" })?.catch?.(() => undefined);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [blocks, justBooked]);
+
   // Keep the Unscheduled grid in step.
   const unscheduledRows = useMemo(
     () =>
@@ -286,7 +305,7 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
           startDate={range.start}
           endDate={range.end}
           timeZone={timezone}
-          viewPreset={{ base: "hourAndDay", tickWidth: 200, headers: [{ unit: "hour", dateFormat: "ddd D MMM, HH:mm" }] } as any}
+          viewPreset={{ base: "hourAndDay", tickWidth: 264, headers: [{ unit: "hour", dateFormat: "ddd D MMM, HH:mm" }] } as any}
           workingTime={{ fromHour: DAY_START, toHour: DAY_END }}
           rowHeight={64}
           barMargin={7}
@@ -319,8 +338,9 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
             const short = label.replace("Evidence ", "").replace(/^./, (ch: string) => ch.toUpperCase());
             // Very short blocks (Marlow's own quick jobs) only have room for the amount.
             const tiny = eventRecord.endDate - eventRecord.startDate <= 15 * 60_000;
+            if (tiny) renderData.wrapperCls.add("tiny");
             return {
-              className: "desk-block",
+              className: tiny ? "desk-block tiny" : "desk-block",
               children: tiny
                 ? [{ tag: "b", text: c ? money(c.amount) : "" }]
                 : [
@@ -399,12 +419,21 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
         />
       </div>
 
-      <aside className="desk-unscheduled w-full shrink-0 overflow-hidden rounded-[14px] border border-line bg-surface xl:w-[310px]" aria-label="Unscheduled disputes" data-testid="unscheduled-panel">
+      <aside
+        className="desk-unscheduled flex w-full shrink-0 flex-col overflow-hidden rounded-[14px] border border-line bg-surface xl:h-[var(--board-h)] xl:w-[310px]"
+        style={{ "--board-h": `${40 + team.length * 64 + 16}px` } as React.CSSProperties}
+        aria-label="Unscheduled disputes"
+        data-testid="unscheduled-panel"
+      >
         <div className="border-b border-line bg-missing-tint px-4 py-2.5">
           <h2 className="text-[15px] font-bold text-missing">Unscheduled ({unscheduledRows.length})</h2>
           <p className="text-[12.5px] text-missing">A deadline but no time booked. Drag onto a row, or let Marlow book them.</p>
         </div>
-        <div style={{ height: unscheduledRows.length ? Math.min(380, 44 + unscheduledRows.length * 60) : 0 }}>
+        {/* Beside the board the list is as tall as the board and scrolls; below it, it grows with its rows. */}
+        <div
+          className="h-[var(--grid-h)] xl:h-auto xl:min-h-0 xl:flex-1"
+          style={{ "--grid-h": `${unscheduledRows.length ? Math.min(380, 44 + unscheduledRows.length * 60) : 0}px` } as React.CSSProperties}
+        >
           <BryntumGrid
             ref={gridRef}
             data={unscheduledRows}

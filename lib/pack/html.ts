@@ -69,7 +69,8 @@ export function packModel(detail: CaseDetail): PackModel {
     disputeId: d.dispute_id,
     title: `${reasonTitle(d.reason)}: seller response`,
     amount: `$${d.dispute_amount.value} ${d.dispute_amount.currency_code}`,
-    stage: (d.dispute_life_cycle_stage ?? "").replace(/_/g, " ").toLowerCase(),
+    // PayPal names the claim stage CHARGEBACK. The pack uses the word PayPal's own screens use.
+    stage: d.dispute_life_cycle_stage === "CHARGEBACK" ? "claim" : (d.dispute_life_cycle_stage ?? "").replace(/_/g, " ").toLowerCase(),
     letter: detail.draft?.letter ?? "",
     facts: [
       { label: "PayPal case", value: d.dispute_id },

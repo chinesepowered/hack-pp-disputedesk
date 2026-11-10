@@ -155,7 +155,8 @@ export async function explainSchedule(lines: string[]): Promise<{ text: string; 
         content:
           "You just booked dispute work on the team's board using the shop's scheduling rules. Here is exactly what was booked:\n" +
           lines.map((l) => `- ${l}`).join("\n") +
-          "\n\nSummarize it for the team in 2 short sentences, in the first person. Mention the most urgent booking by name and time. Do not add anything that is not in the list.",
+          "\n\nThe list is in deadline order: the first line is the case with the nearest deadline. Summarize it for the team in 2 short sentences, in the first person. " +
+          "Mention the first line's case by name and time as the most urgent. Do not add anything that is not in the list.",
       },
     ],
   });

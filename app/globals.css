@@ -139,6 +139,11 @@ body {
   min-width: 0;
 }
 .desk-block b { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Ten and fifteen minute blocks only have room for the amount: give it every pixel. */
+.desk-scheduler .b-sch-event-wrap.tiny .b-sch-event { border-left-width: 4px; padding-inline: 0; }
+.desk-scheduler .b-sch-event-wrap.tiny .b-sch-event-content { margin: 0; padding: 0; width: 100%; }
+.desk-block.tiny { padding: 2px 1px; align-items: center; }
+.desk-block.tiny b { font-size: 11.5px; text-overflow: clip; }
 .desk-block span { font-weight: 500; font-size: 11.5px; color: #3c4a43; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Deadlines: PayPal's are solid clay lines, the desk's own targets are dashed amber. */
@@ -194,9 +199,10 @@ body {
 .desk-tip { font-size: 13px; line-height: 1.45; max-width: 290px; }
 .desk-tip h4 { font-weight: 700; margin: 0 0 4px; }
 .desk-tip dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 6px 0 0; }
-.desk-tip dt { color: #c9d2cc; }
+/* The tooltip is light, so its quieter text uses the same muted ink as the rest of the app. */
+.desk-tip dt { color: var(--color-muted); }
 .desk-tip dd { margin: 0; font-weight: 600; }
-.desk-tip .why { margin-top: 6px; color: #dfe6e1; }
+.desk-tip .why { margin-top: 6px; color: #3c4a43; }
 
 /* The drag proxy when a dispute is pulled from the Unscheduled panel onto the timeline. */
 .desk-drag-proxy {

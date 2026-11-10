@@ -37,12 +37,20 @@ export function recoveredThisMonth(desk: Desk, timezone: string, now = new Date(
   return { amount: Math.round(amount * 100) / 100, won, resolved };
 }
 
-export function boardView(desk: Desk, settings: Settings) {
+/** A block whose time has gone by. If its case still needs a response, the work was missed. */
+export function isMissed(block: WorkBlock, now = new Date()): boolean {
+  return new Date(block.end).getTime() <= now.getTime();
+}
+
+export function boardView(desk: Desk, settings: Settings, now = new Date()) {
   const cases = Object.values(desk.cases).sort((a, b) => (a.dueAt ?? "9").localeCompare(b.dueAt ?? "9"));
-  const scheduled = new Set(desk.blocks.map((b) => b.disputeId));
+  // Missed blocks are not shown as booked: their cases go back to Unscheduled until Marlow
+  // (or a person) books them again, so the board never shows a plan that is already in the past.
+  const blocks = desk.blocks.filter((b) => !isMissed(b, now));
+  const scheduled = new Set(blocks.map((b) => b.disputeId));
   return {
     cases,
-    blocks: desk.blocks,
+    blocks,
     unscheduled: cases.filter((c) => c.needsSeller && !scheduled.has(c.disputeId)).map((c) => c.disputeId),
     waiting: cases.filter((c) => !c.needsSeller && !c.outcome).map((c) => c.disputeId),
     resolved: cases.filter((c) => c.outcome).map((c) => c.disputeId),
@@ -70,7 +78,9 @@ export async function autoSchedule(opts: { reflow?: boolean; explain?: boolean }
   const desk = await updateDesk((latest) => {
     const open = Object.values(latest.cases).filter((c) => c.needsSeller);
     const openIds = new Set(open.map((c) => c.disputeId));
-    const existing = latest.blocks.filter((b) => openIds.has(b.disputeId));
+    // A block whose time passed without a response is booked again, pinned or not.
+    const missed = new Set(latest.blocks.filter((b) => openIds.has(b.disputeId) && isMissed(b, now)).map((b) => b.disputeId));
+    const existing = latest.blocks.filter((b) => openIds.has(b.disputeId) && !missed.has(b.disputeId));
     const fixed = existing.filter((b) => b.pinned || !opts.reflow || new Date(b.start).getTime() <= now.getTime());
     const fixedIds = new Set(fixed.map((b) => b.disputeId));
     const toPlace = open.filter((c) => !fixedIds.has(c.disputeId));
@@ -81,13 +91,21 @@ export async function autoSchedule(opts: { reflow?: boolean; explain?: boolean }
       fixed,
       cases: toPlace.map(toSched),
     }));
+    for (const b of blocks) {
+      if (missed.has(b.disputeId) && !b.why.startsWith("The earlier slot passed")) b.why = `The earlier slot passed with no response, so Marlow moved it. ${b.why}`;
+    }
+    for (const p of placements) {
+      if (p.block && missed.has(p.disputeId)) p.why = p.block.why;
+    }
     latest.blocks = blocks;
   });
 
   let note: ScheduleOutcome["note"] = null;
   const booked = placements.filter((p) => p.block);
   if (booked.length) {
-    const lines = booked.slice(0, 8).map((p) => `${caseLabel(desk.cases[p.disputeId])}: ${p.why}`);
+    // Nearest deadline first, so "most urgent" in Marlow's note is a fact and not a guess.
+    const byDeadline = [...booked].sort((a, b) => (desk.cases[a.disputeId]?.dueAt ?? "9").localeCompare(desk.cases[b.disputeId]?.dueAt ?? "9"));
+    const lines = byDeadline.slice(0, 8).map((p) => `${caseLabel(desk.cases[p.disputeId])}: ${p.why}`);
     // Replay keeps the scheduler's own sentence: a recorded explanation would describe
     // bookings from the day it was recorded.
     if (opts.explain && currentMode() !== "replay") {
@@ -107,8 +125,12 @@ export async function moveBlock(input: { disputeId: string; resourceId: string; 
   const settings = await loadSettings();
   const who = settings.team.find((p) => p.id === input.resourceId);
   if (!who) throw new Error("Unknown team member.");
+  // The start snaps to a quarter hour. The length is kept (to five minutes, ten at least), so
+  // moving a twenty minute job does not quietly shorten it to fifteen.
+  const FIVE = 5 * 60_000;
   const start = Math.round(new Date(input.start).getTime() / SLOT_MS) * SLOT_MS;
-  const end = Math.max(start + SLOT_MS, Math.round(new Date(input.end).getTime() / SLOT_MS) * SLOT_MS);
+  const length = Math.max(2 * FIVE, Math.round((new Date(input.end).getTime() - new Date(input.start).getTime()) / FIVE) * FIVE);
+  const end = start + length;
   await updateDesk((desk) => {
     const meta = desk.cases[input.disputeId];
     if (!meta) throw new Error("Unknown dispute.");
