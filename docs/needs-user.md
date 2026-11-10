@@ -55,7 +55,7 @@ It takes 30 to 45 minutes because it waits on PayPal. `pnpm seed --status` shows
 - Upload `demo/video.mp4` (2:39, 17 MB, 1920x1080) to YouTube. Thumbnail: `demo/thumb.png`.
 - Add the hosted URL and the YouTube link at the top of `README.md` and at the bottom of `docs/devpost.md`.
 - Make the repository public and submit on Devpost with the text in `docs/devpost.md`.
-- The session worked on branch `claude/gifted-dijkstra-4csqd3` and pushed every commit to `main` as well. The branch can be deleted once you have checked `main`.
+- Every commit is on `main`. The cloud session's working branch `claude/gifted-dijkstra-4csqd3` was kept identical to `main`; if it still exists on the remote it can be deleted.
 
 ## 5. Decisions left to you
 
