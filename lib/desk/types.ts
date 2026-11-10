@@ -172,6 +172,18 @@ export type CaseMeta = {
   replay?: boolean;
 };
 
+/** Something Marlow wants to file. It already passed the code guards and waits for a person. */
+export type Proposal = {
+  id: string;
+  action: DisputeAction;
+  text: string;
+  offerAmount?: number;
+  why: string;
+  createdAt: string;
+  status: "pending" | "approved" | "dismissed";
+  ai: AiTag | null;
+};
+
 export type CaseDetail = {
   disputeId: string;
   dispute: Dispute;
@@ -181,6 +193,7 @@ export type CaseDetail = {
   recommendation: Recommendation | null;
   draft: Draft | null;
   trail: TrailStep[];
+  proposals?: Proposal[];
 };
 
 export type WorkBlock = {

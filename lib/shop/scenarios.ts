@@ -354,7 +354,33 @@ export const SCENARIOS: Scenario[] = [
   },
 ];
 
+/**
+ * Orders placed on the demo store page carry custom_id "web:<sku>". They get a plain, well
+ * documented fulfillment record so a dispute opened on one still has store evidence to show.
+ */
+function webOrderScenario(sku: string): Scenario {
+  return {
+    key: `web:${sku}`,
+    sku,
+    shipTo: { fullName: "", addressLine1: "", city: "", state: "", postalCode: "", countryCode: "US" },
+    customer: { priorOrders: 0, accountAgeDays: 0 },
+    orderAgeDays: 6,
+    shipping: {
+      carrier: "harbor",
+      service: "Ground",
+      addToPayPal: true,
+      events: delivered("the destination city", 3),
+      outcome: "delivered",
+      deliveredToOrderAddress: true,
+      photo: "/seed/photos/delivery-door-1.jpg",
+    },
+    risk: { ipRegion: "the buyer's region", ipMatchesShipTo: true, billingMatchesShipTo: true, deviceSeenBefore: false },
+    thread: [],
+  };
+}
+
 export function scenarioByKey(key: string | undefined | null): Scenario | undefined {
   if (!key) return undefined;
+  if (key.startsWith("web:")) return webOrderScenario(key.slice(4));
   return SCENARIOS.find((s) => s.key === key);
 }

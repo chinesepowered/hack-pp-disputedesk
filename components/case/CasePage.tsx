@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Marlow } from "@/components/marlow/Marlow";
 import { ACTION_LABEL, AiTag, Button, Card, Chip, cx, dueText, fmtDate, money, OUTCOME_TEXT, READINESS_LABEL, reasonLabel, stageLabel, statusLabel } from "@/components/ui/atoms";
 import { announce, api, ApiError, toast } from "@/lib/client/store";
-import type { CaseDetail, CaseMeta, ChecklistItem, Filing, Recommendation, TrailStep, WorkBlock } from "@/lib/desk/types";
+import type { AiTag as AiTagType, CaseDetail, CaseMeta, ChecklistItem, Filing, Proposal, Recommendation, TrailStep, WorkBlock } from "@/lib/desk/types";
 import type { DisputeAction } from "@/lib/paypal/types";
 
 type Loaded = { detail: CaseDetail; meta: CaseMeta; block: WorkBlock | null; filings: Filing[] };
@@ -35,7 +35,16 @@ export default function CasePage({ id }: { id: string }) {
   const [message, setMessage] = useState("");
   const [offer, setOffer] = useState("");
   const [confirmAccept, setConfirmAccept] = useState(false);
+  const [ask, setAsk] = useState("");
+  const [answer, setAnswer] = useState<{ text: string; ai: AiTagType | null; events: { tool: string; ok: boolean; summary: string }[] } | null>(null);
   const started = useRef(false);
+  // Latest values for callbacks that outlive a render (polling, async results).
+  const dirtyRef = useRef(false);
+  const busyRef = useRef<string | null>(null);
+  useEffect(() => {
+    dirtyRef.current = dirty;
+    busyRef.current = busy;
+  }, [dirty, busy]);
 
   const apply = useCallback((next: Partial<Loaded>) => {
     setData((prev) => {
@@ -45,8 +54,7 @@ export default function CasePage({ id }: { id: string }) {
     if (next.detail?.draft && !dirtyRef.current) setLetter(next.detail.draft.letter);
     if (next.detail?.recommendation?.offerAmount != null) setOffer((v) => v || String(next.detail!.recommendation!.offerAmount));
   }, []);
-  const dirtyRef = useRef(false);
-  dirtyRef.current = dirty;
+
 
   const build = useCallback(
     async (force = false) => {
@@ -102,9 +110,6 @@ export default function CasePage({ id }: { id: string }) {
     }, every);
     return () => clearInterval(timer);
   }, [status, load]);
-  const busyRef = useRef<string | null>(null);
-  busyRef.current = busy;
-
   const outcomeCode = data?.meta.outcome?.code;
   const prevOutcome = useRef<string | undefined>(undefined);
   useEffect(() => {
@@ -146,6 +151,39 @@ export default function CasePage({ id }: { id: string }) {
     }
   };
 
+  const askMarlow = async (instruction: string) => {
+    setBusy("Marlow is working the case with tools");
+    setAnswer(null);
+    try {
+      const res = await api<{ answer: string; ai: AiTagType | null; events: { tool: string; ok: boolean; summary: string }[]; detail: CaseDetail; meta: CaseMeta }>("/api/agent/run", {
+        method: "POST",
+        body: { disputeId: id, instruction },
+      });
+      apply({ detail: res.detail, meta: res.meta });
+      setAnswer({ text: res.answer, ai: res.ai, events: res.events });
+      setAsk("");
+      announce(`Marlow answered: ${res.answer}`);
+    } catch (err) {
+      toast("error", "Marlow could not finish", err instanceof ApiError ? err.message : undefined);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const decide = async (proposal: Proposal, decision: "approve" | "dismiss") => {
+    setBusy(decision === "approve" ? "Filing with PayPal" : "Dismissing the proposal");
+    try {
+      const res = await api<{ detail: CaseDetail; meta: CaseMeta; filing: Filing | null }>("/api/agent/run", { method: "PUT", body: { disputeId: id, proposalId: proposal.id, decision } });
+      apply({ detail: res.detail, meta: res.meta, ...(res.filing ? { filings: [...(data?.filings ?? []).filter((f) => f.key !== res.filing!.key), res.filing] } : {}) });
+      if (res.filing) toast("success", res.filing.summary, `POST /v1/customer/disputes/${id}/${ENDPOINT[proposal.action]} accepted by PayPal.`);
+    } catch (err) {
+      toast("error", "PayPal did not accept the proposal", err instanceof ApiError ? `${err.message}${err.debugId ? ` Debug id ${err.debugId}.` : ""}` : undefined);
+      void load(true);
+    } finally {
+      setBusy(null);
+    }
+  };
+
   if (error && !data) {
     return (
       <Card className="mx-auto max-w-xl px-6 py-8 text-center" role="alert">
@@ -177,6 +215,7 @@ export default function CasePage({ id }: { id: string }) {
   const fileVia = FILE_ACTIONS.find((a) => actions.includes(a));
   const requested = (d.evidences ?? []).filter((x) => x.source === "REQUESTED_FROM_SELLER").map((x) => x.evidence_type);
   const offerTypes = d.allowed_response_options?.make_offer?.offer_types ?? [];
+  const pending = (detail.proposals ?? []).filter((p) => p.status === "pending");
   const buyerWords = d.messages?.[0]?.content ?? d.evidences?.find((x) => x.source === "SUBMITTED_BY_BUYER")?.notes;
 
   return (
@@ -485,6 +524,60 @@ export default function CasePage({ id }: { id: string }) {
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+            </Card>
+          )}
+
+          {!outcome && (
+            <Card className="px-5 py-4" aria-labelledby="ask-title" data-testid="ask-card">
+              <div className="flex items-center gap-3">
+                <Marlow mood={busy ? "working" : "calm"} size={54} />
+                <div>
+                  <h2 id="ask-title" className="text-[17px] font-bold">Ask Marlow</h2>
+                  <p className="text-[13px] text-muted">Marlow works with tools: PayPal Agent Toolkit tools to read, guarded tools to propose. Anything that moves money waits for you.</p>
+                </div>
+              </div>
+              {pending.length > 0 && (
+                <ul className="mt-3 space-y-2" aria-label="Proposals waiting for approval">
+                  {pending.map((p) => (
+                    <li key={p.id} className="rounded-xl border-2 border-forest bg-forest-tint px-3 py-3" data-testid="proposal">
+                      <p className="text-[12.5px] font-bold uppercase tracking-wide text-forest-deep">Marlow proposes · {ACTION_LABEL[p.action]}</p>
+                      <p className="mt-0.5 text-[14.5px] font-semibold">{p.why}</p>
+                      <p className="mt-1 whitespace-pre-line text-[13.5px] text-muted">{p.text.length > 320 ? `${p.text.slice(0, 320)}...` : p.text}</p>
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <Button size="sm" onClick={() => void decide(p, "approve")} disabled={Boolean(busy)} data-testid="proposal-approve">Approve and file</Button>
+                        <Button size="sm" variant="ghost" onClick={() => void decide(p, "dismiss")} disabled={Boolean(busy)} data-testid="proposal-dismiss">Dismiss</Button>
+                        <AiTag ai={p.ai} />
+                        <span className="font-mono text-[11.5px] text-muted">POST /v1/customer/disputes/{id}/{ENDPOINT[p.action]}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <form
+                className="mt-3 flex flex-wrap gap-2"
+                onSubmit={(ev) => {
+                  ev.preventDefault();
+                  if (!busy) void askMarlow(ask || "Work this case and propose what the rules say.");
+                }}
+              >
+                <label htmlFor="ask" className="sr-only">Instruction for Marlow</label>
+                <input id="ask" value={ask} onChange={(ev) => setAsk(ev.target.value)} placeholder="Work this case, or: book it with Sam tomorrow at 10" className="min-h-11 min-w-[220px] flex-1 rounded-lg border border-line bg-paper px-3 text-[14.5px]" data-testid="ask-input" />
+                <Button type="submit" disabled={Boolean(busy)} data-testid="ask-submit">Ask Marlow</Button>
+              </form>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {["Work this case", "Book this for Sam tomorrow at 10:00", "Write the buyer a short, friendly update"].map((q) => (
+                  <button key={q} type="button" onClick={() => void askMarlow(q)} disabled={Boolean(busy)} className="min-h-8 rounded-full border border-line px-3 text-[12.5px] font-semibold text-forest-deep hover:bg-forest-tint disabled:text-muted">{q}</button>
+                ))}
+              </div>
+              {answer && (
+                <div className="mt-3 rounded-xl bg-sunken px-3 py-3" data-testid="agent-answer" role="status">
+                  <p className="text-[14.5px] leading-relaxed">{answer.text}</p>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                    <AiTag ai={answer.ai} />
+                    <span className="text-[12px] text-muted">{answer.events.length} tool {answer.events.length === 1 ? "call" : "calls"}: {answer.events.map((ev) => ev.tool).join(", ")}</span>
+                  </div>
                 </div>
               )}
             </Card>

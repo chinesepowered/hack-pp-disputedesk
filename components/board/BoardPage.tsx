@@ -120,11 +120,14 @@ export default function BoardPage() {
   );
 
   useEffect(() => {
-    void load(false);
+    const first = setTimeout(() => void load(false), 0);
     const timer = setInterval(() => {
       if (document.visibilityState === "visible") void load(true);
     }, 60_000);
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(first);
+      clearInterval(timer);
+    };
   }, [load]);
 
   const onMove = useCallback(async (input: { disputeId: string; resourceId: string; start: string; end: string }) => {

@@ -17,7 +17,7 @@ const BLOB_PREFIX = "disputedesk/";
 type BlobAccess = "public" | "private";
 let blobAccess: BlobAccess = process.env.BLOB_ACCESS === "public" ? "public" : "private";
 
-function useBlob(): boolean {
+function blobEnabled(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 }
 
@@ -106,7 +106,7 @@ function filePath(key: string): string {
 
 export async function getDoc<T>(key: string): Promise<T | null> {
   try {
-    const text = useBlob() ? await blobGet(key) : await fs.readFile(filePath(key), "utf8");
+    const text = blobEnabled() ? await blobGet(key) : await fs.readFile(filePath(key), "utf8");
     return text ? (JSON.parse(text) as T) : null;
   } catch {
     return null;
@@ -114,8 +114,8 @@ export async function getDoc<T>(key: string): Promise<T | null> {
 }
 
 export async function setDoc<T>(key: string, value: T): Promise<void> {
-  const text = JSON.stringify(value, null, useBlob() ? 0 : 2);
-  if (useBlob()) {
+  const text = JSON.stringify(value, null, blobEnabled() ? 0 : 2);
+  if (blobEnabled()) {
     await blobPut(key, text);
     return;
   }
@@ -127,7 +127,7 @@ export async function setDoc<T>(key: string, value: T): Promise<void> {
 }
 
 export async function deleteDoc(key: string): Promise<void> {
-  if (useBlob()) {
+  if (blobEnabled()) {
     await blobDel(key);
     return;
   }
@@ -135,7 +135,7 @@ export async function deleteDoc(key: string): Promise<void> {
 }
 
 export async function listKeys(prefix: string): Promise<string[]> {
-  if (useBlob()) return blobList(prefix);
+  if (blobEnabled()) return blobList(prefix);
   try {
     const files = await fs.readdir(DATA_DIR);
     const safe = safeKey(prefix);
@@ -156,5 +156,5 @@ export async function updateDoc<T>(key: string, fallback: T, change: (doc: T) =>
 }
 
 export function storeBackend(): "blob" | "files" {
-  return useBlob() ? "blob" : "files";
+  return blobEnabled() ? "blob" : "files";
 }

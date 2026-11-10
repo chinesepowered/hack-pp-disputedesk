@@ -17,7 +17,7 @@ import "@bryntum/scheduler/fontawesome/css/fontawesome.css";
 import "@bryntum/scheduler/fontawesome/css/solid.css";
 import "@bryntum/scheduler/scheduler.css";
 import "@bryntum/scheduler/svalbard-light.css";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { dueText, money, READINESS_LABEL, reasonLabel, stageLabel } from "@/components/ui/atoms";
 import type { CaseMeta, Person, WorkBlock } from "@/lib/desk/types";
 import { addZonedDays, zonedParts, zonedToUtc } from "@/lib/schedule/time";
@@ -115,11 +115,15 @@ class UnscheduledDrag extends DragHelper {
 export default function SchedulerBoard({ cases, blocks, unscheduled, team, timezone, justBooked, handlers }: Props) {
   const schedulerRef = useRef<BryntumScheduler>(null);
   const gridRef = useRef<BryntumGrid>(null);
+  // The Scheduler keeps the callbacks it was created with, so they read the latest props
+  // through refs that are refreshed after every render.
   const handlersRef = useRef(handlers);
-  handlersRef.current = handlers;
   const caseMap = useMemo(() => new Map(cases.map((c) => [c.disputeId, c])), [cases]);
   const caseMapRef = useRef(caseMap);
-  caseMapRef.current = caseMap;
+  useEffect(() => {
+    handlersRef.current = handlers;
+    caseMapRef.current = caseMap;
+  }, [handlers, caseMap]);
   const applying = useRef(false);
 
   // The visible window: from today to a day after the last deadline, at least one working week.
@@ -182,7 +186,7 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
     return out;
   }, [team, range, timezone]);
 
-  const initialEvents = useRef(blocks.map((b) => eventData(b, caseMap.get(b.disputeId))));
+  const [initialEvents] = useState(() => blocks.map((b) => eventData(b, caseMap.get(b.disputeId))));
 
   // Apply block changes through the event store so moves and new bookings animate.
   useEffect(() => {
@@ -274,7 +278,7 @@ export default function SchedulerBoard({ cases, blocks, unscheduled, team, timez
           rowHeight={64}
           barMargin={7}
           resources={resources}
-          events={initialEvents.current}
+          events={initialEvents}
           timeRanges={timeRanges}
           resourceTimeRanges={resourceTimeRanges}
           zoomOnMouseWheel={false}
