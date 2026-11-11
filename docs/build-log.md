@@ -175,8 +175,8 @@ how we got around them. Times are UTC.
   judge opening the board a day later would see an empty week. Blocks whose time has passed with
   no response now go back to Unscheduled and are booked again, and the timeline opens at the
   next booked block.
-- The trial package was only run on localhost in the build environment. Whether the hosted
-  build shows a trial notice is on the list in `docs/needs-user.md`.
+- The trial package was only run on localhost in the build environment. After deploying, the
+  hosted board loads and works the same way, with the trial watermark (see `docs/deploy.md`).
 
 ### Our own mistakes
 

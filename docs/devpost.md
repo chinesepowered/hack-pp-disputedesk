@@ -86,7 +86,7 @@ Next.js, React, TypeScript, Tailwind CSS, PayPal Disputes API, PayPal Orders API
 
 ## Tools: which AI models and services were used and how
 
-- **Claude Code** (Anthropic) wrote the code, tests, docs and the video pipeline from the team's brief, working against the PayPal sandbox.
+- **Claude Code**: AI coding agent used to build the app, tests, docs and video pipeline from a written brief, with the APIMatic PayPal Context Plugin skills, working against the PayPal sandbox.
 - **Qwen/Qwen3.8-27B** on W&B Inference: in the product, for explaining recommendations, drafting dispute responses, phrasing prevention cards and scheduling notes, and as the tool-calling agent.
 - **google/gemma-4-31B-it** on W&B Inference: in the product, reading delivery and damage photos.
 - **zai-org/GLM-5.3-Flash** on W&B Inference: in the product, the fallback text model.
@@ -110,8 +110,8 @@ Next.js, React, TypeScript, Tailwind CSS, PayPal Disputes API, PayPal Orders API
 - **Bryntum Scheduler** (trial build): the triage board, which is the main screen of the product.
 - **APIMatic**: the PayPal server SDK it generates, and the PayPal Context Plugin, used as described in the README.
 
-## Links to add at submission
+## Links
 
-- Hosted demo URL
-- YouTube link for `demo/video.mp4`
-- Repository URL (once public)
+- Hosted demo: https://hack-pp-disputedesk.vercel.app
+- Video: https://youtu.be/dLU-_NTq-0U
+- Repository: https://github.com/chinesepowered/hack-pp-disputedesk

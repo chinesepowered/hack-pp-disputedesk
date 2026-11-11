@@ -4,7 +4,8 @@
 
 Built for the PayPal AI Hackathon. PayPal sandbox only: no real money moves.
 
-- Demo video (2:39): [`demo/video.mp4`](demo/video.mp4), narration in [`demo/narration.txt`](demo/narration.txt)
+- **Live demo:** https://hack-pp-disputedesk.vercel.app (PayPal sandbox; no login needed, and Replay plays recorded cases without using any up)
+- **Demo video:** https://youtu.be/dLU-_NTq-0U (2:39). The same file is in [`demo/video.mp4`](demo/video.mp4), narration in [`demo/narration.txt`](demo/narration.txt)
 - Devpost text: [`docs/devpost.md`](docs/devpost.md)
 - What surprised us in the sandbox: [`docs/build-log.md`](docs/build-log.md)
 
@@ -219,7 +220,7 @@ The win estimate is always labeled as an estimate. It is a transparent point sco
 - Changes go through the event store so new bookings and reflows animate.
 - Blocks are colored by evidence readiness and also carry a text label, so color is never the only cue.
 
-This build uses the public **trial** package (`@bryntum/scheduler-trial`), which shows a watermark. It was tested on localhost in the build environment. If the hosted build shows a trial notice, that is the trial package, not a fault in the app. Turbopack ran out of memory on the Scheduler bundle, so `pnpm dev` and `pnpm build` use webpack.
+This build uses the public **trial** package (`@bryntum/scheduler-trial`), which shows a watermark. It runs the same way on the hosted demo: the board loads and works there, with the trial watermark. Turbopack ran out of memory on the Scheduler bundle, so `pnpm dev` and `pnpm build` use webpack.
 
 ### APIMatic: PayPal server SDK and the PayPal Context Plugin
 
